@@ -79,5 +79,5 @@ Get in touch with us if you have questions or need help with CCBill RESTful API.
   <a href="https://ae.linkedin.com/company/ccbill">LinkedIn</a> •
   <a href="https://www.instagram.com/ccbillbiz/">Instagram</a> •
   <a href="https://www.youtube.com/c/CCBillBiz/featured">YouTube</a> •
-  <a href="https://ccbill.com/contact">Support</a> •
+  <a href="https://ccbill.com/contact">Support</a>
 </p>
