@@ -15,7 +15,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
   <a href="https://ccbill.com/kb/">Knowledge Base</a> •
   <a href="https://kb.ccbill.com/FlexForms">FlexForms</a> •
   <a href="https://kb.ccbill.com/CCBill+Pay+Merchant+FAQs">CCBill Pay</a> •
-  <a href="https://ccbill.com/contact">Support</a> •
+  <a href="https://ccbill.com/contact">Support</a>
 </p>
 
 ## Requirements
