@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://user-images.githubusercontent.com/81383705/118320243-3cd0b080-b4fc-11eb-8ded-36c7fb454604.png" alt="ccbill-restful-api" width="300"></a>
+  <a href="https://user-images.githubusercontent.com/81383705/118308832-b791cf80-b4ec-11eb-95a9-14a9363c56e4.png" alt="ccbill-restful-api" width="300"></a>
   <br>
   CCBill RESTful API
   <br>
