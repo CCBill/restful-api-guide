@@ -43,7 +43,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 * **Merchant Secret:**  This is the password that was setup for authentication of this API.
 
-* **Strong Customer Authentication (SCA):** European laws, such as[PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+* **Strong Customer Authentication (SCA):** European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
 
 ## The Payment Flow
 
