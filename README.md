@@ -43,7 +43,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 * **Merchant Secret:**  This is the password that was setup for authentication of this API.
 
-* **Strong Customer Authentication (SCA):** European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+* **Strong Customer Authentication (SCA):** European laws, such as[PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
 
 ## The Payment Flow
 
@@ -105,34 +105,33 @@ Add a preload link and script html elements to the client HTML page that will co
 
 ### Step 2. Define Field IDs
 
-The Advanced Widget library extracts field values fields based on field IDs. To provide more flexibility and avoid intrusiveness, CCBill uses a custom HTML data field attribute **data-ccbill**.
-
-The correct format is:
+The Advanced Widget library knows how to extract the relevant form values by relying on default ID attributes or by utilizing the **data-ccbill** attribute. Using the **data-ccbill** attribute is recommended as it is less intrusive and provides more flexibility. The correct format is:
 ```
 data-ccbill='[corresponding field]'
 ```
-Using the **data-ccbill** attribute is the recommended approach.
 
-The CCBill Advanced Widget also has a set of default IDs merchants can use. The fields include:
+The table shows the values that should be set for the **data-ccbill** attribute or, alternatively, in the default ID attribute fields.
 
-1.	_ccbillId_cardNumber
-2.	_ccbillId_expMonth
-3.	_ccbillId_expYear
-4.	_ccbillId_firstName
-5.	_ccbillId_lastName
-6.	_ccbillId_address1
-7.	_ccbillId_address2 (optional)
-8.	_ccbillId_city
-9.	_ccbillId_country
-10.	_ccbillId_state (State/Province, Must pass "XX" if not specified)
-11.	_ccbillId_postalCode
-12.	_ccbillId_phoneNumber (optional)
-13.	_ccbillId_email
-14.	_ccbillId_ipAddress (recommended hidden field auto populated by JavaScript)
-15.	_ccbillId_browserHttpAccept (optional, recommended hidden field auto populated by JavaScript)
-16.	_ccbillId_browserHttpAcceptEncoding (optional, recommended hidden field auto populated by javascript)
-17.	_ccbillId_browserHttpAcceptLanguage (optional, recommended hidden field auto populated by javascript)
-18.	_ccbillId_browserHttpUserAgent (optional, recommended hidden field auto populated by JavaScript)
+| **data-ccbill**                                                                                 | **Default IDs**                                                                                             |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **cardNumber**                                                                                  | **\_ccbillId\_cardNumber**                                                                                  |
+| **expMonth**                                                                                    | **\_ccbillId\_expMonth**                                                                                    |
+| **expYear**                                                                                     | **\_ccbillId\_expYear**                                                                                     |
+| **firstName**                                                                                   | **\_ccbillId\_firstName**                                                                                   |
+| **lastName**                                                                                    | **\_ccbillId\_lastName**                                                                                    |
+| **address1**                                                                                    | **\_ccbillId\_address1**                                                                                    |
+| **address2 (optional)**                                                                         | **\_ccbillId\_address2** (optional)                                                                         |
+| **city**                                                                                        | **\_ccbillId\_city**                                                                                        |
+| **country**                                                                                     | **\_ccbillId\_country**                                                                                     |
+| **state** (State/Province, must pass "XX" if not specified)                                     | **\_ccbillId\_state** (State/Province, must pass "XX" if not specified)                                     |
+| **postalCode**                                                                                  | **\_ccbillId\_postalCode**                                                                                  |
+| **phoneNumber** (optional)                                                                      | **\_ccbillId\_phoneNumber** (optional)                                                                      |
+| **email**                                                                                       | **\_ccbillId\_email**                                                                                       |
+| **ipAddress** (recommended hidden field auto populated by JavaScript)                           | **\_ccbillId\_ipAddress** (recommended hidden field auto populated by JavaScript)                           |
+| **browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)         | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)         |
+| **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript) | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript) |
+| **browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript) | **\_ccbillId\_browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript) |
+
 
 ### Step 3. Create JavaScript Method
 
@@ -470,7 +469,7 @@ After you have generated a new bearer token using the second set of credentials 
 | **threedsSdkTransId** (optional)             | string   | The 3DS vendor's transaction ID.                                                                                                                                                               |
 | **threedsAuthenticationType** (optional)     | string   | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (**v2.1.0**).                                            |
 | **threedsAuthenticationValue** (optional)    | string   | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (**v2.1.0**).                                            |
-| **threedsClientTransactionId** (optional)    | string   | Used to identify the origin of the 3DS authentication transaction.                                                                                                                             |
+| **threedsClientTransactionId** (required)    | string   | The parameter is automatically generated by the Advanced Widget. Its purpose is to identify the origin of the 3DS authentication transaction.                                                                                                                             |
 | **threedsSuccess** (optional)                | boolean  | Verification of 3DS authentication success or failure.                                                                                                                                         |
 | **threedsAmount** (optional)                 | integer  | The amount to be charged (same as **initialPrice**).                                                                                                                                           |
 | **threedsCurrency** (optional)               | integer  | The 3-digit currency code for the currency to be used in this transaction.<br>Example value: **840**                                                                                           |
