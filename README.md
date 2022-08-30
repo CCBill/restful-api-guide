@@ -356,7 +356,26 @@ const result = widget.authenticateCustomer(authToken, form, iframeId, paymentTok
 |:---------------------|--------------------------------------------------------------------------------------------------------------------------|
 |     paymentTokenId    |     Must match regular expression **[a-zA-Z0-9]+$**                                                                          |
 |     form     |   Must be a valid selector or HTMLFormElement. If it's not provided, the systems attempt to collect the required SCA inputs from the first HTML form it finds on the page.       |
-|     iframeId    |     If it is not provided, the system generates one and injects it into the web page.                                                                          |
+|     iframeId    |     If it is not provided, the system generates one and injects it into the web page.                                                                         |
+
+### 3DS Authentication Error Codes
+
+| **HTTP Status Code** | **HTTP Status Type**  | **Error Code** | **Error Message**                                                        |
+| -------------------- | --------------------- | -------------- | ------------------------------------------------------------------------ |
+| 500                  | Internal Server Error | 200000         | Authorization Failed due to Unknown Issue.                               |
+| 500                  | Internal Server Error | 200001         | Authorization Failed due to Unexpected Response from Third Party SCA.    |
+| 500                  | Internal Server Error | 200400         | Authorization Failed due to Bad Request to Third Party SCA.              |
+| 500                  | Internal Server Error | 200401         | Authorization Failed due to Unauthorized Request to Third Party SCA.     |
+| 500                  | Internal Server Error | 200500         | Failed to Authenticate Transaction.                                      |
+| 500                  | Internal Server Error | 200501         | API failed to parse JSON.                                                |
+| 400                  | Bad Request           | 200502         | Payment token does not exist.                                            |
+| 400                  | Bad Request           | 200503         | No card associated with payment token.                                   |
+| 500                  | Internal Server Error | 200600         | Failed to Retrieve Status.                                               |
+| 500                  | Internal Server Error | 200601         | API failed to Parse JSON.                                                |
+| 404                  | Not Found             | 200602         | Transaction ID Not Found.                                                |
+| 400                  | Bad Request           | 200603         | Validation Error Transaction ID not valid UUID.                          |
+| 400                  | Bad Request           | 200604         | Validation Error Correlation Id not valid UUID.                          |
+| 400                  | Bad Request           | 200605         | Validation Error Transaction Updated Format not YYYY-MM-DD HH:mm:ss zzz. |
 
 ## Charge Payment Token ID
 
@@ -567,6 +586,57 @@ GET 'https://api.ccbill.com/payment-tokens/{{PAYMENT_TOKEN_ID}}' \
 {"paymentTokenId":"01390f2aae864749a6437e007936529b","programParticipationId":null,"originalPaymentTokenId":null,"clientAccnum":999999,"clientSubacc":0,"createdDatetime":"2021-04-02T23:09:02","timeToLive":30,"validNumberOfUse":3,"paymentInfoId":null,"errors":null,"subscriptionId":"121092501000146223","cvv2Response":M,"avsResponse":M}
 ```
 
+## CCBill RESTful API Error Codes
+
+| **HTTP Status Code** | **HTTP Status Type**  | **Error Code** | **Error Message**                                                                                                                                                                                      |
+| -------------------- | --------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 400                  | Bad Request           | 100100         | Invalid client account.                                                                                                                                                                                |
+| 400                  | Bad Request           | 100102         | Expired payment token.                                                                                                                                                                                 |
+| 400                  | Bad Request           | 100105         | Invalid payout type.                                                                                                                                                                                   |
+| 400                  | Bad Request           | 100106         | Invalid privacy type.                                                                                                                                                                                  |
+| 400                  | Bad Request           | 100107         | Invalid program category.                                                                                                                                                                              |
+| 400                  | Bad Request           | 100108         | Invalid payment type.                                                                                                                                                                                  |
+| 400                  | Bad Request           | 100109         | Invalid program participation.                                                                                                                                                                         |
+| 400                  | Bad Request           | 200000         | Problem with attribute size.                                                                                                                                                                           |
+| 400                  | Bad Request           | 200000         | Attribute required.                                                                                                                                                                                    |
+| 400                  | Bad Request           | 200000         | Problem with the attribute values.                                                                                                                                                                     |
+| 400                  | Bad Request           | 200000         | Invalid credit card number.                                                                                                                                                                            |
+| 400                  | Bad Request           | 200000         | Invalid email address.                                                                                                                                                                                 |
+| 400                  | Bad Request           | 200000         | Invalid Client Accnum.                                                                                                                                                                                 |
+| 400                  | Bad Request           | 200000         | Invalid Client Subacc.                                                                                                                                                                                 |
+| 400                  | Bad Request           | 200000         | Invalid Subscription ID.                                                                                                                                                                               |
+| 400                  | Bad Request           | 200000         | Invalid Target Client Accnum.                                                                                                                                                                          |
+| 400                  | Bad Request           | 200000         | Invalid Target Client Subacc.                                                                                                                                                                          |
+| 400                  | Bad Request           | 200000         | Invalid Program Participation ID.                                                                                                                                                                      |
+| 400                  | Bad Request           | 200000         | Too many programs found between merchants.                                                                                                                                                             |
+| 400                  | Bad Request           | 200000         | Program does not exist between merchants.                                                                                                                                                              |
+| 400                  | Bad Request           | 200000         | Program is Inactive.                                                                                                                                                                                   |
+| 400                  | Bad Request           | 200000         | Invalid Token.                                                                                                                                                                                         |
+| 400                  | Bad Request           | 200000         | Customer and Payment Information required for zero Subscription ID.                                                                                                                                    |
+| 400                  | Bad Request           | 200000         | Invalid 3DS Cavv.                                                                                                                                                                                      |
+| 400                  | Bad Request           | 200000         | Invalid 3DS Cavv Algorithm.                                                                                                                                                                            |
+| 400                  | Bad Request           | 200000         | Invalid 3DS Xid.                                                                                                                                                                                       |
+| 400                  | Bad Request           | 200000         | Invalid 3DS Ds Trans Id.                                                                                                                                                                               |
+| 400                  | Bad Request           | 200000         | Invalid 3DS Acs Trans Id.                                                                                                                                                                              |
+| 400                  | Bad Request           | 200000         | Threeds request parameters need to contain either 3DS verification parameters or error parameters to be valid.                                                                                         |
+| 400                  | Bad Request           | 200000         | Problem with attribute digit format.                                                                                                                                                                   |
+| 400                  | Bad Request           | 200000         | Problem with data type.                                                                                                                                                                                |
+| 400                  | Bad Request           | 200000         | Invalid Program ID.                                                                                                                                                                                    |
+| 400                  | Bad Request           | 200000         | Invalid date range.                                                                                                                                                                                    |
+| 401                  | Unauthorized          | N/A            | invalid\_token.                                                                                                                                                                                        |
+| 403                  | Forbidden             | 100020         | Forbidden                                                                                                                                                                                              |
+| 404                  | Not Found             | 100101         | Invalid payment token.                                                                                                                                                                                 |
+| 404                  | Not Found             | 100104         | Lookup Object Not Found.                                                                                                                                                                               |
+| 500                  | Internal Server Error | 100103         | Transaction error.                                                                                                                                                                                     |
+| 500                  | Internal Server Error | 100105         | Unable to complete the transaction required to create a payment token.                                                                                                                                 |
+| 500                  | Internal Server Error | 100106         | There was an internal error, or a database error and the requested action could not be completed, or Data Link is inactive for user.                                                                   |
+| 500                  | Internal Server Error | 100107         | The IP address the client was attempting to authenticate on was not in the valid range.                                                                                                                |
+| 500                  | Internal Server Error | 100108         | The client's account has been deactivated for use on the Datalink system or the client is not permitted to perform the requested action.                                                               |
+| 500                  | Internal Server Error | 100109         | The client has unsuccessfully logged into the system 3 or more times in the last hour. The client should wait an hour before attempting to login again and is advised to review the login information. |
+| 500                  | Internal Server Error | 100110         | Throttled, number of transactions has reached limit.                                                                                                                                                   |
+| 500                  | Internal Server Error | 100111         | Throttled, total money amount has reached the limit.                                                                                                                                                   |
+| 500                  | Internal Server Error | 100112         | Unable to determine if 3DS is required.                                                                                                                                                                |
+| 500                  | Internal Server Error | 100113         | Unable to retrieve authorized amount.                                                                                                                                                                  |
 
 ## CCBill Community
 
