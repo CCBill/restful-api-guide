@@ -49,7 +49,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 When it comes to using the CCBIll RESTful API, there are 4 request in order for CCBill to properly capture a consumer’s card information and charge their credit card. Below is the sequence of request that need to take place in order to charge a consumer’s credit card.
 
-1. Generate Frontend Token Bearer
+1. Generate Frontend Bearer Token
 
 2. Create Payment Token ID
 
