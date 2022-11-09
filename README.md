@@ -49,7 +49,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 When it comes to using the CCBIll RESTful API, there are 4 request in order for CCBill to properly capture a consumer’s card information and charge their credit card. Below is the sequence of request that need to take place in order to charge a consumer’s credit card.
 
-1. Generate Frontend Bearer Token
+1. Generate Frontend Token Bearer
 
 2. Create Payment Token ID
 
@@ -257,12 +257,18 @@ The isScaRequired function determines whether strong customer authentication is 
 |     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |
 |     **clientAccnum** (required)         |     integer    |     Merchant account number.                                                                                                                                                                                                                                                                        |
 |     **clientSubacc** (required)         |     integer    |     Merchant subaccount number.                                                                                                                                                                                                                                                                     |
-|     **currencyCode** (required)         |     integer    |     Three-digit currency code [ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/) for the currency used in the transaction.       |
+
+The merchant payment form needs to contain a text input field or select element for the **currencyCode** value. The value represents a three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.
+
+The Advanced Widget will automatically collect the **currencyCode** value if it follows standard naming conventions. Merchants can:
+* Use the default ID attribute. 
+* Specify the currency code ID using the library.
+* Utilize the **data-ccbill** attribute to specify the currency code field.
 
 #### Code Example
 
 ```
-const result = widget.isScaRequired(authToken, clientAccnum, clientSubacc, currencyCode);
+const result = widget.isScaRequired(authToken, clientAccnum, clientSubacc);
 ```
 
 #### Field Data Validation
@@ -292,12 +298,18 @@ The **isScaRequiredForPaymentToken** function determines whether strong customer
 |      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
 |:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |
-|     **paymentTokenId** (required)         |     string    |     The payment token ID.                                                                                                                                                                                                                                                                        |                                                                                                                                                                                                                                                                    |
-|     **currencyCode** (required)         |     integer    |     Three-digit currency code [ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/) for the currency used in the transaction.       |
+|     **paymentTokenId** (required)         |     string    |     The payment token ID.                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                    |
+
+The merchant payment form needs to contain a text input field or select element for the **currencyCode** value. The value represents a three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.
+
+The Advanced Widget will automatically collect the **currencyCode** value if it follows standard naming conventions. Merchants can:
+* Use the default ID attribute. 
+* Specify the currency code ID using the library.
+* Utilize the **data-ccbill** attribute to specify the currency code field.
 
 #### Code Example
 ```
-const result = widget.isScaRequiredForPaymentToken(authToken, paymentTokenId, currencyCode);
+const result = widget.isScaRequiredForPaymentToken(authToken, paymentTokenId);
 ```
 
 #### Field Data Validation
