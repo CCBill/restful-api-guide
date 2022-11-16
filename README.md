@@ -127,6 +127,7 @@ The table shows the values that should be set for the **data-ccbill** attribute 
 | **postalCode**                                                                                  | **\_ccbillId\_postalCode**                                                                                  |
 | **phoneNumber** (optional)                                                                      | **\_ccbillId\_phoneNumber** (optional)                                                                      |
 | **email**                                                                                       | **\_ccbillId\_email**                                                                                       |
+| **currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) | **_ccbillId_currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) |
 | **ipAddress** (recommended hidden field auto populated by JavaScript)                           | **\_ccbillId\_ipAddress** (recommended hidden field auto populated by JavaScript)                           |
 | **browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)         | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)         |
 | **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript) | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript) |
@@ -261,9 +262,36 @@ The isScaRequired function determines whether strong customer authentication is 
 The merchant payment form needs to contain a text input field or select element for the **currencyCode** value. The value represents a three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.
 
 The Advanced Widget will automatically collect the **currencyCode** value if it follows standard naming conventions. Merchants can:
-* Use the default ID attribute. 
-* Specify the currency code ID using the library.
-* Utilize the **data-ccbill** attribute to specify the currency code field.
+
+*	Utilize the **data-ccbill** attribute to specify the currency code field. 
+
+For example:
+
+`<input data-ccbill=”currencyCode” type=”text” />`
+
+or
+
+`<select data-ccbill=”currencyCode” />
+              <option>…</option>
+              <option>…</option>
+…
+</select>`
+
+*	Use the default **_ccbillId_currencyCode** attribute.
+
+For example:
+
+`<input id=“_ccbillId_currencyCode” type=”text” />`
+
+or
+
+`<select id=“_ccbillId_currencyCode” />
+              <option>…</option>
+              <option>…</option>
+…
+</select>`
+
+*	Specify the currency code ID using the library.
 
 #### Code Example
 
@@ -303,9 +331,37 @@ The **isScaRequiredForPaymentToken** function determines whether strong customer
 The merchant payment form needs to contain a text input field or select element for the **currencyCode** value. The value represents a three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.
 
 The Advanced Widget will automatically collect the **currencyCode** value if it follows standard naming conventions. Merchants can:
-* Use the default ID attribute. 
-* Specify the currency code ID using the library.
-* Utilize the **data-ccbill** attribute to specify the currency code field.
+
+*	Utilize the **data-ccbill** attribute to specify the currency code field. 
+
+For example:
+
+`<input data-ccbill=”currencyCode” type=”text” />`
+
+or
+
+`<select data-ccbill=”currencyCode” />
+              <option>…</option>
+              <option>…</option>
+…
+</select>`
+
+*	Use the default **_ccbillId_currencyCode** attribute.
+
+For example:
+
+`<input id=“_ccbillId_currencyCode” type=”text” />`
+
+or
+
+`<select id=“_ccbillId_currencyCode” />
+              <option>…</option>
+              <option>…</option>
+…
+</select>`
+
+*	Specify the currency code ID using the library.
+
 
 #### Code Example
 ```
