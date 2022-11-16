@@ -271,11 +271,13 @@ For example:
 
 or
 
-`<select data-ccbill=”currencyCode” />
-              <option>…</option>
-              <option>…</option>
-…
-</select>`
+`<select data-ccbill=”currencyCode” />`
+
+`<option>…</option>`
+<br> `<option>…</option>`
+<br> `…`
+
+`</select>`
 
 *	Use the default **_ccbillId_currencyCode** attribute.
 
@@ -285,11 +287,13 @@ For example:
 
 or
 
-`<select id=“_ccbillId_currencyCode” />
-              <option>…</option>
-              <option>…</option>
-…
-</select>`
+`<select id=“_ccbillId_currencyCode” />`
+
+`<option>…</option>`
+<br> `<option>…</option>`
+<br> `…`
+
+`</select>`
 
 *	Specify the currency code ID using the library.
 
@@ -340,11 +344,13 @@ For example:
 
 or
 
-`<select data-ccbill=”currencyCode” />
-              <option>…</option>
-              <option>…</option>
-…
-</select>`
+`<select data-ccbill=”currencyCode” />`
+
+`<option>…</option>`
+<br>`<option>…</option>`
+<br> `…`
+
+`</select>`
 
 *	Use the default **_ccbillId_currencyCode** attribute.
 
@@ -354,11 +360,13 @@ For example:
 
 or
 
-`<select id=“_ccbillId_currencyCode” />
-              <option>…</option>
-              <option>…</option>
-…
-</select>`
+`<select id=“_ccbillId_currencyCode” />`
+
+`<option>…</option>`
+<br> `<option>…</option>`
+<br> `…`
+
+`</select>`
 
 *	Specify the currency code ID using the library.
 
