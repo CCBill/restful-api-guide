@@ -43,7 +43,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 * **Merchant Secret:**  This is the password that was setup for authentication of this API.
 
-* **Strong Customer Authentication (SCA):** European laws, such as[PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+* **Strong Customer Authentication (SCA):** European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
 
 ## The Payment Flow
 
@@ -98,10 +98,10 @@ The following instructions describe how to set up and use the Advanced Widget li
 
 Add a preload link and script html elements to the client HTML page that will connect to the CCBill Advanced Widget:
 ```
-<link rel="preload" href="https://js.ccbill.com/v1.2.0/ccbill-advanced-widget.js" as="script"/>
-<script type="text/javascript" src="https://js.ccbill.com/v1.2.0/ccbill-advanced-widget.js"></script>
+<link rel="preload" href="https://js.ccbill.com/v1.2.2/ccbill-advanced-widget.js" as="script"/>
+<script type="text/javascript" src="https://js.ccbill.com/v1.2.2/ccbill-advanced-widget.js"></script>
 ```
-**Note:** The version in this URI example is **v1.2.0**. Pay special attention to the version in the URI path as the version number may be subject to change.
+**Note:** The version in this URI example is **v1.2.2**. Pay special attention to the version in the URI path as the version number may be subject to change.
 
 ### Step 2. Define Field IDs
 
@@ -120,7 +120,7 @@ The table shows the values that should be set for the **data-ccbill** attribute 
 | **firstName**                                                                                   | **\_ccbillId\_firstName**                                                                                   |
 | **lastName**                                                                                    | **\_ccbillId\_lastName**                                                                                    |
 | **address1**                                                                                    | **\_ccbillId\_address1**                                                                                    |
-| **address2 (optional)**                                                                         | **\_ccbillId\_address2** (optional)                                                                         |
+| **address2** (optional)                                                                     | **\_ccbillId\_address2** (optional)                                                                         |
 | **city**                                                                                        | **\_ccbillId\_city**                                                                                        |
 | **country**                                                                                     | **\_ccbillId\_country**                                                                                     |
 | **state** (State/Province, must pass "XX" if not specified)                                     | **\_ccbillId\_state** (State/Province, must pass "XX" if not specified)                                     |
@@ -223,14 +223,14 @@ The **createPaymentToken** function will validate field values. If any of the va
 |     expYear         |     A range of 2018-2100, is required and must be a number.                                                               |
 |     firstName       |     Required                                                                                                             |
 |     lastName        |     Required                                                                                                             |
-|     address1        |     Required                                                                                                             |
-|     city            |     Required                                                                                                             |
+|     address1        |     Optional                                                                                                             |
+|     city            |     Optional                                                                                                             |
 |     country         |     Required                                                                                                             |
-|     state           |     Required ("XX" if not available)                                                                                     |
+|     state           |     Optional                                                                                     |
 |     postalCode      |     Must be a valid postal code   for the country provided.                                                               |
 |     phoneNumber     |     If provided, must be a valid telephone number.                                                                        |
 |     email          |     Must be a valid email.                                                                                                |
-|     ipAddress       |     Must be a valid IP.                                                                                                   |
+|     ipAddress       |     Optional (If present must be a valid IP).                                                                                                   |
 
 The violations object is an array of the following object: 
 ```
@@ -402,10 +402,10 @@ Several parameters need to be passed to facilitate a strong customer authenticat
 
 |      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
 |:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |
-|     **paymentTokenId** (optional)         |     string    |     Use this optional field instead of the card number, card expiry month, and card expiry year. The card information must be present in the associated HTML form if the token ID is not provided.                                                                                                                                                                                                                                                                       |
+|     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |                                                                                                                                                                                      
 |     **form** (optional)         |     string    |     A form reference should either be a valid selector or an HTML Form Element that exists on the merchant's web page.                                                                                                                                                                                                                                                                    |
 |     **iframeId** (optional)         |     string    |     The 3DS authentication process presents an iframe on the web page to perform its functionality. The Advanced Widget script generates an iframe and injects it into the merchant's web page if the parameter is undefined. If the provided value is null or an empty string, it is regenerated to fit the minimum technical requirements.       |
+|     **paymentTokenId** (optional)         |     string    |     Use this optional field instead of the card number, card expiry month, and card expiry year. The card information must be present in the associated HTML form if the token ID is not provided.  
 
 #### Code examples
 
