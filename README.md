@@ -29,6 +29,8 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 * User has experience with JSON formats.
 * The RESTful Transaction API supports TLS 1.2 only.
 
+**Note:** To maintain [PCI compliance](https://ccbill.com/kb/pci-compliance-checklist) at all times, use [CCBill's RESTful API](https://ccbill.com/doc/ccbill-restful-transaction-api) and ensure that payment details are sent directly to CCBill without it being sent through your server. Always load CCBill's API from https://api.ccbill.com to remain compliant. Don’t bundle or host the payment script yourself.
+
 ## Terminology
 
 * **Merchant Account**. Each CCBill merchant receives an account number for tracking purposes. The standard format is 9xxxxx-xxxx, where 9xxxxx is the main account. The main account is a six (6) digit number. For example: "999999".
