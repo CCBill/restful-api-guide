@@ -51,21 +51,19 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 When it comes to using the CCBIll RESTful API, there are 4 request in order for CCBill to properly capture a consumer’s card information and charge their credit card. Below is the sequence of request that need to take place in order to charge a consumer’s credit card.
 
-1. Generate Frontend Token Bearer
+1. Generate Frontend Bearer Token
 
 2. Create Payment Token ID
 
-3. Generate Backend Token Bearer
+3. Generate Backend Bearer Token
 
 4. Charge Payment Token ID
 
-## Authentication and Authorization
+## Generate Frontend Bearer Token
 
 The CCBill RESTful Transaction API uses bearer token-based authentication and authorization. Prior to accessing the API, you need to register your application with CCBill. Upon registration, your app will be assigned a merchant application ID and secret key. Use these credentials to generate a token by providing them to the authorization server. Once you have generated an access token (not to be confused with a payment token), provide it in the Authorization header of each API request. 
 
 You will have access until the access token expires or is revoked. The acquired token is a random string of data that does not hold any important piece of information or has value on its own. It works only as an authentication and authorization tool and grants access to an application.
-
-If the authorization token isn't valid, you will receive a 401 or 403 response code.
 
 ### Endpoint URL
 
@@ -87,7 +85,7 @@ curl - POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
 
 --data-urlencode 'grant_type=client_credentials'
 ``` 
-## How to Integrate with the CCBill Advanced Widget
+## Create Payment Token ID (CCBill Advanced Widget)
 
 The CCBill Advanced Widget enables merchants to automate payment token requests. Merchants can design their own interface to call the widget and generate payment tokens.
 
