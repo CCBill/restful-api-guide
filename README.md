@@ -136,7 +136,21 @@ The table shows the values that should be set for the **data-ccbill** attribute 
 
 ### Step 3. Create JavaScript Method
 
-Create a JavaScript method that will call the CCBill Advanced Widget **createPaymentToken()** function. The following example is provided and can be modified as required:
+Create a JavaScript method that will call the CCBill Advanced Widget **createPaymentToken()** function. This is the main function Merchants need to incorporate into their JavaScript calls in order to create Payment Tokens.
+
+To generate a token, multiple parameters need to be passed using the function:
+
+|      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
+|:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|     **authToken** (required)            |     string     |     Required input that uses an Oauth token to perform the creation of the Payment Token. This must be a valid Oauth Token for the client account provided.                                                                                                                                     |
+|     **clientAccnum** (required)         |     integer    |     Merchant account number.                                                                                                                                                                                                                                                                        |
+|     **clientSubacc** (required)         |     integer    |     Merchant subaccount number.                                                                                                                                                                                                                                                                     |
+|     **clearPaymentInfo** (optional)     |     boolean    |     Optional input that will   clear the Payment Information fields when the **createPaymentToken** function is called. This will default to not   clearing the Payment Information fields. <br><br>**Note:** Even though this parameter is   optional, this field should be set to **'null'**   if not used.      |
+|     **clearCustomerInfo** (optional)    |     boolean    |     Optional input that will clear the Customer Information fields   when the **createPaymentToken**   function is called. This will default to not clearing the Customer   Information fields.  <br><br>**Note:** Even   though this parameter is optional, this field should be set to **'null'** if not used.    |
+|     **timeToLive**  (optional)                    |     integer    |     Time for the token to   exist.                                                                                                                                                                                                                                                                  |
+|     **numberOfUse** (optional)                    |     integer    |     Total number of times the Payment Token can be used for purchases. <br><br>**Note:** Even though this parameter is optional, this field should be set to **'null'** if not used.   |
+
+The following example is provided and can be modified as required:
 
 ```
 const widget = new ccbill.CCBillAdvancedWidget(applicationId);
@@ -166,30 +180,6 @@ try {
        alert("ERROR: Unable to generate Payment Token: " + JSON.stringify(errors));
    }
 ```
-### Step 4. Payment Token Generated
-
-The result will contain the newly created payment token, which can be stringified into JSON. It may also contain validation violations that occurred on the data being passed from the form or indicate any errors that might have happened while generating the Payment Token.
-
-At this time, the Client Page will need to either resolve any errors, display the right message on which fields were invalid, or use the new payment token provided.
-
-## Create Payment Token ID
-
-The primary function of the Advanced Widget is **createPaymentToken**. Using this function either returns a created payment token output or an error message if the payment token could not be created with the provided inputs.
-
-### createPaymentToken Function 
-
-This is the main function that Merchants need to incorporate into their JavaScript calls in order to create Payment Tokens. To generate a token multiple parameters need to be passed using the function:
-
-|      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
-|:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     **authToken** (required)            |     string     |     Required input that uses an Oauth token to perform the creation of the Payment Token. This must be a valid Oauth Token for the client account provided.                                                                                                                                     |
-|     **clientAccnum** (required)         |     integer    |     Merchant account number.                                                                                                                                                                                                                                                                        |
-|     **clientSubacc** (required)         |     integer    |     Merchant subaccount number.                                                                                                                                                                                                                                                                     |
-|     **clearPaymentInfo** (optional)     |     boolean    |     Optional input that will   clear the Payment Information fields when the **createPaymentToken** function is called. This will default to not   clearing the Payment Information fields. <br><br>**Note:** Even though this parameter is   optional, this field should be set to **'null'**   if not used.      |
-|     **clearCustomerInfo** (optional)    |     boolean    |     Optional input that will clear the Customer Information fields   when the **createPaymentToken**   function is called. This will default to not clearing the Customer   Information fields.  <br><br>**Note:** Even   though this parameter is optional, this field should be set to **'null'** if not used.    |
-|     **timeToLive**  (optional)                    |     integer    |     Time for the token to   exist.                                                                                                                                                                                                                                                                  |
-|     **numberOfUse** (optional)                    |     integer    |     Total number of times the Payment Token can be used for   purchases. <br><br>**Note:** Even though this parameter is optional, this field should be set to **'null'** if not used.                                                                                                                                                                                                                         |
-
 ### Code Examples
 
 #### Using only required parameters
@@ -207,8 +197,13 @@ const result = widget.createPaymentToken(oauthToken, clientAccnum, clientSubacc,
 #### Using all parameters
 ```
 const result = widget.createPaymentToken(oauthToken, clientAccnum, clientSubacc, clearPaymentInfo, clearCustomerInfo, timeToLive, numberOfUse);
+
 ```
-### Field Data Validation
+### Step 4. Payment Token Generated
+
+The result will contain the newly created payment token, which can be stringified into JSON. It may also contain validation violations that occurred on the data being passed from the form or indicate any errors that might have happened while generating the Payment Token.
+                                                                                                                                                                             
+#### Field Data Validation
 
 The **createPaymentToken** function will validate field values. If any of the values do not pass validation, no token will be created. If that is the case, the system will **generate a violations array** indicating which fields are invalid.
 
