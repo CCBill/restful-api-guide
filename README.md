@@ -29,7 +29,7 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 * User has experience with JSON formats.
 * The RESTful Transaction API supports TLS 1.2 only.
 
-**Note:** To maintain [PCI compliance](https://ccbill.com/kb/pci-compliance-checklist) at all times, use [CCBill's RESTful API](https://ccbill.com/doc/ccbill-restful-transaction-api) and ensure that payment details are sent directly to CCBill without it being sent through your server. Always load CCBill's API from ```https://api.ccbill.com``` to remain compliant. Don’t bundle or host the payment script yourself.
+**Note:** To maintain PCI compliance at all times, use CCBill’s Advanced Widget and ensure that payment details are sent directly to CCBill without it being sent through your server. Always load the CCBill’s JavaScript libraries via ```https://js.ccbill.com``` to remain compliant. Don’t bundle or host the scripts yourself.
 
 ## Terminology
 
