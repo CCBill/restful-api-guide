@@ -7,26 +7,22 @@
 </h1>
 
 <p align="center">
-This document outlines the API resources and endpoints of the CCBill Transaction RESTful API service. Merchants can use these resources to charge consumers with a payment token. This instructional document is provided as a technical resource to CCBill Merchants. It is intended to be read by programmers, technicians, and others with advanced coding skills.
+This document describes the API resources and endpoints of the CCBill Transaction RESTful API service, as well as the CCBill Advanced Widget, a JavaScript library that makes the use of the API easier to use from a web page. Merchants can use these resources to charge consumers with a payment token. This instructional document is provided as a technical resource to CCBill Merchants. It is intended to be read by programmers, technicians, and other persons with coding skills.
 </p>
 
 <p align="center">
   <a href="https://ccbill.com/doc/ccbill-restful-transaction-api">API</a> •
   <a href="https://ccbill.com/kb/">Knowledge Base</a> •
-  <a href="https://kb.ccbill.com/FlexForms">FlexForms</a> •
-  <a href="https://kb.ccbill.com/CCBill+Pay+Merchant+FAQs">CCBill Pay</a> •
   <a href="https://ccbill.com/contact">Support</a>
 </p>
 
 ## Requirements
 
-* The user has already a [CCBill Account](https://admin.ccbill.com/loginMM.cgi).
-* The user has been given [API credentials](https://ccbill.com/contact).
-* The user has had their origin request whitelisted. 
-* The user possesses intermediate to advanced programming skills.
-* User has experience with HTTP/1.1.
-* User has experience with RESTful Web Services.
-* User has experience with JSON formats.
+* The user already has a [CCBill Account](https://admin.ccbill.com/loginMM.cgi).
+* The user has been provided with the [API credentials](https://ccbill.com/contact).
+* The user has had their domain whitelisted with help of [CCBill Support](https://ccbill.com/contact).
+* The user has experience with RESTful Web Services.
+* The user has experience with JSON format.
 * The RESTful Transaction API supports TLS 1.2 only.
 
 **Note:** To maintain PCI compliance at all times, use CCBill’s Advanced Widget and ensure that payment details are sent directly to CCBill without them being sent through your server. Always load the CCBill’s JavaScript libraries via ```https://js.ccbill.com``` to remain compliant. Don’t bundle or host the scripts yourself.
@@ -37,45 +33,55 @@ This document outlines the API resources and endpoints of the CCBill Transaction
 
 * **Merchant Sub-account**. CCBill Merchants may open one or more sub-accounts. The sub-account is a four (4) digit number. The standard format is: xxxx. For example: "1234". The sub-account is part of the main account.
 
-* **Payment Token**. A Payment Token identifies a billable entity within the system.
+* **[Payment Token](https://ccbill.com/kb/credit-card-tokenization)**. A Payment Token identifies a billable entity within the system.
 
 * **Subscription ID:**  Transaction subscription identification number.
 
-* **Merchant Application ID:**  This is the username that was setup for authentication of this API.
+* **Merchant Application ID:**  This is the client ID that the merchant has received upon signing up to use the CCBill RESTful API.
 
-* **Merchant Secret:**  This is the password that was setup for authentication of this API.
+* **Merchant Secret:**  This is the password that was setup for the authentication with the CCBill RESTful API.
 
-* **Strong Customer Authentication (SCA):** European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+* **[Strong Customer Authentication (SCA)](https://ccbill.com/kb/strong-customer-authentication):** European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
 
 ## The Payment Flow
 
-When it comes to using the CCBIll RESTful API, there are 4 request in order for CCBill to properly capture a consumer’s card information and charge their credit card. Below is the sequence of request that need to take place in order to charge a consumer’s credit card.
+Below are the 3 essential steps for charging the consumer using a payment token:
 
-1. Generate Frontend Bearer Token
+1. Generate the CCBill OAuth Bearer Token
+   * **the request to generate the `CCBill OAuth` token must be sent from your back-end services directly to the CCBill API, and it can not be requested from within the browser**
 
-2. Create Payment Token ID
+2. Create the [Payment Token](https://ccbill.com/kb/credit-card-tokenization)
 
-3. Generate Backend Bearer Token
+3. Charge the Payment Token
 
-4. Charge Payment Token ID
+**Note:** While all of the above steps can be completed by making requests from your backend to our API endpoints, you can also use the `CCBill Advanced Widget` (JS library) to:
+* create the payment tokens
+* check whether the 3DS verification is required or not, and
+* perform the strong customer authentication (SCA) from within the browser
 
-## Generate Frontend Bearer Token
+Creation of the `CCBill OAuth` token and charging payment tokens are not supported by the `CCBill Advanced Widget` and must be performed by making API calls from your back-end services.
 
-The CCBill RESTful Transaction API uses bearer token-based authentication and authorization. Prior to accessing the API, you need to register your application with CCBill. Upon registration, your app will be assigned a merchant application ID and secret key. Use these credentials to generate a token by providing them to the authorization server. Once you have generated an access token (not to be confused with a payment token), provide it in the Authorization header of each API request. 
+## 1. Generate the CCBill OAuth Bearer Token
 
-You will have access until the access token expires or is revoked. The acquired token is a random string of data that does not hold any important piece of information or has value on its own. It works only as an authentication and authorization tool and grants access to an application.
+The [CCBill RESTful Transaction API](https://ccbill.com/doc/ccbill-restful-transaction-api) uses OAuth based authentication and authorization. Prior to accessing the API, you need to [register your application with CCBill]((https://ccbill.com/contact)). 
+
+Upon registration, your application will be assigned a `merchant application ID` and a `secret key`. Use these credentials to generate the `CCBill Oauth Bearer Token` (aka the `access token`) by providing them to the authorization server. **Please note that this step cannot be done from within the browser, and you must make the call from your backend**.
+
+Once you have generated the CCBill OAuth token (which is not to be confused with the `payment token`), you need to place it in the `Authorization header` of each API request. You will then be able to access the CCBill Transaction API until the access token expires or is revoked.
+
+The acquired CCBill OAuth token is a random string of data that does not hold any important piece of information, and it has no value on its own. It works only as an authentication and authorization tool and grants access to an application.
 
 ### Endpoint URL
 
-* [https://api.ccbill.com/ccbill-auth/oauth/token](https://api.ccbill.com/ccbill-auth/oauth/token)
+* [https://api.ccbill.com/ccbill-auth/oauth/token?grant_type=client_credentials](https://api.ccbill.com/ccbill-auth/oauth/token?grant_type=client_credentials)
 
 ### Headers
 
-* **Content-Type: application/x-www-form-urlencoded**
+* `Content-Type: application/x-www-form-urlencoded`
 
- * **Authorization: Basic Merchant_ApplicationID:Merchant_Secret**
+* `Authorization: Basic MerchantApplicationID:SecretKey`
 
-### Example Request
+### Example Request Using CURL
 ```
 curl - POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
 
@@ -85,70 +91,77 @@ curl - POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
 
 --data-urlencode 'grant_type=client_credentials'
 ``` 
-## Create Payment Token ID (CCBill Advanced Widget)
+## 2. Create Payment Token ID (CCBill Advanced Widget)
 
-The CCBill Advanced Widget enables merchants to automate payment token requests. Merchants can design their own interface to call the widget and generate payment tokens.
+The `CCBill Advanced Widget` makes the creation of payment tokens easier by encapsulating the API calls that need to be made into a JavaScript function that can be used from within your web page. 
 
-The JavaScript widget is hosted in a location accessible to merchants allowing them to reference and import the widget into their websites.
+The library is hosted on CCBill's content distribution network (CDN) which makes import into the merchants' websites quick and easy from any location in the world.
 
-The following instructions describe how to set up and use the Advanced Widget library.
-
+The following instructions describe how to set up and use the `CCBill Advanced Widget` library:
 
 ### Step 1. Add Preload Link and HTML Elements
 
-Add a preload link and script html elements to the client HTML page that will connect to the CCBill Advanced Widget:
+Add the following preload link and script HTML elements to the HTML page that will host your payment form:
 ```
 <link rel="preload" href="https://js.ccbill.com/v1.2.2/ccbill-advanced-widget.js" as="script"/>
 <script type="text/javascript" src="https://js.ccbill.com/v1.2.2/ccbill-advanced-widget.js"></script>
 ```
 **Note:** The version in this URI example is **v1.2.2**. Pay special attention to the version in the URI path as the version number may be subject to change.
 
-### Step 2. Define Field IDs
+### Step 2. Define the Field IDs
 
-The Advanced Widget library knows how to extract the relevant form values by relying on default ID attributes or by utilizing the **data-ccbill** attribute. Using the **data-ccbill** attribute is recommended as it is less intrusive and provides more flexibility. The correct format is:
+The `CCBill Advanced Widget` library is able to extract the values from the relevant form fields by relying on the default ID attributes or by utilizing the `data-ccbill` custom HTML element attribute. Using the `data-ccbill` attribute is recommended as it is less intrusive and allows the merchant looser coupling. 
+
+When using the custom attribute the correct format is:
 ```
-data-ccbill='[corresponding field]'
+<input type="text" data-ccbill="[corresponding field name]" />
 ```
 
-The table shows the values that should be set for the **data-ccbill** attribute or, alternatively, in the default ID attribute fields.
+When using the default IDs the correct format is:
+```
+<input type="text" id="_ccbillId_[corresponding field name]" />
+```
 
-| **data-ccbill**                                                                                 | **Default IDs**                                                                                             |
-| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **cardNumber**                                                                                  | **\_ccbillId\_cardNumber**                                                                                  |
-| **expMonth**                                                                                    | **\_ccbillId\_expMonth**                                                                                    |
-| **expYear**                                                                                     | **\_ccbillId\_expYear**                                                                                     |
-| **firstName**                                                                                   | **\_ccbillId\_firstName**                                                                                   |
-| **lastName**                                                                                    | **\_ccbillId\_lastName**                                                                                    |
-| **address1** (optional)                                                                         | **\_ccbillId\_address1** (optional)                                                                                   |
-| **address2** (optional)                                                                     | **\_ccbillId\_address2** (optional)                                                                         |
-| **city** (optional)                                                                                       | **\_ccbillId\_city** (optional)                                                                                       |
-| **country**                                                                                     | **\_ccbillId\_country**                                                                                     |
-| **state** (optional)                                     |                        **\_ccbillId\_state** (optional)                                      |
-| **postalCode**                                                                                  | **\_ccbillId\_postalCode**                                                                                  |
-| **phoneNumber** (optional)                                                                      | **\_ccbillId\_phoneNumber** (optional)                                                                      |
-| **email**                                                                                       | **\_ccbillId\_email**                                                                                       |
+The table below shows the values that should be set for the `data-ccbill` attribute or, alternatively, in the default ID attribute fields.
+
+| **data-ccbill**                                                                                            | **Default IDs**                                                                                                      |
+|------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| **nameOnCard**                                                                                             | **\_ccbillId\_nameOnCard**                                                                                           |
+| **cardNumber**                                                                                             | **\_ccbillId\_cardNumber**                                                                                           |
+| **expMonth**                                                                                               | **\_ccbillId\_expMonth**                                                                                             |
+| **expYear**                                                                                                | **\_ccbillId\_expYear**                                                                                              |
+| **firstName**                                                                                              | **\_ccbillId\_firstName**                                                                                            |
+| **lastName**                                                                                               | **\_ccbillId\_lastName**                                                                                             |
+| **address1** (optional)                                                                                    | **\_ccbillId\_address1** (optional)                                                                                  |
+| **address2** (optional)                                                                                    | **\_ccbillId\_address2** (optional)                                                                                  |
+| **city** (optional)                                                                                        | **\_ccbillId\_city** (optional)                                                                                      |
+| **country**                                                                                                | **\_ccbillId\_country**                                                                                              |
+| **state** (optional)                                                                                       | **\_ccbillId\_state** (optional)                                                                                     |
+| **postalCode**                                                                                             | **\_ccbillId\_postalCode**                                                                                           |
+| **phoneNumber** (optional)                                                                                 | **\_ccbillId\_phoneNumber** (optional)                                                                               |
+| **email**                                                                                                  | **\_ccbillId\_email**                                                                                                |
 | **currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) | **_ccbillId_currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) |
-| **ipAddress** (optional, recommended hidden field auto populated by JavaScript)                           | **\_ccbillId\_ipAddress** (optional, recommended hidden field auto populated by JavaScript)                           |
-| **browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)         | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)         |
-| **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript) | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript) |
-| **browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript) | **\_ccbillId\_browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript) |
+| **ipAddress** (optional, recommended hidden field auto populated by JavaScript)                            | **\_ccbillId\_ipAddress** (optional, recommended hidden field auto populated by JavaScript)                          |
+| **browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)                    | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)                  |
+| **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)          |
+| **browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)          |
 
 
 ### Step 3. Create JavaScript Method
 
-Create a JavaScript method that will call the CCBill Advanced Widget **createPaymentToken()** function. This is the main function Merchants need to incorporate into their JavaScript calls in order to create Payment Tokens.
+Create a JavaScript function that will call the `CCBill Advanced Widget's` `createPaymentToken()` function. This is the main function merchants need to incorporate into their JavaScript in order to create payment tokens.
 
 To generate a token, multiple parameters need to be passed using the function:
 
-|      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
-|:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     **authToken** (required)            |     string     |     Required input that uses an Oauth token to perform the creation of the Payment Token. This must be a valid Oauth Token for the client account provided.                                                                                                                                     |
-|     **clientAccnum** (required)         |     integer    |     Merchant account number.                                                                                                                                                                                                                                                                        |
-|     **clientSubacc** (required)         |     integer    |     Merchant subaccount number.                                                                                                                                                                                                                                                                     |
-|     **clearPaymentInfo** (optional)     |     boolean    |     Optional input that will   clear the Payment Information fields when the **createPaymentToken** function is called. This will default to not   clearing the Payment Information fields. <br><br>**Note:** Even though this parameter is   optional, this field should be set to **'null'**   if not used.      |
-|     **clearCustomerInfo** (optional)    |     boolean    |     Optional input that will clear the Customer Information fields   when the **createPaymentToken**   function is called. This will default to not clearing the Customer   Information fields.  <br><br>**Note:** Even   though this parameter is optional, this field should be set to **'null'** if not used.    |
-|     **timeToLive**  (optional)                    |     integer    |     Time for the token to   exist.                                                                                                                                                                                                                                                                  |
-|     **numberOfUse** (optional)                    |     integer    |     Total number of times the Payment Token can be used for purchases. <br><br>**Note:** Even though this parameter is optional, this field should be set to **'null'** if not used.   |
+| PARAMETER                        | TYPE    | DESCRIPTION                                                                                                                                                                                                                                                                                                                                                                    |
+|----------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **authToken** (required)         | string  | Required input that uses an OAuth token to perform the creation of the Payment Token. This must be a valid OAuth token generated using the merchant application ID and the secret key dedicated to the client account involved in the transaction.                                                                                                                             |
+| **clientAccnum** (required)      | integer | Merchant account number.                                                                                                                                                                                                                                                                                                                                                       |
+| **clientSubacc** (required)      | integer | Merchant subaccount number.                                                                                                                                                                                                                                                                                                                                                    |
+| **clearPaymentInfo** (optional)  | boolean | An optional flag that will, if set to true, result in clearance of the payment information fields when the `createPaymentToken` function is called. If `null` is provided, this will default to false, and the payment information fields will not be cleared. <br /><br />**Note:** Even though this parameter is optional, this field should be set to `null` if not used.   |
+| **clearCustomerInfo** (optional) | boolean | An optional flag that will, if set to true, result in clearance of the customer information fields when the `createPaymentToken` function is called. If `null` is provided, this will default to false, and the customer information fields will not be cleared. <br /><br />**Note:** Even though this parameter is optional, this field should be set to `null` if not used. |
+| **timeToLive**  (optional)       | integer | The time interval that defines how long the token should be valid (hours).                                                                                                                                                                                                                                                                                                     |
+| **numberOfUse** (optional)       | integer | The total number of times a specific payment token can be used for purchases. <br /><br />**Note:** Even though this parameter is optional, this field should be set to `null` if not used.                                                                                                                                                                                    |
 
 The following example is provided and can be modified as required:
 
@@ -183,51 +196,63 @@ try {
 ### Code Examples
 
 #### Using only required parameters
+
 ```
 const result = widget.createPaymentToken(oauthToken, clientAccnum, clientSubacc);
 ```
+
 #### Using field clearing flags
+
 ```
 const result = widget.createPaymentToken(oauthToken, clientAccnum, clientSubacc, clearPaymentInfo, clearCustomerInfo);
 ```
+
 #### Using time to live and number of use but no flags
+
 ```
 const result = widget.createPaymentToken(oauthToken, clientAccnum, clientSubacc, null, null, timeToLive, numberOfUse);
 ```
+
 #### Using all parameters
+
 ```
 const result = widget.createPaymentToken(oauthToken, clientAccnum, clientSubacc, clearPaymentInfo, clearCustomerInfo, timeToLive, numberOfUse);
-
 ```
+
 ### Step 4. Payment Token Generated
 
-The result will contain the newly created payment token, which can be stringified into JSON. It may also contain validation violations that occurred on the data being passed from the form or indicate any errors that might have happened while generating the Payment Token.
-                                                                                                                                                                             
+The response returned from `createPaymentToken` function will contain the newly created payment token, which can be converted into JSON format.
+
+In case of any invalid input the response will include validation errors that were found during input validation.
+
+Finally, it may also include any errors that might have happened during the process of payment token generation.
+
 #### Field Data Validation
 
-The **createPaymentToken** function will validate field values. If any of the values do not pass validation, no token will be created. If that is the case, the system will **generate a violations array** indicating which fields are invalid.
+The `createPaymentToken` function will validate the input field values. If any of the values do not pass validation, the library will generate a **violations array** which will hold the information on which exact inputs were invalid.
 
-|      PARAMETER      |      REQUIREMENT                                                                                                         |
-|:---------------------|--------------------------------------------------------------------------------------------------------------------------|
-|     clientAccnum    |     A range of 90000-999999 and must be a number.                                                                         |
-|     clientSubacc    |     A range of 0-9999 and must   be a number.                                                                             |
-|     timeToLive     |     A range of 0-2147483647 and must be a number, if max value is   desired then just leave this out (or pass null).      |
-|     numberOfUse     |     A range of 0-2147483647 and   must be a number, if max value is desired then just leave this out (or pass null).    |
-|     cardNumber      |     Must be a valid credit card number.                                                                                   |
-|     expMonth        |     A range of 1-12, is   required and must be a number.                                                                  |
-|     expYear         |     A range of 2018-2100, is required and must be a number.                                                               |
-|     firstName       |     Required                                                                                                             |
-|     lastName        |     Required                                                                                                             |
-|     address1        |     Optional                                                                                                             |
-|     city            |     Optional                                                                                                             |
-|     country         |     Required                                                                                                             |
-|     state           |     Optional                                                                                     |
-|     postalCode      |     Must be a valid postal code   for the country provided.                                                               |
-|     phoneNumber     |     If provided, must be a valid telephone number.                                                                        |
-|     email          |     Must be a valid email.                                                                                                |
-|     ipAddress       |     Optional (If present must be a valid IP).                                                                                                   |
+| PARAMETER    | REQUIREMENT                                                                                                                                          |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| clientAccnum | A range between 90000 and 999999 and must be a number.                                                                                               |
+| clientSubacc | A range of 0-9999 and must be a number.                                                                                                              |
+| timeToLive   | A range of 0-2147483647 and must be a number, if max value is desired then just leave this out (or pass null).                                       |
+| numberOfUse  | A range of 0-2147483647 and must be a number, if max value is desired then just leave this out (or pass null).                                       |
+| cardNumber   | Must be a valid credit card number.                                                                                                                  |
+| expMonth     | A range of 1-12, it is required and must be a number.                                                                                                |
+| expYear      | A range of 2018-2100, is required and must be a number.                                                                                              |
+| firstName    | Required                                                                                                                                             |
+| lastName     | Required                                                                                                                                             |
+| address1     | Optional                                                                                                                                             |
+| city         | Optional                                                                                                                                             |
+| country      | Required and must be represented as a two-letter country code as defined in [ISO 3166-1](https://www.iso.org/obp/ui/#iso:std:iso:3166:-1:ed-4:v1:en) |
+| state        | Optional, but if provided must be a two-letter state code as defined in [ISO 3166-2](https://www.iso.org/obp/ui/#iso:std:iso:3166:-2:ed-4:v1:en)     |
+| postalCode   | Must be a valid postal code for the country provided.                                                                                                |
+| phoneNumber  | If provided, must be a valid telephone number.                                                                                                       |
+| email        | Must be a valid email address.                                                                                                                       |
+| ipAddress    | Optional (If present must be a valid IP address).                                                                                                    |
 
-The violations object is an array of the following object: 
+The violations object is an array of the following object:
+
 ```
 {
   target: Object,
@@ -238,59 +263,53 @@ The violations object is an array of the following object:
 
 ## Strong Customer Authentication
 
-The CCBill Advanced Widget enables merchants to integrate with CCBill's 3DS vendor and incorporate strong customer authentication in their transactions.
+The `CCBill Advanced Widget` enables merchants to integrate with CCBill's 3DS vendor and thus create an additional layer of security for their transactions using `strong customer authentication (SCA)`.
 
-Alternatively, merchants can send SCA (3DS) results obtained from a 3DS vendor of their choice. To initiate charges using a payment token the SCA parameters need to be submitted along with other required parameters.
+Alternatively, merchants can send SCA (3DS) parameters obtained from a 3DS vendor of their choice. To initiate charges using a payment token with this additional layer of security, the SCA parameters must be provided along with the other required parameters.
 
-The Oauth Token must be valid and bound to the provided Merchant Account.
+The OAuth token must be valid and bound to the provided merchant account.
 
 ### isScaRequired Function
 
-The isScaRequired function determines whether strong customer authentication is needed. The system checks the provided credit card number, merchant account number, subaccount number, and currency code. A valid input results in a Promise, that will eventually resolve to a response with SCA parameters, or will turn into a rejection, due to an error.
+The `isScaRequired` function determines whether the strong customer authentication is required by law. The system uses the provided credit card number, the merchant account number, the subaccount number, and the currency code to determine if SCA is required. If the input is valid the function will return a Promise object, which will eventually resolve to a response which includes the SCA parameters, or it will reject the call, due to any errors.
 
-|      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
-|:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |
-|     **clientAccnum** (required)         |     integer    |     Merchant account number.                                                                                                                                                                                                                                                                        |
-|     **clientSubacc** (required)         |     integer    |     Merchant subaccount number.                                                                                                                                                                                                                                                                     |
+| PARAMETER                   | TYPE    | DESCRIPTION                                                    |
+|-----------------------------|---------|----------------------------------------------------------------|
+| **authToken** (required)    | string  | Must be a valid OAuth token for the provided merchant account. |
+| **clientAccnum** (required) | integer | Merchant account number.                                       |
+| **clientSubacc** (required) | integer | Merchant subaccount number.                                    |
 
-The merchant payment form needs to contain a text input field or select element for the **currencyCode** value. The value represents a three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.
+The merchant payment form needs to contain a (hidden if necessary) text input field or a (hidden if necessary) select element which will contain the information on the `currencyCode` to be used. The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).
 
-The Advanced Widget will automatically collect the **currencyCode** value if it follows standard naming conventions. Merchants can:
+The Advanced Widget will automatically collect the `currencyCode` value if the form is created according to the outlined rules. Merchants can:
 
-*	Utilize the **data-ccbill** attribute to specify the currency code field. 
+* Utilize the `data-ccbill` attribute to specify the currency code field.
 
-For example:
+      <input data-ccbill=”currencyCode” type=”text” />
 
-`<input data-ccbill=”currencyCode” type=”text” />`
+      or
 
-or
+      <select data-ccbill=”currencyCode” />
+      
+        <option>…</option>
+        <option>…</option>
+        ...
+      
+      </select>
 
-`<select data-ccbill=”currencyCode” />`
+* Use the default `_ccbillId_currencyCode` attribute.
 
-`<option>…</option>`
-<br> `<option>…</option>`
-<br> `…`
+      <input id=“_ccbillId_currencyCode” type=”text” />
 
-`</select>`
+      or
 
-*	Use the default **_ccbillId_currencyCode** attribute.
+      <select id=“_ccbillId_currencyCode” />
 
-For example:
+        <option>…</option>
+        <option>…</option>
+        ...
 
-`<input id=“_ccbillId_currencyCode” type=”text” />`
-
-or
-
-`<select id=“_ccbillId_currencyCode” />`
-
-`<option>…</option>`
-<br> `<option>…</option>`
-<br> `…`
-
-`</select>`
-
-*	Specify the currency code ID using the library.
+      </select>
 
 #### Code Example
 
@@ -300,12 +319,12 @@ const result = widget.isScaRequired(authToken, clientAccnum, clientSubacc);
 
 #### Field Data Validation
 
-|      PARAMETER      |      REQUIREMENT                                                                                                         |
-|:---------------------|--------------------------------------------------------------------------------------------------------------------------|
-|     clientAccnum    |     A range of 90000-999999 and must be a number.                                                                         |
-|     clientSubacc    |     A range of 0-9999 and must   be a number.                                                                             |
-|     currencyCode      |   Has to match regular expression **^\\d{3}$**       |
-|     credit card number (form input)       |     Must be a valid credit card number.                                                                                   |
+| PARAMETER                       | REQUIREMENT                                    |
+|---------------------------------|------------------------------------------------|
+| clientAccnum                    | A range of 90000-999999 and must be a number.  |
+| clientSubacc                    | A range of 0-9999 and must be a number.        |
+| currencyCode                    | Has to match the regular expression `^\\d{3}$` |
+| credit card number (form input) | Must be a valid credit card number.            |
 
 
 The violations object is an array of the following object:
@@ -320,63 +339,57 @@ The violations object is an array of the following object:
 
 ### isScaRequiredForPaymentToken Function
 
-The **isScaRequiredForPaymentToken** function determines whether strong customer authentication is required **based on the provided payment token ID and currency code**. A valid input results in a Promise, that will eventually resolve to a response with SCA parameters, or will turn into a rejection, due to an error.
+The `isScaRequiredForPaymentToken` function determines whether strong customer authentication is required **based on the provided payment token ID and the supplied currency code**. If the input is valid the function will return a Promise object, which will eventually resolve to a response with SCA parameters, or a rejection response, due to any errors.
 
-|      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
-|:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |
-|     **paymentTokenId** (required)         |     string    |     The payment token ID.                                                                                                                                                                                                                                                               |                                                                                                                                                                                                                                                                    |
+| PARAMETER                     | TYPE   | DESCRIPTION                                                                                |
+|-------------------------------|--------|--------------------------------------------------------------------------------------------|
+| **authToken** (required)      | string | Must be a valid OAuth token for the provided merchant account.                             |
+| **paymentTokenId** (required) | string | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$` |                                                                                                                                                                                                                                                                    |
 
-The merchant payment form needs to contain a text input field or select element for the **currencyCode** value. The value represents a three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.
+The merchant payment form needs to contain a (hidden if necessary) text input field or a (hidden if necessary) select element which will contain the information on the `currencyCode` to be used. The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).
 
-The Advanced Widget will automatically collect the **currencyCode** value if it follows standard naming conventions. Merchants can:
+The Advanced Widget will automatically collect the `currencyCode` value if the form is created according to the outlined rules. Merchants can:
 
-*	Utilize the **data-ccbill** attribute to specify the currency code field. 
+* Utilize the `data-ccbill` attribute to specify the currency code field.
 
-For example:
+      <input data-ccbill=”currencyCode” type=”text” />
 
-`<input data-ccbill=”currencyCode” type=”text” />`
+      or
 
-or
+      <select data-ccbill=”currencyCode” />
+      
+        <option>…</option>
+        <option>…</option>
+        ...
+      
+      </select>
 
-`<select data-ccbill=”currencyCode” />`
+* Use the default `_ccbillId_currencyCode` attribute.
 
-`<option>…</option>`
-<br>`<option>…</option>`
-<br> `…`
+      <input id=“_ccbillId_currencyCode” type=”text” />
 
-`</select>`
+      or
 
-*	Use the default **_ccbillId_currencyCode** attribute.
+      <select id=“_ccbillId_currencyCode” />
 
-For example:
+        <option>…</option>
+        <option>…</option>
+        ...
 
-`<input id=“_ccbillId_currencyCode” type=”text” />`
-
-or
-
-`<select id=“_ccbillId_currencyCode” />`
-
-`<option>…</option>`
-<br> `<option>…</option>`
-<br> `…`
-
-`</select>`
-
-*	Specify the currency code ID using the library.
-
+      </select>
 
 #### Code Example
+
 ```
 const result = widget.isScaRequiredForPaymentToken(authToken, paymentTokenId);
 ```
 
 #### Field Data Validation
 
-|      PARAMETER      |      REQUIREMENT                                                                                                         |
-|:---------------------|--------------------------------------------------------------------------------------------------------------------------|
-|     paymentTokenId    |     Must match regular expression **[a-zA-Z0-9]+$**                                                                          |
-|     currencyCode      |   Has to match regular expression **^\\d{3}$**       |
+| PARAMETER      | REQUIREMENT                                                                                |
+|----------------|--------------------------------------------------------------------------------------------|
+| paymentTokenId | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$` |
+| currencyCode   | Has to match regular expression `^\\d{3}$`                                                 |
 
 
 The violations object is an array of the following object:
@@ -391,48 +404,55 @@ The violations object is an array of the following object:
 
 ### authenticateCustomer Function
 
-The **authenticateCustomer** function enables merchants to obtain the customer authentication result before initiating a 3DS transaction and calling CCBill's Merchant Connect (RESTful) API endpoint. If the call fails, it is going to return an error. 
+The `authenticateCustomer` function enables merchants to obtain the strong customer authentication parameters before initiating a 3DS transaction and calling CCBill's Merchant Connect (RESTful) API `charge 3DS transaction` endpoint. If the call fails, it is going to return an error.
 
-Several parameters need to be passed to facilitate a strong customer authentication:
+Several parameters must be passed to facilitate the strong customer authentication:
 
-|      PARAMETER                      |      TYPE      |      DESCRIPTION                                                                                                                                                                                                                                                                                    |
-|:-------------------------------------|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     **authToken** (required)            |     string     |     Must be a valid Oauth Token for the provided Merchant Account.                                                                                                                                     |                                                                                                                                                                                      
-|     **form** (optional)         |     string    |     A form reference should either be a valid selector or an HTML Form Element that exists on the merchant's web page.                                                                                                                                                                                                                                                                    |
-|     **iframeId** (optional)         |     string    |     The 3DS authentication process presents an iframe on the web page to perform its functionality. The Advanced Widget script generates an iframe and injects it into the merchant's web page if the parameter is undefined. If the provided value is null or an empty string, it is regenerated to fit the minimum technical requirements.       |
-|     **paymentTokenId** (optional)         |     string    |     Use this optional field instead of the card number, card expiry month, and card expiry year. The card information must be present in the associated HTML form if the token ID is not provided.  
+| PARAMETER                     | TYPE   | DESCRIPTION                                                                                                                                                                                                                                                                                                                              |
+|-------------------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **authToken** (required)      | string | Must be a valid OAuth token for the provided merchant account.                                                                                                                                                                                                                                                                           |                                                                                                                                                                                      
+| **form** (optional)           | string | The form reference should either be a valid selector or an HTML Form Element that exists on the merchant's web page. Please note that if the formId is not provided, the Widget will find the first form HTML element on the page and assume that that is the payment form.                                                              |
+| **iframeId** (optional)       | string | The 3DS authentication process presents an iframe on the web page to perform its functionality. The Advanced Widget script generates an iframe and injects it into the merchant's web page if the parameter is undefined. If the provided value is null or an empty string, it is regenerated to fit the minimum technical requirements. |
+| **paymentTokenId** (optional) | string | Use this optional field instead of the card number, card expiry month, and card expiry year. The card information must be present in the associated HTML form if the token ID is not provided.                                                                                                                                           |
 
 #### Code examples
 
 Using only required parameters:
+
 ```
 const result = widget.authenticateCustomer(authToken);
 ```
-Using form:
+
+Using the form:
+
 ```
 const result = widget.authenticateCustomer(authToken, form);
 ```
-Using iframeId together with form:
+
+Using iframeId in addition to the form:
+
 ```
 const result = widget.authenticateCustomer(authToken, form, iframeId);
 ```
+
 Using all parameters:
+
 ```
 const result = widget.authenticateCustomer(authToken, form, iframeId, paymentTokenId);
 ```
 
 #### Field Data Validation
 
-|      PARAMETER      |      REQUIREMENT                                                                                                         |
-|:---------------------|--------------------------------------------------------------------------------------------------------------------------|
-|     paymentTokenId    |     Must match regular expression **[a-zA-Z0-9]+$**                                                                          |
-|     form     |   Must be a valid selector or HTMLFormElement. If it's not provided, the systems attempt to collect the required SCA inputs from the first HTML form it finds on the page.       |
-|     iframeId    |     If it is not provided, the system generates one and injects it into the web page.                                                                         |
+| PARAMETER      | REQUIREMENT                                                                                                                                                                     |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| paymentTokenId | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$`                                                                                      |
+| form           | Must be a valid selector or an HTMLFormElement. If it's not provided, the system will attempt to collect the required SCA inputs from the first HTML form it finds on the page. |
+| iframeId       | If it is not provided, the system generates one and injects it into the web page.                                                                                               |
 
 ### 3DS Authentication Error Codes
 
 | **HTTP Status Code** | **HTTP Status Type**  | **Error Code** | **Error Message**                                                        |
-| -------------------- | --------------------- | -------------- | ------------------------------------------------------------------------ |
+|----------------------|-----------------------|----------------|--------------------------------------------------------------------------|
 | 500                  | Internal Server Error | 200000         | Authorization Failed due to Unknown Issue.                               |
 | 500                  | Internal Server Error | 200001         | Authorization Failed due to Unexpected Response from Third Party SCA.    |
 | 500                  | Internal Server Error | 200400         | Authorization Failed due to Bad Request to Third Party SCA.              |
@@ -448,78 +468,89 @@ const result = widget.authenticateCustomer(authToken, form, iframeId, paymentTok
 | 400                  | Bad Request           | 200604         | Validation Error Correlation Id not valid UUID.                          |
 | 400                  | Bad Request           | 200605         | Validation Error Transaction Updated Format not YYYY-MM-DD HH:mm:ss zzz. |
 
-## Charge Payment Token ID
+## 3. Charge Payment Token ID
 
-After you have generated a new bearer token using the second set of credentials and have generated a payment token ID, you’ll then use those two new tokens to charge the consumer’s credit card.
+After you have generated a new bearer token, and after you have generated the payment token, you will then be able to use those two new tokens to charge the consumer’s credit card.
 
 ### Charge Payment Token (Without 3DS Authentication)
 
 #### Endpoint URL
 
-* **https://api.ccbill.com/transactions/payment-tokens/{Payment_Token_ID}**
+* **https://api.ccbill.com/transactions/payment-tokens/{paymentTokenId}**
 
 #### Headers
 
-* **Accept: application/vnd.mcn.transaction-service.api.v.1+json**
+* `Accept: application/vnd.mcn.transaction-service.api.v.1+json`
 
 #### Request Parameters
 
-|     PARAMETER                    |     TYPE          |     DESCRIPTION                                                         |
-|:----------------------------------|:-------------------|:-------------------------------------------------------------------------|
-|     **clientAccnum** (required)    |     integer       |     Merchant account number.                                      |
-|     **clientSubacc** (required)    |     integer       |     Merchant subaccount number.                                      |
-|     **initialPrice** (required)    |     float        |      Initial transaction price.                                       |
-|     **initialPeriod** (required)      |     integer       |     The length (in days) of the initial billing period.                                |
-|     **recurringPrice** (optional)              |     float        |      The amount the consumer will be charged for each recurring bill.                                    |
-|     **recurringPeriod** (optional)           |     integer       |     The length of time between rebills.                             |
-|     **rebills** (optional)                     |     integer       |     The total number of times the subscription will rebill.                  |
-|     **currencyCode** (optional)                |     integer       |     Three-digit currency code [ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/) for the currency used in the transaction.    |
-|     **lifeTimeSubscription** (optional)        |     boolean       |     The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.                                    |
-|     **createNewPaymentToken** (optional)        |     boolean       |     Return new payment token for subsequent transactions or not.       |
-|     **passThroughInfo** (optional)             |     Array[any]    |     Paired information being passed through to the transaction service.      |
+| PARAMETER                            | TYPE       | DESCRIPTION                                                                                                                                                          |
+|:-------------------------------------|:-----------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **clientAccnum** (required)          | integer    | Merchant account number.                                                                                                                                             |
+| **clientSubacc** (required)          | integer    | Merchant subaccount number.                                                                                                                                          |
+| **initialPrice** (required)          | float      | Initial transaction price.                                                                                                                                           |
+| **initialPeriod** (required)         | integer    | The length (in days) of the initial billing period.                                                                                                                  |
+| **recurringPrice** (optional)        | float      | The amount the consumer will be charged for each recurring bill.                                                                                                     |
+| **recurringPeriod** (optional)       | integer    | The length of time between rebills.                                                                                                                                  |
+| **rebills** (optional)               | integer    | The total number of times the subscription will rebill.                                                                                                              |
+| **currencyCode** (optional)          | integer    | The three-digit currency code as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en) for the currency to be used in the transaction. |
+| **lifeTimeSubscription** (optional)  | boolean    | The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.                                                       |
+| **createNewPaymentToken** (optional) | boolean    | Whether to create and return a new payment token to be used for subsequent transactions or not.                                                                      |
+| **passThroughInfo** (optional)       | Array[any] | Key/value pairs that can be passed through to the transaction service and received in the webhook response.                                                          |
 
 #### Example Request
+
 ```
 {
-	"clientAccnum": 900000,
-	"clientSubacc": 0,
-	"initialPrice":19.99,
-	"initialPeriod":30,
-    "recurringPrice":19.99,
-    "recurringPeriod":30,
-    "rebills":99,
-    "currencyCode":840,
-    "lifeTimeSubscription":false,
-    "createNewPaymentToken":false,
-    "passThroughInfo":[
-         {
-                "name":"custom1",
-                "value":"10000000942"
-         },
-         {
-                "name":"custom2",
-                " value":"10058"
-         }
-                      ]
+  "clientAccnum": 900000,
+  "clientSubacc": 0,
+  "initialPrice":19.99,
+  "initialPeriod":30,
+  "recurringPrice":19.99,
+  "recurringPeriod":30,
+  "rebills":99,
+  "currencyCode":840,
+  "lifeTimeSubscription":false,
+  "createNewPaymentToken":false,
+  "passThroughInfo":[
+       {
+          "name":"custom1",
+          "value":"10000000942"
+       },
+       {
+          "name":"custom2",
+          " value":"10058"
+       }
+  ]
 }
 ```
+
 #### Response Parameters
 
-
-|     PARAMETER            |     TYPE       |     DESCRIPTION                                           |
-|:--------------------------|:----------------|:-----------------------------------------------------------|
-|     declineCode          |     integer    |     Error   condition value of the transaction.           |
-|     declineText         |     boolean    |     Description of decline.                               |
-|     declineId            |     string     |     Randomly generated GUID.                             |
-|     approved             |     boolean    |     Approval status of the transaction.               |
-|     paymentUniqueId      |     string     |     Unique key connected to payment account.            |
-|     sessionId            |     string     |     Unique session ID value for transaction.             |
-|     subscriptionId       |     integer    |     Subscription   ID to which the transaction belongs.    |
-|     newPaymentTokenId    |     string     |     New   payment token for subsequent transactions.       |
+| PARAMETER         | TYPE    | DESCRIPTION                                                                     |
+|-------------------|---------|---------------------------------------------------------------------------------|
+| declineCode       | integer | The error code pertaining to the error that has caused the transaction failure. |
+| declineText       | boolean | Description of the reason why the transaction was declined.                     |
+| declineId         | string  | Randomly generated GUID unique to this specific error occurrence.               |
+| approved          | boolean | Approval status of the transaction.                                             |
+| paymentUniqueId   | string  | Unique key connected to the payment account.                                    |
+| sessionId         | string  | Unique session ID value pertaining to the transaction.                          |
+| subscriptionId    | integer | Subscription ID which uniquely identifies the transaction.                      |
+| newPaymentTokenId | string  | The new payment token ID to be used for subsequent transactions (if created).   |
 
 #### Example Response
+
 ```
-{"declineCode":null,"declineText":null,"denialId":null,"approved":true,"paymentUniqueId":"dG4P1t8dL58pA3rNxE+Phw","sessionId":null,"subscriptionId":121095101000018190,"newPaymentTokenId":null}
+{
+  "declineCode": null,
+  "declineText": null,
+  "denialId": null,
+  "approved": true,
+  "paymentUniqueId": "dG4P1t8dL58pA3rNxE+Phw",
+  "sessionId": null,
+  "subscriptionId": 121095101000018190,
+  "newPaymentTokenId":null
+}
 ```
 
 ### Charge Payment Token (With 3DS Authentication)
@@ -530,93 +561,95 @@ After you have generated a new bearer token using the second set of credentials 
 
 #### Headers
 
-* **Accept: application/vnd.mcn.transaction-service.api.v.1+json**
+* `Accept: application/vnd.mcn.transaction-service.api.v.1+json`
 
 #### Request Parameters
 
-| PARAMETER                                 | TYPE | DESCRIPTION                                                                                                                                                                                |
-| --------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **createNewPaymentToken**                     | boolean  | Return new payment token for subsequent transactions or not.                                                                                                                                   |
-| **initialPrice** (required)                  | number   | Price of the initial transaction.                                                                                                                                                              |
-| **clientAccnum** (required)                  | integer  | Merchant account number.                                                                                                                                                                       |
-| **clientSubacc** (required)                 | integer  | Merchant subaccount number.                                                                                                                                                                    |
-| **initialPeriod** (required)                 | integer  | The length (in days) of the initial billing period.                                                                                                                                            |
-| **recurringPrice** (optional)                | number   | The amount the consumer will be charged for each recurring bill.                                                                                                                               |
-| **recurringPeriod** (optional)               | Integer  | The length of time between rebills.                                                                                                                                                            |
-| **rebills** (optional)                       | integer  | The total number of times the subscription will rebill.                                                                                                                                        |
-| **currencyCode** (optional)                  | integer  | Three-digit currency code ([ISO 4217 standard](https://www.iso.org/obp/ui/#search/code/)) for the currency used in the transaction.                                                            |
-| **lifeTimeSubscription** (optional)          | Boolean  | The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.                                                                                 |
-| **passThroughInfo** (optional)               | array    | Paired information being passed through to the transaction service.                                                                                                                            |
-| **threedsCardToken** (required)              | integer  | The payment card number (PAN).                                                                                                                                                                 |
-| **threedsEci** (required)                    | string   | An Electronic Commerce Indicator (ECI).<br>Values: '**0**', '**1**', '**2**', '**5**', '**6**', or '**7**'.                                                                                    |
-| **threedsStatus** (required)                 | string   | The status of the 3DS verification ('**Y**', '**N**', '**A**', etc.)                                                                                                                           |
-| **threedsVersion** (required)                | string   | The version of the 3DS protocol to be followed for this specific card and transaction.<br>Available versions are **1.0.2** and **2.1.0**                                                       |
-| **threedsXid** (optional/required)           | string   | The transaction identifier (**XID**) is a unique tracking number set by the merchant for 3DS. **It is a required parameter for threedsVersion 1.0.2**                                          |
-| **threedsCavv** (optional/required)          | string   | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow and is a **required parameter for threedsVersion 1.0.2** |
-| **threedsCavvAlgorithm** (optional/required) | string   | CAVV Algorithm for threeds request. **The threedsCavvAlgorithm parameter is required for threedsVersion 1.0.2**                                                                                |
-| **threedsDsTransId** (optional/required)     | string   | Directory Server Transaction ID. **The threedsDsTransId parameter is required for threedsVersion 2.1.0**                                                                                       |
-| **threedsAcsTransId** (optional/required)    | string   | Access Control Server Transaction ID. **The threedsAcsTransId parameter is required for threedsVersion 2.1.0**                                                                                 |
-| **threedsSdkTransId** (optional)             | string   | The 3DS vendor's transaction ID.                                                                                                                                                               |
-| **threedsAuthenticationType** (optional)     | string   | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (**v2.1.0**).                                            |
-| **threedsAuthenticationValue** (optional)    | string   | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (**v2.1.0**).                                            |
-| **threedsClientTransactionId** (required)    | string   | The parameter is automatically generated by the Advanced Widget. Its purpose is to identify the origin of the 3DS authentication transaction.                                                                                                                             |
-| **threedsSuccess** (optional)                | boolean  | Verification of 3DS authentication success or failure.                                                                                                                                         |
-| **threedsAmount** (optional)                 | integer  | The amount to be charged (same as **initialPrice**).                                                                                                                                           |
-| **threedsCurrency** (optional)               | integer  | The 3-digit currency code for the currency to be used in this transaction.<br>Example value: **840**                                                                                           |
-| **threedsError** (optional/required)         | string   | Error received from the 3DS vendor during the strong customer authentication process. **The parameter is required if no threedsVersion is provided.**                                          |
-| **threedsErrorDetail** (optional)            | string   | Error details related to the _threedsError_.                                                                                                                                                   |
-| **threedsErrorCode** (optional)              | string   | Error code.                                                                                                                                                                                    |
-| **threedsResponse** (optional)               | string   | The complete response in case of an error.                                                                                                                                                     |
+| PARAMETER                                    | TYPE    | DESCRIPTION                                                                                                                                                                                      |
+|----------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **createNewPaymentToken**                    | boolean | Whether to create and return a new payment token to be used for subsequent transactions or not.                                                                                                  |
+| **initialPrice** (required)                  | number  | Price of the initial transaction.                                                                                                                                                                |
+| **clientAccnum** (required)                  | integer | Merchant account number.                                                                                                                                                                         |
+| **clientSubacc** (required)                  | integer | Merchant subaccount number.                                                                                                                                                                      |
+| **initialPeriod** (required)                 | integer | The length (in days) of the initial billing period.                                                                                                                                              |
+| **recurringPrice** (optional)                | number  | The amount the consumer will be charged for each recurring bill.                                                                                                                                 |
+| **recurringPeriod** (optional)               | Integer | The length of time between rebills.                                                                                                                                                              |
+| **rebills** (optional)                       | integer | The total number of times the subscription will rebill.                                                                                                                                          |
+| **currencyCode** (optional)                  | integer | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.                                            |
+| **lifeTimeSubscription** (optional)          | Boolean | The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.                                                                                   |
+| **passThroughInfo** (optional)               | array   | Key/value pairs that can be passed through to the transaction service and received in the webhook response.                                                                                      |
+| **threedsCardToken** (required)              | integer | The payment card number (PAN).                                                                                                                                                                   |
+| **threedsEci** (required)                    | string  | An Electronic Commerce Indicator (ECI).<br />Possible values are: '**0**', '**1**', '**2**', '**5**', '**6**', or '**7**'.                                                                       |
+| **threedsStatus** (required)                 | string  | The status of the 3DS verification ('**Y**', '**N**', '**A**', etc.)                                                                                                                             |
+| **threedsVersion** (required)                | string  | The version of the 3DS protocol to be followed for this specific card and transaction.<br />The supported versions are **1.0.2** and **2.1.0**                                                   |
+| **threedsXid** (optional/required)           | string  | The transaction identifier (**XID**) is a unique tracking number set by the merchant for 3DS. **It is a required parameter for threedsVersion 1.0.2**                                            |
+| **threedsCavv** (optional/required)          | string  | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through the 3DS verification flow and is a **required parameter for threedsVersion 1.0.2** |
+| **threedsCavvAlgorithm** (optional/required) | string  | CAVV algorithm to be used in the 3DS request. **The threedsCavvAlgorithm parameter is required for 3DS version 1.0.2**                                                                           |
+| **threedsDsTransId** (optional/required)     | string  | The Directory Server Transaction ID. **The threedsDsTransId parameter is required for 3DS version 2.1.0**                                                                                        |
+| **threedsAcsTransId** (optional/required)    | string  | Access Control Server Transaction ID. **The threedsAcsTransId parameter is required for 3DS version 2.1.0**                                                                                      |
+| **threedsSdkTransId** (optional)             | string  | The 3DS vendor's transaction ID.                                                                                                                                                                 |
+| **threedsAuthenticationType** (optional)     | string  | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through the 3DS verification flow (**v2.1.0**).                                            |
+| **threedsAuthenticationValue** (optional)    | string  | A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through the 3DS verification flow (**v2.1.0**).                                            |
+| **threedsClientTransactionId** (required)    | string  | The parameter is automatically generated by the `CCBill Advanced Widget`. Its purpose is to identify the origin of the 3DS authentication transaction.                                           |
+| **threedsSuccess** (optional)                | boolean | The result of the 3DS verification process.                                                                                                                                                      |
+| **threedsAmount** (optional)                 | integer | The amount to be charged (must be the same value as the **initialPrice**).                                                                                                                       |
+| **threedsCurrency** (optional)               | integer | The 3-digit currency code for the currency to be used in this transaction.<br />Example value: **840**                                                                                           |
+| **threedsError** (optional/required)         | string  | The error received from the 3DS vendor during the `strong customer authentication` process. **This parameter is required if the SCA parameters are not provided.**                               |
+| **threedsErrorDetail** (optional)            | string  | Error details related to the `threedsError` parameter.                                                                                                                                           |
+| **threedsErrorCode** (optional)              | string  | The error code related to the `threedsError` parameter.                                                                                                                                          |
+| **threedsResponse** (optional)               | string  | The complete response received in case of an error encountered during the 3DS verification process.                                                                                              |
 
 #### Example Request
+
 ```
 <?php
-$request = new HttpRequest();
-$request->setUrl('https://api.ccbill.com/transactions/payment-tokens/threeds/01047ed6f3b440c7a2ccc6abc1ad0a84');
-$request->setMethod(HTTP_METH_POST);
-$request->setHeaders(array(
-'Cache-Control' => 'no-cache',
-'Authorization' => 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibWNuLXRyYW5zYWN0aW9uLXNlcnZpY2UiLCJtY24tYWRtaW4tc2VydmljZSJdLCJzY29wZSI6WyJjcmVhdGVfdG9rZW4iLCJyZWFkX3Rva2VuIiwiY2hhcmdlX3Rva2VuIiwiY3JlYXRlX3Byb2dyYW0iLCJyZWFkX3Byb2dyYW0iLCJjcmVhdGVfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIiwicmVhZF9wcm9ncmFtX3BhcnRpY2lwYXRpb24iLCJtb2RpZnlfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIl0sImV4cCI6MTUzNzM4MDczNiwiYXV0aG9yaXRpZXMiOlsiTUNOX0FQSV9UT0tFTl9DSEFSR0VSIiwiTUNOX0FQSV9UT0tFTl9DUkVBVE9SIiwiTUNOX0FQSV9BRE1JTiJdLCJqdGkiOiI4YzI2Njg1MC00NjMzLTQzZDMtYjZjOC1lNzIyY2ExNjQ1YTUiLCJjbGllbnRfaWQiOiI1MjE3NjhhYTc1OGQxMWU4YWE2YjAwNTA1NjlkMTU4NSJ9.HRYXZFATkIcI2_LJ1W_xo67IfBnbN9atyYNzyHqseLxYUxzgwBsAV5rNqCixKemOrDIeQLBN4jrwRsBIHDpEvshwBC8XmTodDJzpGmMaU9s1r20RV68X0_d1yTgSDke_Of7VCrVmJRbSuDl7AgsfTqQ1J7nWyu9vcIaER93ms-vadser_Ot9Z68_HAmCJL3DCLpdIFq3PYtBMKKKqXbvhfhSZQZD3b6-aewAnBo0VzpvK6tREqw1rv9_73oAvYcW2aHAj79ILr8viWMM40LyDKMMYOYkneg3hJUQsUVeh9WzztYUJKzERYNXje9fYIGN-eofoLvX7OZJ3eXmIfkrfQ',
-'Content-Type' => 'application/json'
-));
-$request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"4111111111111111","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
-try {
-$response = $request->send();
-echo $response->getBody();
-} catch (HttpException $ex) {
-echo $ex;
-}
+  $request = new HttpRequest();
+  $request->setUrl('https://api.ccbill.com/transactions/payment-tokens/threeds/01047ed6f3b440c7a2ccc6abc1ad0a84');
+  $request->setMethod(HTTP_METH_POST);
+  $request->setHeaders(array(
+    'Cache-Control' => 'no-cache',
+    'Authorization' => 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibWNuLXRyYW5zYWN0aW9uLXNlcnZpY2UiLCJtY24tYWRtaW4tc2VydmljZSJdLCJzY29wZSI6WyJjcmVhdGVfdG9rZW4iLCJyZWFkX3Rva2VuIiwiY2hhcmdlX3Rva2VuIiwiY3JlYXRlX3Byb2dyYW0iLCJyZWFkX3Byb2dyYW0iLCJjcmVhdGVfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIiwicmVhZF9wcm9ncmFtX3BhcnRpY2lwYXRpb24iLCJtb2RpZnlfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIl0sImV4cCI6MTUzNzM4MDczNiwiYXV0aG9yaXRpZXMiOlsiTUNOX0FQSV9UT0tFTl9DSEFSR0VSIiwiTUNOX0FQSV9UT0tFTl9DUkVBVE9SIiwiTUNOX0FQSV9BRE1JTiJdLCJqdGkiOiI4YzI2Njg1MC00NjMzLTQzZDMtYjZjOC1lNzIyY2ExNjQ1YTUiLCJjbGllbnRfaWQiOiI1MjE3NjhhYTc1OGQxMWU4YWE2YjAwNTA1NjlkMTU4NSJ9.HRYXZFATkIcI2_LJ1W_xo67IfBnbN9atyYNzyHqseLxYUxzgwBsAV5rNqCixKemOrDIeQLBN4jrwRsBIHDpEvshwBC8XmTodDJzpGmMaU9s1r20RV68X0_d1yTgSDke_Of7VCrVmJRbSuDl7AgsfTqQ1J7nWyu9vcIaER93ms-vadser_Ot9Z68_HAmCJL3DCLpdIFq3PYtBMKKKqXbvhfhSZQZD3b6-aewAnBo0VzpvK6tREqw1rv9_73oAvYcW2aHAj79ILr8viWMM40LyDKMMYOYkneg3hJUQsUVeh9WzztYUJKzERYNXje9fYIGN-eofoLvX7OZJ3eXmIfkrfQ',
+    'Content-Type' => 'application/json'
+  ));
+  $request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"4111111111111111","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
+
+  try {
+    $response = $request->send();
+    echo $response->getBody();
+  } catch (HttpException $ex) {
+    echo $ex;
+  }
 ?>
 ```
 
 #### Response Parameters
 
-| PARAMETER                    | TYPE | DESCRIPTION                                |
-| --------------------------------- | -------- | ------------------------------------------------- |
-| errorCode         | integer  | Error condition value of the transaction.         |
-| approved           | boolean  | Description of decline.                           |
-| paymentUniqueId    | string   | Unique key connected to the payment account.      |
-| sessionId        | string   | Unique session ID value for the transaction.      |
-| subscriptionId    | integer  | Subscription ID to which the transaction belongs. |
-| newPaymentTokenId  | string   | New payment token for subsequent transactions.    |
+| PARAMETER         | TYPE    | DESCRIPTION                                                                           |
+|-------------------|---------|---------------------------------------------------------------------------------------|
+| errorCode         | integer | The error code pertaining to the error encountered during the transaction processing. |
+| approved          | boolean | Approval status of the transaction.                                                   |
+| paymentUniqueId   | string  | Unique key connected to the payment account.                                          |
+| sessionId         | string  | Unique session ID value pertaining to the transaction.                                |
+| subscriptionId    | integer | Subscription ID which uniquely identifies the transaction.                            |
+| newPaymentTokenId | string  | The new payment token ID to be used for subsequent transactions (if created).         |
 
 #### Example Response
 ```
 {
-  "errorCode": "integer",
-  "approved": "boolean",
-  "paymentUniqueId": "string",
-  "sessionId": "string",
-  "subscriptionId": "integer",
-  "newPaymentTokenId": "string"
+  "errorCode": "100100",
+  "approved": "false",
+  "paymentUniqueId": "dG4P1t8dL58pA3rNxE+Phw",
+  "sessionId": null,
+  "subscriptionId": "922243301000000141",
+  "newPaymentTokenId": null
 }
 ```
 
-Once the payment token has been charged, a [webhooks HTTP POST notification](https://kb.ccbill.com/Webhooks+User+Guide) will be triggered so that you may capture the transaction information. This webhooks event will be a [“UpSaleSuccess”](https://kb.ccbill.com/Webhooks+User+Guide#UpSaleSuccess).
+Once the payment token has been charged, a [webhooks HTTP POST notification](https://kb.ccbill.com/Webhooks+User+Guide) will be triggered so that you may capture the transaction information. This webhooks event will be of [“UpSaleSuccess”](https://kb.ccbill.com/Webhooks+User+Guide#UpSaleSuccess) type.
 
 ## Read Payment Token ID
 
-Use this API endpoint to obtain data on a previously made charge. You will need to identify the charge by the payment token ID.
+Use this API endpoint to obtain the data on a previously made charge. You will need to identify the charge by supplying the relevant payment token ID.
 
 ### Endpoint URL
 
@@ -624,9 +657,10 @@ Use this API endpoint to obtain data on a previously made charge. You will need 
 
 ### Headers
 
-* **Accept: application/vnd.mcn.transaction-service.api.v.2+json**
+* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
 
 ### Example Request
+
 ```
 GET 'https://api.ccbill.com/payment-tokens/{{PAYMENT_TOKEN_ID}}' \
 
@@ -634,33 +668,43 @@ GET 'https://api.ccbill.com/payment-tokens/{{PAYMENT_TOKEN_ID}}' \
 
 --header 'Accept: application/vnd.mcn.transaction-service.api.v.2+json'
 ```
+
 ### Response Parameters
 
-
-|     PARAMETER                 |     TYPE             |     DESCRIPTION                                                             |
-|:-------------------------------|:----------------------|:-----------------------------------------------------------------------------|
-|     paymentTokenId            |     string           |     Complex   representation of Payment Token Id.                           |
-|     programParticipationId    |     integer          |     The   Program connected to the Payment Token.                            |
-|     originalPaymentTokenId    |     string           |     Reference   to a previous Token Id.                                      |
-|     clientAccnum             |     integer          |     Merchant   account number.                                               |
-|     clientSubacc              |     integer          |     Merchant   subaccount number.                                            |
-|     createdDatetime          |     datetime-only    |     Date and   time of creation of the Payment Token.                       |
-|     timeToLive                |     integer          |     Time for   the token to exist (hours).                                   |
-|     validNumberOfUse          |     integer          |     Total   number of times the Payment Token can be used for purchases.     |
-|     paymentInfoId             |     string           |     Information   associated with the payment.                               |
-|     subscriptionId            |     integer          |     Identification   of the subscription associated with the transaction.    |
-|     cvv2Response              |     string           |     The   result of CVV2 verification.                                       |
-|     avsResponse               |     string           |     The result   of AVS verification.                                       |
+| PARAMETER              | TYPE          | DESCRIPTION                                                                                |
+|------------------------|---------------|--------------------------------------------------------------------------------------------|
+| paymentTokenId         | string        | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$` |
+| programParticipationId | integer       | The Program ID relevant to the Payment Token.                                              |
+| originalPaymentTokenId | string        | Reference to the previous token ID.                                                        |
+| clientAccnum           | integer       | Merchant account number.                                                                   |
+| clientSubacc           | integer       | Merchant subaccount number.                                                                |
+| createdDatetime        | datetime-only | Date and time of the creation of the payment token.                                        |
+| timeToLive             | integer       | The time interval that defines how long the token will be valid (hours).                   |
+| validNumberOfUse       | integer       | The total number of times the Payment Token can be used for purchases.                     |
+| paymentInfoId          | string        | Information associated with the payment.                                                   |
+| subscriptionId         | integer       | Identification of the subscription associated with the transaction.                        |
 
 ### Example Response:
 ```
-{"paymentTokenId":"01390f2aae864749a6437e007936529b","programParticipationId":null,"originalPaymentTokenId":null,"clientAccnum":999999,"clientSubacc":0,"createdDatetime":"2021-04-02T23:09:02","timeToLive":30,"validNumberOfUse":3,"paymentInfoId":null,"errors":null,"subscriptionId":"121092501000146223","cvv2Response":M,"avsResponse":M}
+{  
+  "paymentTokenId": "01390f2aae864749a6437e007936529b",
+  "programParticipationId": null,
+  "originalPaymentTokenId": null,
+  "clientAccnum": 999999,
+  "clientSubacc": 0,
+  "createdDatetime": "2021-04-02T23:09:02",
+  "timeToLive": 30,
+  "validNumberOfUse": 3,
+  "paymentInfoId": null,
+  "errors": null,
+  "subscriptionId": "121092501000146223",
+}
 ```
 
 ## CCBill RESTful API Error Codes
 
 | **HTTP Status Code** | **HTTP Status Type**  | **Error Code** | **Error Message**                                                                                                                                                                                      |
-| -------------------- | --------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|----------------------|-----------------------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 400                  | Bad Request           | 100100         | Invalid client account.                                                                                                                                                                                |
 | 400                  | Bad Request           | 100102         | Expired payment token.                                                                                                                                                                                 |
 | 400                  | Bad Request           | 100105         | Invalid payout type.                                                                                                                                                                                   |
@@ -694,7 +738,7 @@ GET 'https://api.ccbill.com/payment-tokens/{{PAYMENT_TOKEN_ID}}' \
 | 400                  | Bad Request           | 200000         | Problem with data type.                                                                                                                                                                                |
 | 400                  | Bad Request           | 200000         | Invalid Program ID.                                                                                                                                                                                    |
 | 400                  | Bad Request           | 200000         | Invalid date range.                                                                                                                                                                                    |
-| 401                  | Unauthorized          | N/A            | invalid\_token.                                                                                                                                                                                        |
+| 401                  | Unauthorized          | N/A            | Invalid token.                                                                                                                                                                                         |
 | 403                  | Forbidden             | 100020         | Forbidden                                                                                                                                                                                              |
 | 404                  | Not Found             | 100101         | Invalid payment token.                                                                                                                                                                                 |
 | 404                  | Not Found             | 100104         | Lookup Object Not Found.                                                                                                                                                                               |
@@ -711,7 +755,7 @@ GET 'https://api.ccbill.com/payment-tokens/{{PAYMENT_TOKEN_ID}}' \
 
 ## CCBill Community
 
-Become part of the CCBill community to get updates on new features, help us improve the platform, and engage with other merchants and developers.
+Become part of the CCBill community to get updates on the new features, help us improve the platform, and engage with other merchants and developers.
 
 * Follow [@CCBillBIZ on Twitter](https://twitter.com/CCBillBIZ).
 * Visit [CCBill's Blog](https://ccbill.com/blog) and read about latest developments in payment processing.
@@ -725,7 +769,7 @@ Become part of the CCBill community to get updates on new features, help us impr
 
 ### Contact CCBill
 
-Get in touch with us if you have questions or need help with CCBill RESTful API.
+Get in touch with us if you have questions or need help with the CCBill RESTful API.
 
 <p align="left">
   <a href="https://twitter.com/CCBillBIZ">Twitter</a> •
