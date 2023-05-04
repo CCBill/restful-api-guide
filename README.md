@@ -763,7 +763,7 @@ Become part of the CCBill community to get updates on the new features, help us 
 ### Resources
 
 * [API Documentation](https://ccbill.com/doc/ccbill-restful-transaction-api)
-* [Webhooks User Guide](https://ccbill.com/doc/webhooks-overview)
+* [Webhooks User Guide](https://ccbill.com/doc/webhooks-user-guide)
 * [Knowledge Base](https://ccbill.com/kb/)
 * [Blog](https://ccbill.com/blog)
 
