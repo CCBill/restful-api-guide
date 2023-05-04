@@ -285,11 +285,11 @@ The Advanced Widget will automatically collect the `currencyCode` value if the f
 
 * Utilize the `data-ccbill` attribute to specify the currency code field.
 
-      <input data-ccbill=”currencyCode” type=”text” />
+      <input data-ccbill="currencyCode" type="text" />
 
       or
 
-      <select data-ccbill=”currencyCode” />
+      <select data-ccbill="currencyCode" />
       
         <option>…</option>
         <option>…</option>
@@ -299,11 +299,11 @@ The Advanced Widget will automatically collect the `currencyCode` value if the f
 
 * Use the default `_ccbillId_currencyCode` attribute.
 
-      <input id=“_ccbillId_currencyCode” type=”text” />
+      <input id="_ccbillId_currencyCode" type="text" />
 
       or
 
-      <select id=“_ccbillId_currencyCode” />
+      <select id="_ccbillId_currencyCode" />
 
         <option>…</option>
         <option>…</option>
@@ -352,11 +352,11 @@ The Advanced Widget will automatically collect the `currencyCode` value if the f
 
 * Utilize the `data-ccbill` attribute to specify the currency code field.
 
-      <input data-ccbill=”currencyCode” type=”text” />
+      <input data-ccbill="currencyCode" type="text" />
 
       or
 
-      <select data-ccbill=”currencyCode” />
+      <select data-ccbill="currencyCode" />
       
         <option>…</option>
         <option>…</option>
@@ -366,11 +366,11 @@ The Advanced Widget will automatically collect the `currencyCode` value if the f
 
 * Use the default `_ccbillId_currencyCode` attribute.
 
-      <input id=“_ccbillId_currencyCode” type=”text” />
+      <input id="_ccbillId_currencyCode" type="text" />
 
       or
 
-      <select id=“_ccbillId_currencyCode” />
+      <select id="_ccbillId_currencyCode" />
 
         <option>…</option>
         <option>…</option>
