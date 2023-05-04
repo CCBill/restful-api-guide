@@ -645,7 +645,7 @@ After you have generated a new bearer token, and after you have generated the pa
 }
 ```
 
-Once the payment token has been charged, a [webhooks HTTP POST notification](https://kb.ccbill.com/Webhooks+User+Guide) will be triggered so that you may capture the transaction information. This webhooks event will be of [“UpSaleSuccess”](https://kb.ccbill.com/Webhooks+User+Guide#UpSaleSuccess) type.
+Once the payment token has been charged, a [webhooks HTTP POST notification](https://ccbill.com/doc/webhooks-user-guide) will be triggered so that you may capture the transaction information. This webhooks event will be of [“UpSaleSuccess”](https://ccbill.com/doc/webhooks-user-guide#ftoc-heading-19) type.
 
 ## Read Payment Token ID
 
@@ -762,9 +762,9 @@ Become part of the CCBill community to get updates on the new features, help us 
 
 ### Resources
 
-* [API Documentation](https://kb.ccbill.com/CCBill+RESTful+Transaction+API)
-* [Webhooks User Guide](https://kb.ccbill.com/Webhooks+User+Guide)
-* [Knowledge Base](https://kb.ccbill.com/Welcome)
+* [API Documentation](https://ccbill.com/doc/ccbill-restful-transaction-api)
+* [Webhooks User Guide](https://ccbill.com/doc/webhooks-overview)
+* [Knowledge Base](https://ccbill.com/doc/)
 * [Blog](https://ccbill.com/blog)
 
 ### Contact CCBill
