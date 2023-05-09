@@ -54,10 +54,18 @@ Below are the 3 essential steps for charging the consumer using a payment token:
 
 3. Charge the Payment Token
 
-**Note:** While all of the above steps can be completed by making requests from your backend to our API endpoints, you can also use the `CCBill Advanced Widget` (JS library) to:
+Click the image to open the sequence diagram in a new tab.
+
+<a href="https://user-images.githubusercontent.com/81383705/237035677-5ae3004a-8ed6-41d2-a5b8-c103462dbde8.png" target="_blank"><img src="https://user-images.githubusercontent.com/81383705/237035677-5ae3004a-8ed6-41d2-a5b8-c103462dbde8.png" alt="ccbill-restful-api" width="300"></a>
+
+While all of the above steps can be completed by making requests from your backend to our API endpoints, you can also use the `CCBill Advanced Widget` (JS library) to:
 * create the payment tokens
 * check whether the 3DS verification is required or not, and
 * perform the strong customer authentication (SCA) from within the browser
+
+Click the image to review a sequence flow for creating and charging of payment tokens with 3DS verification.
+
+<a href="https://user-images.githubusercontent.com/81383705/237035691-46280338-e7e3-451a-94aa-d7c6b6338874.png" target="_blank"><img src="https://user-images.githubusercontent.com/81383705/237035691-46280338-e7e3-451a-94aa-d7c6b6338874.png" alt="ccbill-restful-api" width="300"></a>
 
 Creation of the `CCBill OAuth` token and charging payment tokens are not supported by the `CCBill Advanced Widget` and must be performed by making API calls from your back-end services.
 
