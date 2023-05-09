@@ -54,7 +54,7 @@ Below are the 3 essential steps for charging the consumer using a payment token:
 
 3. Charge the Payment Token
 
-Click the image or open in a new tab to review the sequence diagram it in full size.
+Click the image or open in a new tab to review the sequence diagram in full size.
 
 <a href="https://user-images.githubusercontent.com/81383705/237035677-5ae3004a-8ed6-41d2-a5b8-c103462dbde8.png" target="_blank" rel="noopener"><img src="https://user-images.githubusercontent.com/81383705/237035677-5ae3004a-8ed6-41d2-a5b8-c103462dbde8.png" alt="ccbill-restful-api" width="300"></a>
 
