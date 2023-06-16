@@ -273,7 +273,7 @@ The violations object is an array of the following object:
 
 The `CCBill Advanced Widget` enables merchants to integrate with CCBill's 3DS vendor and thus create an additional layer of security for their transactions using `strong customer authentication (SCA)`.
 
-Alternatively, merchants can send SCA (3DS) parameters obtained from a 3DS vendor of their choice. To initiate charges using a payment token with this additional layer of security, the SCA parameters must be provided along with the other required parameters.
+Alternatively, merchants can send SCA (3DS) parameters obtained from a CCBill's 3DS vendor. To initiate charges using a payment token with this additional layer of security, the SCA parameters must be provided along with the other required parameters.
 
 The OAuth token must be valid and bound to the provided merchant account.
 
