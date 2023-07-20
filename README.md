@@ -241,7 +241,7 @@ The `createPaymentToken` function will validate the input field values. If any o
 
 | PARAMETER    | REQUIREMENT                                                                                                                                          |
 |--------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| clientAccnum | A range between 90000 and 999999 and must be a number.                                                                                               |
+| clientAccnum | A range between 900000 and 999999 and must be a number.                                                                                              |
 | clientSubacc | A range of 0-9999 and must be a number.                                                                                                              |
 | timeToLive   | A range of 0-2147483647 and must be a number, if max value is desired then just leave this out (or pass null).                                       |
 | numberOfUse  | A range of 0-2147483647 and must be a number, if max value is desired then just leave this out (or pass null).                                       |
@@ -329,7 +329,7 @@ const result = widget.isScaRequired(authToken, clientAccnum, clientSubacc);
 
 | PARAMETER                       | REQUIREMENT                                    |
 |---------------------------------|------------------------------------------------|
-| clientAccnum                    | A range of 90000-999999 and must be a number.  |
+| clientAccnum                    | A range of 900000-999999 and must be a number.  |
 | clientSubacc                    | A range of 0-9999 and must be a number.        |
 | currencyCode                    | Has to match the regular expression `^\\d{3}$` |
 | credit card number (form input) | Must be a valid credit card number.            |
@@ -498,6 +498,7 @@ After you have generated a new bearer token, and after you have generated the pa
 | **clientSubacc** (required)          | integer    | Merchant subaccount number.                                                                                                                                          |
 | **initialPrice** (required)          | float      | Initial transaction price.                                                                                                                                           |
 | **initialPeriod** (required)         | integer    | The length (in days) of the initial billing period.                                                                                                                  |
+| **currencyCode** (required)          | integer    | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.           |
 | **recurringPrice** (optional)        | float      | The amount the consumer will be charged for each recurring bill.                                                                                                     |
 | **recurringPeriod** (optional)       | integer    | The length of time between rebills.                                                                                                                                  |
 | **rebills** (optional)               | integer    | The total number of times the subscription will rebill.                                                                                                              |
@@ -514,10 +515,10 @@ After you have generated a new bearer token, and after you have generated the pa
   "clientSubacc": 0,
   "initialPrice":19.99,
   "initialPeriod":30,
+  "currencyCode":840,
   "recurringPrice":19.99,
   "recurringPeriod":30,
   "rebills":99,
-  "currencyCode":840,
   "lifeTimeSubscription":false,
   "createNewPaymentToken":false,
   "passThroughInfo":[
@@ -580,10 +581,10 @@ After you have generated a new bearer token, and after you have generated the pa
 | **clientAccnum** (required)                  | integer | Merchant account number.                                                                                                                                                                         |
 | **clientSubacc** (required)                  | integer | Merchant subaccount number.                                                                                                                                                                      |
 | **initialPeriod** (required)                 | integer | The length (in days) of the initial billing period.                                                                                                                                              |
+| **currencyCode** (required)                  | integer | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.                                            |
 | **recurringPrice** (optional)                | number  | The amount the consumer will be charged for each recurring bill.                                                                                                                                 |
 | **recurringPeriod** (optional)               | Integer | The length of time between rebills.                                                                                                                                                              |
 | **rebills** (optional)                       | integer | The total number of times the subscription will rebill.                                                                                                                                          |
-| **currencyCode** (optional)                  | integer | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.                                            |
 | **lifeTimeSubscription** (optional)          | Boolean | The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.                                                                                   |
 | **passThroughInfo** (optional)               | array   | Key/value pairs that can be passed through to the transaction service and received in the webhook response.                                                                                      |
 | **threedsCardToken** (required)              | integer | The payment card number (PAN).                                                                                                                                                                   |
@@ -619,7 +620,7 @@ After you have generated a new bearer token, and after you have generated the pa
     'Authorization' => 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibWNuLXRyYW5zYWN0aW9uLXNlcnZpY2UiLCJtY24tYWRtaW4tc2VydmljZSJdLCJzY29wZSI6WyJjcmVhdGVfdG9rZW4iLCJyZWFkX3Rva2VuIiwiY2hhcmdlX3Rva2VuIiwiY3JlYXRlX3Byb2dyYW0iLCJyZWFkX3Byb2dyYW0iLCJjcmVhdGVfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIiwicmVhZF9wcm9ncmFtX3BhcnRpY2lwYXRpb24iLCJtb2RpZnlfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIl0sImV4cCI6MTUzNzM4MDczNiwiYXV0aG9yaXRpZXMiOlsiTUNOX0FQSV9UT0tFTl9DSEFSR0VSIiwiTUNOX0FQSV9UT0tFTl9DUkVBVE9SIiwiTUNOX0FQSV9BRE1JTiJdLCJqdGkiOiI4YzI2Njg1MC00NjMzLTQzZDMtYjZjOC1lNzIyY2ExNjQ1YTUiLCJjbGllbnRfaWQiOiI1MjE3NjhhYTc1OGQxMWU4YWE2YjAwNTA1NjlkMTU4NSJ9.HRYXZFATkIcI2_LJ1W_xo67IfBnbN9atyYNzyHqseLxYUxzgwBsAV5rNqCixKemOrDIeQLBN4jrwRsBIHDpEvshwBC8XmTodDJzpGmMaU9s1r20RV68X0_d1yTgSDke_Of7VCrVmJRbSuDl7AgsfTqQ1J7nWyu9vcIaER93ms-vadser_Ot9Z68_HAmCJL3DCLpdIFq3PYtBMKKKqXbvhfhSZQZD3b6-aewAnBo0VzpvK6tREqw1rv9_73oAvYcW2aHAj79ILr8viWMM40LyDKMMYOYkneg3hJUQsUVeh9WzztYUJKzERYNXje9fYIGN-eofoLvX7OZJ3eXmIfkrfQ',
     'Content-Type' => 'application/json'
   ));
-  $request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"4111111111111111","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
+  $request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","currencyCode":"840","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"4111111111111111","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
 
   try {
     $response = $request->send();
