@@ -39,7 +39,7 @@ This document describes the API resources and endpoints of the CCBill Transactio
 
 * **Merchant Application ID:**  This is the client ID that the merchant has received upon signing up to use the CCBill RESTful API.
 
-* **Merchant Secret:**  This is the password that was setup for the authentication with the CCBill RESTful API.
+* **Merchant Secret:**  This is the password that was set up for the authentication with the CCBill RESTful API.
 
 * **[Strong Customer Authentication (SCA)](https://ccbill.com/kb/strong-customer-authentication):** European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of SCA, such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing. When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
 
@@ -111,10 +111,10 @@ The following instructions describe how to set up and use the `CCBill Advanced W
 
 Add the following preload link and script HTML elements to the HTML page that will host your payment form:
 ```
-<link rel="preload" href="https://js.ccbill.com/v1.2.2/ccbill-advanced-widget.js" as="script"/>
-<script type="text/javascript" src="https://js.ccbill.com/v1.2.2/ccbill-advanced-widget.js"></script>
+<link rel="preload" href="https://js.ccbill.com/v1.3.0/ccbill-advanced-widget.js" as="script"/>
+<script type="text/javascript" src="https://js.ccbill.com/v1.3.0/ccbill-advanced-widget.js"></script>
 ```
-**Note:** The version in this URI example is **v1.2.2**. Pay special attention to the version in the URI path as the version number may be subject to change.
+**Note:** The version in this URI example is **v1.3.0**. Pay special attention to the version in the URI path as the version number may be subject to change.
 
 ### Step 2. Define the Field IDs
 
@@ -241,7 +241,7 @@ The `createPaymentToken` function will validate the input field values. If any o
 
 | PARAMETER    | REQUIREMENT                                                                                                                                          |
 |--------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| clientAccnum | A range between 900000 and 999999 and must be a number.                                                                                               |
+| clientAccnum | A range between 900000 and 999999 and must be a number.                                                                                              |
 | clientSubacc | A range of 0-9999 and must be a number.                                                                                                              |
 | timeToLive   | A range of 0-2147483647 and must be a number, if max value is desired then just leave this out (or pass null).                                       |
 | numberOfUse  | A range of 0-2147483647 and must be a number, if max value is desired then just leave this out (or pass null).                                       |
@@ -418,7 +418,9 @@ Several parameters must be passed to facilitate the strong customer authenticati
 
 | PARAMETER                     | TYPE   | DESCRIPTION                                                                                                                                                                                                                                                                                                                              |
 |-------------------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **authToken** (required)      | string | Must be a valid OAuth token for the provided merchant account.                                                                                                                                                                                                                                                                           |                                                                                                                                                                                      
+| **authToken** (required)      | string | Must be a valid OAuth token for the provided merchant account.                                                                                                                                                                                                                                                                           |
+| **clientAccnum** (required)   | number | The clientAccnum value must correspond to the one used in generating the OAuth token and must be a number within the 900000-999999 range.                                                                                                                                                                                                |
+| **clientSubacc** (required)   | number | The clientSubacc value must correspond to the one used in generating the OAuth token and should be a number within the 0-9999 range.                                                                                                                                                                                                     |                                                                                                                                                                                      
 | **form** (optional)           | string | The form reference should either be a valid selector or an HTML Form Element that exists on the merchant's web page. Please note that if the formId is not provided, the Widget will find the first form HTML element on the page and assume that that is the payment form.                                                              |
 | **iframeId** (optional)       | string | The 3DS authentication process presents an iframe on the web page to perform its functionality. The Advanced Widget script generates an iframe and injects it into the merchant's web page if the parameter is undefined. If the provided value is null or an empty string, it is regenerated to fit the minimum technical requirements. |
 | **paymentTokenId** (optional) | string | Use this optional field instead of the card number, card expiry month, and card expiry year. The card information must be present in the associated HTML form if the token ID is not provided.                                                                                                                                           |
@@ -428,25 +430,25 @@ Several parameters must be passed to facilitate the strong customer authenticati
 Using only required parameters:
 
 ```
-const result = widget.authenticateCustomer(authToken);
+const result = widget.authenticateCustomer(authToken, clientAccnum, clientSubacc);
 ```
 
 Using the form:
 
 ```
-const result = widget.authenticateCustomer(authToken, form);
+const result = widget.authenticateCustomer(authToken, clientAccnum, clientSubacc, form);
 ```
 
 Using iframeId in addition to the form:
 
 ```
-const result = widget.authenticateCustomer(authToken, form, iframeId);
+const result = widget.authenticateCustomer(authToken, clientAccnum, clientSubacc, form, iframeId);
 ```
 
 Using all parameters:
 
 ```
-const result = widget.authenticateCustomer(authToken, form, iframeId, paymentTokenId);
+const result = widget.authenticateCustomer(authToken, form, clientAccnum, clientSubacc, iframeId, paymentTokenId);
 ```
 
 #### Field Data Validation
@@ -454,6 +456,8 @@ const result = widget.authenticateCustomer(authToken, form, iframeId, paymentTok
 | PARAMETER      | REQUIREMENT                                                                                                                                                                     |
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | paymentTokenId | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$`                                                                                      |
+| clientAccnum   | A number within the 900000-999999 range. It must match the value used to create the OAuth token.                                                                                |
+| clientSubacc   | A number within the 0-9999 range. It must match the value used to create the OAuth token.                                                                                       |
 | form           | Must be a valid selector or an HTMLFormElement. If it's not provided, the system will attempt to collect the required SCA inputs from the first HTML form it finds on the page. |
 | iframeId       | If it is not provided, the system generates one and injects it into the web page.                                                                                               |
 
@@ -498,6 +502,7 @@ After you have generated a new bearer token, and after you have generated the pa
 | **clientSubacc** (required)          | integer    | Merchant subaccount number.                                                                                                                                          |
 | **initialPrice** (required)          | float      | Initial transaction price.                                                                                                                                           |
 | **initialPeriod** (required)         | integer    | The length (in days) of the initial billing period.                                                                                                                  |
+| **currencyCode** (optional)          | integer    | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.           |
 | **recurringPrice** (optional)        | float      | The amount the consumer will be charged for each recurring bill.                                                                                                     |
 | **recurringPeriod** (optional)       | integer    | The length of time between rebills.                                                                                                                                  |
 | **rebills** (optional)               | integer    | The total number of times the subscription will rebill.                                                                                                              |
@@ -514,10 +519,10 @@ After you have generated a new bearer token, and after you have generated the pa
   "clientSubacc": 0,
   "initialPrice":19.99,
   "initialPeriod":30,
+  "currencyCode":840,
   "recurringPrice":19.99,
   "recurringPeriod":30,
   "rebills":99,
-  "currencyCode":840,
   "lifeTimeSubscription":false,
   "createNewPaymentToken":false,
   "passThroughInfo":[
@@ -580,13 +585,13 @@ After you have generated a new bearer token, and after you have generated the pa
 | **clientAccnum** (required)                  | integer | Merchant account number.                                                                                                                                                                         |
 | **clientSubacc** (required)                  | integer | Merchant subaccount number.                                                                                                                                                                      |
 | **initialPeriod** (required)                 | integer | The length (in days) of the initial billing period.                                                                                                                                              |
+| **currencyCode** (optional)                  | integer | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.                                            |
 | **recurringPrice** (optional)                | number  | The amount the consumer will be charged for each recurring bill.                                                                                                                                 |
 | **recurringPeriod** (optional)               | Integer | The length of time between rebills.                                                                                                                                                              |
 | **rebills** (optional)                       | integer | The total number of times the subscription will rebill.                                                                                                                                          |
-| **currencyCode** (optional)                  | integer | The three-digit currency code, as per the [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en), to be used in the transaction.                                            |
 | **lifeTimeSubscription** (optional)          | Boolean | The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.                                                                                   |
 | **passThroughInfo** (optional)               | array   | Key/value pairs that can be passed through to the transaction service and received in the webhook response.                                                                                      |
-| **threedsCardToken** (required)              | integer | The payment card number (PAN).                                                                                                                                                                   |
+| **threedsCardToken** (required)              | integer | The cardToken obtained through the process of 3DS verification.                                                                                                                                                                   |
 | **threedsEci** (required)                    | string  | An Electronic Commerce Indicator (ECI).<br />Possible values are: '**0**', '**1**', '**2**', '**5**', '**6**', or '**7**'.                                                                       |
 | **threedsStatus** (required)                 | string  | The status of the 3DS verification ('**Y**', '**N**', '**A**', etc.)                                                                                                                             |
 | **threedsVersion** (required)                | string  | The version of the 3DS protocol to be followed for this specific card and transaction.<br />The supported versions are **1.0.2** and **2.1.0**                                                   |
@@ -619,7 +624,7 @@ After you have generated a new bearer token, and after you have generated the pa
     'Authorization' => 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibWNuLXRyYW5zYWN0aW9uLXNlcnZpY2UiLCJtY24tYWRtaW4tc2VydmljZSJdLCJzY29wZSI6WyJjcmVhdGVfdG9rZW4iLCJyZWFkX3Rva2VuIiwiY2hhcmdlX3Rva2VuIiwiY3JlYXRlX3Byb2dyYW0iLCJyZWFkX3Byb2dyYW0iLCJjcmVhdGVfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIiwicmVhZF9wcm9ncmFtX3BhcnRpY2lwYXRpb24iLCJtb2RpZnlfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIl0sImV4cCI6MTUzNzM4MDczNiwiYXV0aG9yaXRpZXMiOlsiTUNOX0FQSV9UT0tFTl9DSEFSR0VSIiwiTUNOX0FQSV9UT0tFTl9DUkVBVE9SIiwiTUNOX0FQSV9BRE1JTiJdLCJqdGkiOiI4YzI2Njg1MC00NjMzLTQzZDMtYjZjOC1lNzIyY2ExNjQ1YTUiLCJjbGllbnRfaWQiOiI1MjE3NjhhYTc1OGQxMWU4YWE2YjAwNTA1NjlkMTU4NSJ9.HRYXZFATkIcI2_LJ1W_xo67IfBnbN9atyYNzyHqseLxYUxzgwBsAV5rNqCixKemOrDIeQLBN4jrwRsBIHDpEvshwBC8XmTodDJzpGmMaU9s1r20RV68X0_d1yTgSDke_Of7VCrVmJRbSuDl7AgsfTqQ1J7nWyu9vcIaER93ms-vadser_Ot9Z68_HAmCJL3DCLpdIFq3PYtBMKKKqXbvhfhSZQZD3b6-aewAnBo0VzpvK6tREqw1rv9_73oAvYcW2aHAj79ILr8viWMM40LyDKMMYOYkneg3hJUQsUVeh9WzztYUJKzERYNXje9fYIGN-eofoLvX7OZJ3eXmIfkrfQ',
     'Content-Type' => 'application/json'
   ));
-  $request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"4111111111111111","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
+  $request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","currencyCode":"840","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"gjeoB5NdJ1r6p0dG","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
 
   try {
     $response = $request->send();
