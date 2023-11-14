@@ -257,9 +257,9 @@ The `createPaymentToken` function will validate the input field values. If any o
 | postalCode   | Must be a valid postal code for the country provided.                                                                                                |
 | phoneNumber  | If provided, must be a valid telephone number.                                                                                                       |
 | email        | Must be a valid email address.                                                                                                                       |
-| ipAddress    | Optional (If present must be a valid IP address).                                                                                                    |
+| ipAddress    | Optional (If present, the valid IP address must be provided as a request parameter or through X-Origin-IP header).                                   |
 
-The violations object is an array of the following object:
+The violations object is an array of the following objects:
 
 ```
 {
