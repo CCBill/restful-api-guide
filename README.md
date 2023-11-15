@@ -542,7 +542,7 @@ After you have generated a new bearer token, and after you have generated the pa
 | PARAMETER         | TYPE    | DESCRIPTION                                                                     |
 |-------------------|---------|---------------------------------------------------------------------------------|
 | declineCode       | integer | The error code pertaining to the error that has caused the transaction failure. |
-| declineText       | boolean | Description of the reason why the transaction was declined.                     |
+| declineText       | string  | Description of the reason why the transaction was declined.                     |
 | declineId         | string  | Randomly generated GUID unique to this specific error occurrence.               |
 | approved          | boolean | Approval status of the transaction.                                             |
 | paymentUniqueId   | string  | Unique key connected to the payment account.                                    |
@@ -639,7 +639,7 @@ After you have generated a new bearer token, and after you have generated the pa
 | PARAMETER         | TYPE    | DESCRIPTION                                                                     |
 |-------------------|---------|---------------------------------------------------------------------------------|
 | declineCode       | integer | The error code pertaining to the error that has caused the transaction failure. |
-| declineText       | boolean | Description of the reason why the transaction was declined.                     |
+| declineText       | string  | Description of the reason why the transaction was declined.                     |
 | declineId         | string  | Randomly generated GUID unique to this specific error occurrence.               |
 | approved          | boolean | Approval status of the transaction.                                             |
 | paymentUniqueId   | string  | Unique key connected to the payment account.                                    |
