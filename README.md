@@ -636,24 +636,29 @@ After you have generated a new bearer token, and after you have generated the pa
 
 #### Response Parameters
 
-| PARAMETER         | TYPE    | DESCRIPTION                                                                           |
-|-------------------|---------|---------------------------------------------------------------------------------------|
-| errorCode         | integer | The error code pertaining to the error encountered during the transaction processing. |
-| approved          | boolean | Approval status of the transaction.                                                   |
-| paymentUniqueId   | string  | Unique key connected to the payment account.                                          |
-| sessionId         | string  | Unique session ID value pertaining to the transaction.                                |
-| subscriptionId    | integer | Subscription ID which uniquely identifies the transaction.                            |
-| newPaymentTokenId | string  | The new payment token ID to be used for subsequent transactions (if created).         |
+| PARAMETER         | TYPE    | DESCRIPTION                                                                     |
+|-------------------|---------|---------------------------------------------------------------------------------|
+| declineCode       | integer | The error code pertaining to the error that has caused the transaction failure. |
+| declineText       | boolean | Description of the reason why the transaction was declined.                     |
+| declineId         | string  | Randomly generated GUID unique to this specific error occurrence.               |
+| approved          | boolean | Approval status of the transaction.                                             |
+| paymentUniqueId   | string  | Unique key connected to the payment account.                                    |
+| sessionId         | string  | Unique session ID value pertaining to the transaction.                          |
+| subscriptionId    | integer | Subscription ID which uniquely identifies the transaction.                      |
+| newPaymentTokenId | string  | The new payment token ID to be used for subsequent transactions (if created).   |
 
 #### Example Response
+
 ```
 {
-  "errorCode": "100100",
-  "approved": "false",
+  "declineCode": null,
+  "declineText": null,
+  "denialId": null,
+  "approved": true,
   "paymentUniqueId": "dG4P1t8dL58pA3rNxE+Phw",
   "sessionId": null,
-  "subscriptionId": "922243301000000141",
-  "newPaymentTokenId": null
+  "subscriptionId": 121095101000018190,
+  "newPaymentTokenId":null
 }
 ```
 
