@@ -149,8 +149,8 @@ The table below shows the values that should be set for the `data-ccbill` attrib
 | **phoneNumber** (optional)                                                                                 | **\_ccbillId\_phoneNumber** (optional)                                                                               |
 | **email**                                                                                                  | **\_ccbillId\_email**                                                                                                |
 | **currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) | **_ccbillId_currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) |
-| **ipAddress** (recommended hidden field auto populated by JavaScript)                            | **\_ccbillId\_ipAddress** (recommended hidden field auto populated by JavaScript)                          |
-| **browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)                    | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto populated by JavaScript)                  |
+| **ipAddress** (required, recommended hidden field auto-populated by JavaScript)                            | **\_ccbillId\_ipAddress** (required, recommended hidden field auto-populated by JavaScript)                          |
+| **browserHttpAccept** (optional, recommended hidden field auto-populated by JavaScript)                    | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto-populated by JavaScript)                  |
 | **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)          |
 | **browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)          |
 
