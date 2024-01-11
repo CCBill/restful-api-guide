@@ -73,7 +73,13 @@ Creation of the `CCBill OAuth` token and charging payment tokens are not support
 
 The [CCBill RESTful Transaction API](https://ccbill.com/doc/ccbill-restful-transaction-api) uses OAuth based authentication and authorization. Prior to accessing the API, you need to [register your application with CCBill]((https://ccbill.com/contact)). 
 
-Upon registration, your application will be assigned a `merchant application ID` and a `secret key`. Use these credentials to generate the `CCBill Oauth Bearer Token` (aka the `access token`) by providing them to the authorization server. **Please note that this step cannot be done from within the browser, and you must make the call from your backend**.
+Upon registration, your application will be assigned a `merchant application ID` and a `secret key`. Use these credentials to generate the `CCBill Oauth Bearer Token` (aka the `access token`) by providing them to the authorization server.
+
+In the `curl` example below, the `-u` option automatically encodes the provided credentials into a format compatible with HTTP Basic Authentication.
+
+Alternatively, merchants can manually encode their `merchant application ID` and `secret key` using Base64 encoding. The encoded credentials must be included in the request as authorization header parameters.
+
+**Please note that this step cannot be done from within the browser, and you must make the call from your backend**.
 
 Once you have generated the CCBill OAuth token (which is not to be confused with the `payment token`), you need to place it in the `Authorization header` of each API request. You will then be able to access the CCBill Transaction API until the access token expires or is revoked.
 
@@ -91,13 +97,10 @@ The acquired CCBill OAuth token is a random string of data that does not hold an
 
 ### Example Request Using CURL
 ```
-curl - POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
-
---header 'Content-Type: application/x-www-form-urlencoded' \
-
---header 'Authorization: Basic Merchant_ApplicationID:Merchant_Secret ' \
-
---data-urlencode 'grant_type=client_credentials'
+curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
+-i -u 'Basic Merchant_Application_ID:Secret_Key' \
+-H 'Content-Type: application/x-www-form-urlencoded' \
+-d 'grant_type=client_credentials'
 ``` 
 ## 2. Create Payment Token ID (CCBill Advanced Widget)
 
