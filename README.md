@@ -137,10 +137,11 @@ The table below shows the values that should be set for the `data-ccbill` attrib
 
 | **data-ccbill**                                                                                            | **Default IDs**                                                                                                      |
 |------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| **nameOnCard**                                                                                             | **\_ccbillId\_nameOnCard**                                                                                           |
+| **nameOnCard** *                                                                                             | **\_ccbillId\_nameOnCard** *                                                                                          |
 | **cardNumber**                                                                                             | **\_ccbillId\_cardNumber**                                                                                           |
 | **expMonth**                                                                                               | **\_ccbillId\_expMonth**                                                                                             |
 | **expYear**                                                                                                | **\_ccbillId\_expYear**                                                                                              |
+| **cvv2**                                                                                                | **\_ccbillId\_cvv2**                                                                                              |
 | **firstName**                                                                                              | **\_ccbillId\_firstName**                                                                                            |
 | **lastName**                                                                                               | **\_ccbillId\_lastName**                                                                                             |
 | **address1** (optional)                                                                                    | **\_ccbillId\_address1** (optional)                                                                                  |
@@ -150,14 +151,14 @@ The table below shows the values that should be set for the `data-ccbill` attrib
 | **state** (optional)                                                                                       | **\_ccbillId\_state** (optional)                                                                                     |
 | **postalCode**                                                                                             | **\_ccbillId\_postalCode**                                                                                           |
 | **phoneNumber** (optional)                                                                                 | **\_ccbillId\_phoneNumber** (optional)                                                                               |
-| **email**                                                                                                  | **\_ccbillId\_email**                                                                                                |
+| **email** *                                                                                                 | **\_ccbillId\_email**  *                                                                                              |
 | **currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) | **_ccbillId_currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) |
 | **ipAddress** (required, recommended hidden field auto-populated by JavaScript)                            | **\_ccbillId\_ipAddress** (required, recommended hidden field auto-populated by JavaScript)                          |
 | **browserHttpAccept** (optional, recommended hidden field auto-populated by JavaScript)                    | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto-populated by JavaScript)                  |
 | **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)          |
 | **browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)          |
 
-
+*Required for Strong Customer Authentication (SCA) effective from August 5, 2024.
 ### Step 3. Create JavaScript Method
 
 Create a JavaScript function that will call the `CCBill Advanced Widget's` `createPaymentToken()` function. This is the main function merchants need to incorporate into their JavaScript in order to create payment tokens.
@@ -253,11 +254,11 @@ The `createPaymentToken` function will validate the input field values. If any o
 | expYear      | A range of 2018-2100, is required and must be a number.                                                                                              |
 | firstName    | Required                                                                                                                                             |
 | lastName     | Required                                                                                                                                             |
-| address1     | Optional                                                                                                                                             |
-| city         | Optional                                                                                                                                             |
+| address1     | Optional, but if provided must be a maximum of 50 Characters.                                                                                                                                             |
+| city         | Optional, but if provided must be a maximum of 50 Characters.                                                                                                                                             |
 | country      | Required and must be represented as a two-letter country code as defined in [ISO 3166-1](https://www.iso.org/obp/ui/#iso:std:iso:3166:-1:ed-4:v1:en) |
 | state        | Optional, but if provided must be a two-letter state code as defined in [ISO 3166-2](https://www.iso.org/obp/ui/#iso:std:iso:3166:-2:ed-4:v1:en)     |
-| postalCode   | Must be a valid postal code for the country provided.                                                                                                |
+| postalCode   | Must be a valid postal code for the country provided. 16 Characters Max.                                                                                               |
 | phoneNumber  | If provided, must be a valid telephone number.                                                                                                       |
 | email        | Must be a valid email address.                                                                                                                       |
 | ipAddress    | Required (valid IPv4 addresses must be provided as a request parameter or through the **X-Origin-IP** header).                             |
@@ -290,30 +291,49 @@ The `isScaRequired` function determines whether the strong customer authenticati
 | **clientAccnum** (required) | integer | Merchant account number.                                       |
 | **clientSubacc** (required) | integer | Merchant subaccount number.                                    |
 
-The merchant payment form needs to contain a (hidden if necessary) text input field or a (hidden if necessary) select element which will contain the information on the `currencyCode` to be used. The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).
+The merchant payment form also needs to contain text input fields, hidden if necessary (or `select` element for **currencyCode**), for the following parameters:
 
-The Advanced Widget will automatically collect the `currencyCode` value if the form is created according to the outlined rules. Merchants can:
+| PARAMETER                   | TYPE    | DESCRIPTION                                                    |
+|-----------------------------|---------|----------------------------------------------------------------|
+| **nameOnCard** (required)    | string  | Must be a valid OAuth token for the provided merchant account. |
+| **email** (required) | string | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.                                       |
+| **currencyCode** (required) | integer | The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).                        |
 
-* Utilize the `data-ccbill` attribute to specify the currency code field.
+The Advanced Widget will automatically collect the ID value if the form is created according to the outlined rules. Merchants can:
 
-      <input data-ccbill="currencyCode" type="text" />
+Utilize the `data-ccbill` attribute to specify the SCA required fields.
 
-      or
+```html
+<form id="payment-form">
+    <input data-ccbill="email" />
+    <input data-ccbill="nameOnCard" />
+    <input data-ccbill="currencyCode"  type="text" />
+    <!— other fields skipped for brevity -->
+</form>
+```
+or the `<select>` element for the currencyCode ID:
 
-      <select data-ccbill="currencyCode" />
+```html
+<select data-ccbill="currencyCode" />
       
         <option>…</option>
         <option>…</option>
         ...
       
       </select>
+```
+Use the default `_ccbillId_parameterID` attribute.
 
-* Use the default `_ccbillId_currencyCode` attribute.
-
-      <input id="_ccbillId_currencyCode" type="text" />
-
-      or
-
+```html
+<form id="payment-form">
+    <input id="_ccbillId_email" />
+    <input id="_ccbillId_nameOnCard" />
+    <input id="_ccbillId_currencyCode" type="text" />
+    <!— other fields skipped for brevity -->
+</form>
+```
+or the `<select>` element for **_ccbillId_currencyCode**: 
+```html
       <select id="_ccbillId_currencyCode" />
 
         <option>…</option>
@@ -321,6 +341,7 @@ The Advanced Widget will automatically collect the `currencyCode` value if the f
         ...
 
       </select>
+```
 
 #### Code Example
 
@@ -335,6 +356,8 @@ const result = widget.isScaRequired(authToken, clientAccnum, clientSubacc);
 | clientAccnum                    | A range of 900000-999999 and must be a number.  |
 | clientSubacc                    | A range of 0-9999 and must be a number.        |
 | currencyCode                    | Has to match the regular expression `^\\d{3}$` |
+| nameOnCard                      | Must be a valid OAuth token for the provided merchant account. |
+| email                           | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.|
 | credit card number (form input) | Must be a valid credit card number.            |
 
 
@@ -357,30 +380,49 @@ The `isScaRequiredForPaymentToken` function determines whether strong customer a
 | **authToken** (required)      | string | Must be a valid OAuth token for the provided merchant account.                             |
 | **paymentTokenId** (required) | string | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$` |                                                                                                                                                                                                                                                                    |
 
-The merchant payment form needs to contain a (hidden if necessary) text input field or a (hidden if necessary) select element which will contain the information on the `currencyCode` to be used. The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).
+The merchant payment form also needs to contain text input fields, hidden if necessary (or `select` element for **currencyCode**), for the following parameters:
 
-The Advanced Widget will automatically collect the `currencyCode` value if the form is created according to the outlined rules. Merchants can:
+| PARAMETER                   | TYPE    | DESCRIPTION                                                    |
+|-----------------------------|---------|----------------------------------------------------------------|
+| **nameOnCard** (required)    | string  | Must be a valid OAuth token for the provided merchant account. |
+| **email** (required) | string | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.                                       |
+| **currencyCode** (required) | integer | The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).                        |
 
-* Utilize the `data-ccbill` attribute to specify the currency code field.
+The Advanced Widget will automatically collect the ID value if the form is created according to the outlined rules. Merchants can:
 
-      <input data-ccbill="currencyCode" type="text" />
+Utilize the `data-ccbill` attribute to specify the SCA required fields.
 
-      or
+```html
+<form id="payment-form">
+    <input data-ccbill="email" />
+    <input data-ccbill="nameOnCard" />
+    <input data-ccbill="currencyCode"  type="text" />
+    <!— other fields skipped for brevity -->
+</form>
+```
+or the `<select>` element for the currencyCode ID:
 
-      <select data-ccbill="currencyCode" />
+```html
+<select data-ccbill="currencyCode" />
       
         <option>…</option>
         <option>…</option>
         ...
       
       </select>
+```
+Use the default `_ccbillId_parameterID` attribute.
 
-* Use the default `_ccbillId_currencyCode` attribute.
-
-      <input id="_ccbillId_currencyCode" type="text" />
-
-      or
-
+```html
+<form id="payment-form">
+    <input id="_ccbillId_email" />
+    <input id="_ccbillId_nameOnCard" />
+    <input id="_ccbillId_currencyCode" type="text" />
+    <!— other fields skipped for brevity -->
+</form>
+```
+or the `<select>` element for **_ccbillId_currencyCode**: 
+```html
       <select id="_ccbillId_currencyCode" />
 
         <option>…</option>
@@ -388,6 +430,7 @@ The Advanced Widget will automatically collect the `currencyCode` value if the f
         ...
 
       </select>
+```
 
 #### Code Example
 
@@ -401,6 +444,8 @@ const result = widget.isScaRequiredForPaymentToken(authToken, paymentTokenId);
 |----------------|--------------------------------------------------------------------------------------------|
 | paymentTokenId | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$` |
 | currencyCode   | Has to match regular expression `^\\d{3}$`                                                 |
+| nameOnCard     | Must be a valid OAuth token for the provided merchant account. |
+| email          | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.                                       |
 
 
 The violations object is an array of the following object:
