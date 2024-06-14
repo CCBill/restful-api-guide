@@ -301,7 +301,7 @@ The merchant payment form also needs to contain text input fields, hidden if nec
 
 The Advanced Widget will automatically collect the ID value if the form is created according to the outlined rules. Merchants can:
 
-Utilize the `data-ccbill` attribute to specify the SCA required fields.
+1. Utilize the `data-ccbill` attribute to specify the SCA required fields.
 
 ```html
 <form id="payment-form">
@@ -322,7 +322,7 @@ or the `<select>` element for the currencyCode ID:
       
       </select>
 ```
-Use the default `_ccbillId_parameterID` attribute.
+2. Use the default `_ccbillId_parameterID` attribute.
 
 ```html
 <form id="payment-form">
@@ -390,7 +390,7 @@ The merchant payment form also needs to contain text input fields, hidden if nec
 
 The Advanced Widget will automatically collect the ID value if the form is created according to the outlined rules. Merchants can:
 
-Utilize the `data-ccbill` attribute to specify the SCA required fields.
+1. Utilize the `data-ccbill` attribute to specify the SCA required fields.
 
 ```html
 <form id="payment-form">
@@ -411,7 +411,7 @@ or the `<select>` element for the currencyCode ID:
       
       </select>
 ```
-Use the default `_ccbillId_parameterID` attribute.
+2. Use the default `_ccbillId_parameterID` attribute.
 
 ```html
 <form id="payment-form">
