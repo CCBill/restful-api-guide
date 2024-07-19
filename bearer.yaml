@@ -13,17 +13,6 @@ paths:
     post:
       summary: Generate OAuth Bearer Token
       description: Use this endpoint to generate a CCBill OAuth Bearer Token using your MerchantApplicationID and SecretKey.
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                grant_type:
-                  type: string
-                  default: client_credentials
-              required:
-                - grant_type
       responses:
         '200':
           description: Successfully generated OAuth Bearer Token
@@ -51,13 +40,15 @@ paths:
       security:
         - basicAuth: []
       x-code-samples:
-        - lang: cURL (Auto-encode)
+        - lang: bash
+          label: cURL (Auto-encode)
           source: |
             curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
             -i -u 'Basic Merchant_Application_ID:Secret_Key' \
             -H 'Content-Type: application/x-www-form-urlencoded' \
             -d 'grant_type=client_credentials'
-        - lang: cURL (Manual-encode)
+        - lang: bash
+          label: cURL (Manual-encode)
           source: |
             curl -X POST \
             https://api.ccbill.com/ccbill-auth/oauth/token \
