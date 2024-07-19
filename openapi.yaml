@@ -1377,8 +1377,6 @@ components:
         paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
         cvv2Response: "M"
         avsResponse: "Y"
-components:
-  schemas:
     PaymentTokenVerifyV2:
       description: |
         These response parameters are received when a payment token is successfully created, including CVV2 and AVS authentication results.
