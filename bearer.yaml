@@ -57,7 +57,7 @@ paths:
            type: string
          example: application/x-www-form-urlencoded
          description: Content type of the request body.
-    x-code-samples:
+     x-code-samples:
       - lang: bash
         label: cURL (Auto-encode)
         source: |
