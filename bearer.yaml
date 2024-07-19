@@ -1,20 +1,14 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
   title: CCBill API
-  description: This API allows you to generate a CCBill OAuth Bearer Token and use it for authenticating API requests.
   version: 1.0.0
-  contact:
-    name: CCBill Merchant Support
-servers:
-  - url: https://api.ccbill.com
-
 paths:
   /ccbill-auth/oauth/token:
     post:
-      summary: Generate OAuth Bearer Token
-      description: Use this endpoint to generate a CCBill OAuth Bearer Token using your MerchantApplicationID and SecretKey.
+      summary: Request OAuth Token
+      description: This endpoint requests an OAuth token using client credentials.
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -25,7 +19,7 @@ paths:
                   example: client_credentials
       responses:
         '200':
-          description: Successfully generated OAuth Bearer Token
+          description: Successful response
           content:
             application/json:
               schema:
@@ -33,57 +27,28 @@ paths:
                 properties:
                   access_token:
                     type: string
-                    description: The OAuth Bearer Token.
                   token_type:
                     type: string
-                    description: The type of the token.
                   expires_in:
                     type: integer
-                    description: The lifetime in seconds of the access token.
-                  scope:
-                    type: string
-                    description: The scopes associated with the token.
         '400':
-          description: Invalid request
-        '401':
-          description: Unauthorized - Invalid MerchantApplicationID or SecretKey
-      security:
-        - basicAuth: []
-      x-code-samples:
-        - lang: bash
-          label: cURL (Auto-encode)
-          source: |
-            curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
-            -i -u 'Basic Merchant_Application_ID:Secret_Key' \
-            -H 'Content-Type: application/x-www-form-urlencoded' \
-            -d 'grant_type=client_credentials'
-        - lang: bash
-          label: cURL (Manual-encode)
-          source: |
-            curl -X POST \
-            https://api.ccbill.com/ccbill-auth/oauth/token \
-            --header 'Content-Type: application/x-www-form-urlencoded' \
-            --header 'Authorization: Basic [base64_encoded_Merchant_ApplicationID:Merchant_Secret]' \
-            --data-urlencode 'grant_type=client_credentials'
+          description: Bad request
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          example: Basic Merchant_Application_ID:Secret_Key
+          description: |
+            Basic authentication with Merchant_Application_ID and Secret_Key.
+            The value should be a Base64 encoded string of `Merchant_Application_ID:Secret_Key`.
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+          example: application/x-www-form-urlencoded
+          description: Content type of the request body.
 
-components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-
-  schemas:
-    OAuthToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-        expires_in:
-          type: integer
-        scope:
-          type: string
-
-security:
-  - basicAuth: []
+components: {}
