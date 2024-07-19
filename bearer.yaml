@@ -57,5 +57,20 @@ paths:
            type: string
          example: application/x-www-form-urlencoded
          description: Content type of the request body.
-
+    x-code-samples:
+      - lang: bash
+        label: cURL (Auto-encode)
+        source: |
+          curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
+          -i -u 'Basic Merchant_Application_ID:Secret_Key' \
+          -H 'Content-Type: application/x-www-form-urlencoded' \
+          -d 'grant_type=client_credentials'
+      - lang: bash
+        label: cURL (Manual-encode)
+        source: |
+          curl -X POST \
+          https://api.ccbill.com/ccbill-auth/oauth/token \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          --header 'Authorization: Basic [base64_encoded_Merchant_ApplicationID:Merchant_Secret]' \
+          --data-urlencode 'grant_type=client_credentials'
 components: {}
