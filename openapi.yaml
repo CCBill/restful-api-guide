@@ -1,0 +1,2080 @@
+openapi: 3.0.0
+info:
+  title: RESTful API Endpoints
+  version: 1.0.0
+servers:
+  - url: https://api.ccbill.com
+    description: Production Server
+  - url: https://api.dev.ccbill.com
+    description: Deveopment Server
+tags:
+  - name: /payment-tokens
+    description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
+  - name: /transactions
+    description: |-
+      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
+      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
+security:
+  - bearerAuth: []
+paths:
+  /payment-tokens/merchant-only:
+    post:
+      tags:
+        - /payment-tokens
+      summary: Create a payment token
+      description: |-
+        This endpoint is used for creating a payment token. Tokenization turns the customer's payment details, like a credit card number,
+         into a unique randomly generated set of characters, called a token. The token can then be used to make payments without re-entering or referencing the credit card number. 
+         In the context of the CCBill RESTful API, the Payment Token identifies a billable entity within the system.
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X POST "https://api.ccbill.com/payment-tokens/merchant-only" \
+             -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
+             -H "authorization: Bearer TOKEN"\
+             -H "content-type: application/json" \
+             -d '{"clientAccnum":900000,"clientSubacc":2,"customerInfo":{"value":{"customerFname":"Tyler","customerLname":"Thomas","address1":"Woodland Drive","address2":"Apt 21","city":"Tempe","state":"AZ","zipcode":"85281","country":"US","phoneNumber":"5555555555","email":"tthomas@xyz.com","ipAddress":"10.70.60.14","browserHttpUserAgent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0","browserHttpAccept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","browserHttpAcceptLanguage":"en-US,en;q=0.5","browserHttpAcceptEncoding":"gzip, deflate, br"}},"paymentInfo":{"creditCardPaymentInfo":{"value":{"cardNum":"4473707989493598","nameOnCard":"Tyler Thomas","expMonth":"04","expYear":"2026"}}},"subscriptionId":900000000000000000,"timeToLive":30,"validNumberOfUse":3}' \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = JSON.stringify({
+              "clientAccnum": 900000,
+              "clientSubacc": 0,
+              "customerInfo": {
+                "customerFname": "Tyler",
+                "customerLname": "Thomas",
+                "address1": "Woodland Drive",
+                "address2": "Apt 21",
+                "city": "Tempe",
+                "state": "AZ",
+                "zipcode": "85281",
+                "country": "US",
+                "phoneNumber": "5555555555",
+                "email": "tthomas@xyz.com",
+                "ipAddress": "10.70.60.14",
+                "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
+                "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "browserHttpAcceptLanguage": "en-US,en;q=0.5",
+                "browserHttpAcceptEncoding": "gzip, deflate, br"
+                },
+              "paymentInfo": {
+                "creditCardPaymentInfo": {
+                  "cardNum": "4473707989493598",
+                  "nameOnCard": "Tyler Thomas",
+                  "expMonth": "04",
+                  "expYear": "2026"
+                }
+              },
+            "subscriptionId": 900000000000000000,
+            "timeToLive": 30,
+            "validNumberOfUse": 3
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+              console.log(this.responseText);
+            }
+            });
+            xhr.open("POST", "https://api.ccbill.com/payment-tokens/merchant-only");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: PHP
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request->setUrl('https://api.ccbill.com/payment-tokens/merchant-only');
+            $request->setMethod(HTTP_METH_POST);
+            $request->setHeaders(array(
+              'Cache-Control' => 'no-cache',
+              'Authorization' => 'Bearer TOKEN',
+              'Content-Type' => 'application/json'
+            ));
+            $request->setBody('{ "clientAccnum": 900000, "clientSubacc": 0, "customerInfo": { "customerFname": "Tyler", "customerLname": "Thomas", "address1": "Woodland Drive", "address2": "Apt 21", "city": "Tempe", "state": "AZ", "zipcode": "85281", "country": "US", "phoneNumber": "5555555555", "email": "tthomas@xyz.com", "ipAddress": "10.70.60.14", "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0", "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "browserHttpAcceptLanguage": "en-US,en;q=0.5", "browserHttpAcceptEncoding": "gzip, deflate, br" }, "paymentInfo": { "creditCardPaymentInfo": { "cardNum": "4473707989493598", "nameOnCard": "Tyler Thomas", "expMonth": "04", "expYear": "2026" } }, "subscriptionId":900000000000000001, "timeToLive": 30, "validNumberOfUse": 3 }');
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTokenMerchantOnlyParams'
+            examples:
+              Required:
+                $ref: '#/components/examples/PaymentTokenMerchantOnlyParamsRequired'
+              All:
+                $ref: '#/components/examples/PaymentTokenMerchantOnlyParamsAll'
+      parameters:
+        - name: Cache-Control
+          in: header
+          schema:
+            default: no-cache
+          description: Bypass the server-side cache
+      responses:
+        '200':
+          description: The request has been successful. Extract the `paymentTokenID` string to create a charge for the customer.
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenV2'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /payment-tokens/merchant-only-verify:
+    post:
+      tags:
+        - /payment-tokens
+      summary: Create payment token (Enhanced Authentication)
+      description: |-
+        The resource is used to enhance authentication during payment token
+         creation. This endpoint includes `cvvResponse` and `avsResponse`
+         parameters in the response. These parameters help in reducing the
+         chargeback ratios for merchants.<br><br>One of the required parameters for this request is the Subscription ID. Every time customer makes a successful one-time payment or signs up for a recurring subscription, CCBill’s system creates a unique Subscription ID. <br><br>The Subscription ID is an 18-digit number used to track and monitor payments within CCBill’s system. Merchants can retrieve Subscription IDs using the [Lookup Report](https://ccbill.com/doc/lookup-report) in the CCBill Admin or via [Webhooks](https://ccbill.com/doc/webhooks-overview).
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X POST "https://api.ccbill.com/payment-tokens/merchant-only" \
+             -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
+             -H "authorization: Bearer TOKEN"\
+             -H "content-type: application/json" \
+             -d '{"clientAccnum":900000,"clientSubacc":2,"customerInfo":{"value":{"customerFname":"Tyler","customerLname":"Thomas","address1":"Woodland Drive","address2":"Apt 21","city":"Tempe","state":"AZ","zipcode":"85281","country":"US","phoneNumber":"5555555555","email":"tthomas@xyz.com","ipAddress":"10.70.60.14","browserHttpUserAgent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0","browserHttpAccept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","browserHttpAcceptLanguage":"en-US,en;q=0.5","browserHttpAcceptEncoding":"gzip, deflate, br"}},"paymentInfo":{"creditCardPaymentInfo":{"value":{"cardNum":"4473707989493598","nameOnCard":"Tyler Thomas","expMonth":"04","expYear":"2026"}}},"subscriptionId":900000000000000000,"timeToLive":30,"validNumberOfUse":3}' \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = JSON.stringify({
+              "clientAccnum": 900000,
+              "clientSubacc": 0,
+              "customerInfo": {
+                "customerFname": "Tyler",
+                "customerLname": "Thomas",
+                "address1": "Woodland Drive",
+                "address2": "Apt 21",
+                "city": "Tempe",
+                "state": "AZ",
+                "zipcode": "85281",
+                "country": "US",
+                "phoneNumber": "5555555555",
+                "email": "tthomas@xyz.com",
+                "ipAddress": "10.70.60.14",
+                "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
+                "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "browserHttpAcceptLanguage": "en-US,en;q=0.5",
+                "browserHttpAcceptEncoding": "gzip, deflate, br"
+                },
+              "paymentInfo": {
+                "creditCardPaymentInfo": {
+                  "cardNum": "4473707989493598",
+                  "nameOnCard": "Tyler Thomas",
+                  "expMonth": "04",
+                  "expYear": "2026",
+                  "cvv2": "123"
+                }
+              },
+            "subscriptionId": 900000000000000000,
+            "timeToLive": 30,
+            "validNumberOfUse": 3
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+              console.log(this.responseText);
+            }
+            });
+            xhr.open("POST", "https://api.ccbill.com/payment-tokens/merchant-only");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: PHP
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request->setUrl('https://api.ccbill.com/payment-tokens/merchant-only');
+            $request->setMethod(HTTP_METH_POST);
+            $request->setHeaders(array(
+              'Cache-Control' => 'no-cache',
+              'Authorization' => 'Bearer TOKEN',
+              'Content-Type' => 'application/json'
+            ));
+            $request->setBody('{ "clientAccnum": 900000, "clientSubacc": 0, "customerInfo": { "customerFname": "Tyler", "customerLname": "Thomas", "address1": "Woodland Drive", "address2": "Apt 21", "city": "Tempe", "state": "AZ", "zipcode": "85281", "country": "US", "phoneNumber": "5555555555", "email": "tthomas@xyz.com", "ipAddress": "10.70.60.14", "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0", "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "browserHttpAcceptLanguage": "en-US,en;q=0.5", "browserHttpAcceptEncoding": "gzip, deflate, br" }, "paymentInfo": { "creditCardPaymentInfo": { "cardNum": "4473707989493598", "nameOnCard": "Tyler Thomas", "expMonth": "04", "expYear": "2026", "cvv2": "123" } }, "subscriptionId":900000000000000001, "timeToLive": 30, "validNumberOfUse": 3 }');
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTokenMerchantOnlyVerifyParams'
+            examples:
+              Required:
+                $ref: '#/components/examples/PaymentTokenMerchantOnlyVerifyParamsRequired'
+              All:
+                $ref: '#/components/examples/PaymentTokenMerchantOnlyVerifyParamsAll'
+      parameters:
+        - name: Cache-Control
+          in: header
+          schema:
+            default: no-cache
+          description: Bypass the server-side cache
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenVerify'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenVerifyV2'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /payment-tokens/{paymentTokenId}:
+    get:
+      tags:
+        - /payment-tokens
+      summary: Get payment token by ID
+      description: Use this request to retrieve details of a Payment Token based on its ID.
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X GET "https://api.ccbill.com/payment-tokens/{paymentTokenId}" \
+              -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
+              -H "authorization: Bearer TOKEN" \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = null;
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+              if (this.readyState === 4) {
+                console.log(this.responseText);
+              }
+            });
+            xhr.open("GET", "https://api.ccbill.com/payment-tokens/{paymentTokenId}");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: php
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request->setUrl('https://api.ccbill.com/payment-tokens/01047ed6f3b440c7a2ccc6abc1ad0a84');
+            $request->setMethod(HTTP_METH_GET);
+            $request->setHeaders(array(
+              'Cache-Control' => 'no-cache',
+              'Authorization' => 'Bearer TOKEN'
+            ));
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Complex representation of Payment Token Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenV2'
+            application/vnd.mcn.transaction-service.api.v.3+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenVerify'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /payment-tokens/threeds-required:
+    get:
+      tags:
+        - /payment-tokens
+      summary: 3DS card check
+      description: Use this request to determine if a payment card must undergo 3DS verification. The financial institution that issued the payment card to the cardholder (the customer’s bank) needs to support the 3DS function. The issuing bank authenticates the transaction, and either approves or declines it.<br><br>
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X GET "https://api.ccbill.com/payment-tokens/threeds-required?bin=411111&last4=1111&clientAccnum=900000&clientSubacc=2" \
+            -H "accept: application/vnd.mcn.transaction-service.api.v.2+json"\
+            -H "authorization: Bearer TOKEN" \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = null;
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+              if (this.readyState === 4) {
+                console.log(this.responseText);
+              }
+            });
+            xhr.open("GET", "https://api.ccbill.com/payment-tokens/threeds-required?bin=411111&last4=1111&clientAccnum=900000&clientSubacc=2");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Accept", "*/*");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: php
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request--->setUrl('https://api.ccbill.com/payment-tokens/threeds-required');
+            $request->setMethod(HTTP_METH_GET);
+            $request->setQueryData(array(
+              'bin' => '411111',
+              'last4' => '1111',
+              'clientAccnum' => '900684',
+              'clientSubacc' => '0000'
+            ));
+            $request->setHeaders(array(
+              'cache-control' => 'no-cache',
+              'Accept' => '*/*',
+              'Authorization' => 'Bearer TOKEN'
+            ));
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      parameters:
+        - name: bin
+          in: query
+          required: true
+          description: The Bank Identification Number (Usually the first 4-6 digits of the card number).
+          schema:
+            type: integer
+        - name: last4
+          in: query
+          required: true
+          description: The last 4 digits of the credit card number.
+          schema:
+            type: string
+        - name: clientAccnum
+          in: query
+          required: true
+          description: Merchant's account number.
+          schema:
+            minimum: 900000
+            maximum: 999999
+            type: integer
+        - name: clientSubacc
+          in: query
+          description: Merchant's sub-account number.
+          schema:
+            minimum: 0
+            maximum: 9999
+            type: integer
+        - name: currencyCode
+          in: query
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 840
+              - 978
+              - 826
+              - 124
+              - 36
+              - 392
+          description: |-
+            Currency code.  The following are available:
+              - USD - 840
+              - EUR - 978
+              - GBP - 826
+              - CAD - 124
+              - AUD - 036
+              - JPY - 392
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/ThreeDSRequired'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /payment-tokens/{paymentTokenId}/threeds-required:
+    get:
+      tags:
+        - /payment-tokens
+      summary: 3DS payment token check
+      description: Use this endpoint to determine if a transaction must undergo 3DS verification based on the payment token ID.<br><br> European laws, such as [PSD2](https://ccbill.com/blog/what-is-psd2), require the use of [Strong Customer Authentication (SCA)](https://ccbill.com/kb/strong-customer-authentication), such as the [3DS](https://ccbill.com/kb/3d-secure-2) protocol, for online payment processing.<br><br> When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+      x-codeSample:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X GET \
+            https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d/threeds-required \
+            -H 'Authorization: Bearer TOKEN' \
+            -H 'Cache-Control: no-cache'
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Complex representation of Payment Token Id
+        - name: currencyCode
+          in: query
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 840
+              - 978
+              - 826
+              - 124
+              - 36
+              - 392
+          description: |-
+            Currency code.  The following are available:
+              - USD - 840
+              - EUR - 978
+              - GBP - 826
+              - CAD - 124
+              - AUD - 036
+              - JPY - 392
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/ThreeDSRequired'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /payment-tokens/target-client:
+    post:
+      tags:
+        - /payment-tokens
+      summary: Create payment token for merchant/client
+      description: |-
+        This endpoint generates a payment token for the specified merchant/client.
+        It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
+        CCBill enables merchants to create [Merchant Connect](https://ccbill.com/docs/Merchant-Connect/merchant-connect.pdf) sponsor programs and share revenue with other merchants for referred sales. 
+        CCBill is a matchmaker between sponsor merchants and affiliate merchants. The platform supports one-click transactions, allowing affiliate merchants to easily and legally offer instant purchases to your audience on their websites. 
+        CCBill tracks and handles the one-click transactions, calculates revenue sharing, and facilitates payouts to sponsors and affiliates.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTokenTargetClientParams'
+            examples:
+              Required:
+                summary: Required fields
+                value:
+                  clientAccnum: 900000
+                  clientSubacc: 0
+                  customerInfo:
+                    customerFname: Tyler
+                    customerLname: Thomas
+                    zipcode: '85281'
+                    country: US
+                    email: tthomas@xyz.com
+                    ipAddress: 10.70.60.14
+                  paymentInfo:
+                    creditCardPaymentInfo:
+                      cardNum: '4473707989493598'
+                      nameOnCard: Tyler Thomas
+                      expMonth: '04'
+                      expYear: '2026'
+                  subscriptionId: 900000000000000000
+                  targetClientAccnum: 900000
+                  targetClientSubacc: 1
+              All:
+                summary: All fields
+                value:
+                  clientAccnum: 900000
+                  clientSubacc: 0
+                  customerInfo:
+                    customerFname: Tyler
+                    customerLname: Thomas
+                    address1: Woodland Drive
+                    address2: Apt 21
+                    city: Tempe
+                    state: AZ
+                    zipcode: '85281'
+                    country: US
+                    phoneNumber: '5555555555'
+                    email: tthomas@xyz.com
+                    ipAddress: 10.70.60.14
+                    browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+                    browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                    browserHttpAcceptLanguage: en-US,en;q=0.5
+                    browserHttpAcceptEncoding: gzip, deflate, br
+                    paymentInfo:
+                      creditCardPaymentInfo:
+                        cardNum: '4473707989493598'
+                        nameOnCard: Tyler Thomas
+                        expMonth: '04'
+                        expYear: '2026'
+                    subscriptionId: 900000000000000000
+                    targetClientAccnum: 900000
+                    targetClientSubacc: 1
+                    timeToLive: 30
+                    validNumberOfUse: 3
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenV2'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /payment-tokens/program-specified:
+    post:
+      tags:
+        - /payment-tokens
+      summary: Generate payment token for specified program participants
+      description: This endpoint allows merchants to generate payment tokens for cross-sale opportunities with other specified program participants (merchants).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTokenProgramSpecifiedParams'
+            examples:
+              Required:
+                summary: Required fields
+                value:
+                  clientAccnum: 900000
+                  clientSubacc: 0
+                  customerInfo:
+                    customerFname: Tyler
+                    customerLname: Thomas
+                    zipcode: '85281'
+                    country: US
+                    email: tthomas@xyz.com
+                    ipAddress: 10.70.60.14
+                  paymentInfo:
+                    creditCardPaymentInfo:
+                      cardNum: '4473707989493598'
+                      nameOnCard: Tyler Thomas
+                      expMonth: '04'
+                      expYear: '2026'
+                  subscriptionId: 900000000000000000
+                  targetClientAccnum: 900000
+                  targetClientSubacc: 1
+              All:
+                summary: All fields
+                value:
+                  clientAccnum: 900000
+                  clientSubacc: 0
+                  customerInfo:
+                    customerFname: Tyler
+                    customerLname: Thomas
+                    address1: Woodland Drive
+                    address2: Apt 21
+                    city: Tempe
+                    state: AZ
+                    zipcode: '85281'
+                    country: US
+                    phoneNumber: '5555555555'
+                    email: tthomas@xyz.com
+                    ipAddress: 10.70.60.14
+                    browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+                    browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+                    browserHttpAcceptLanguage: en-US,en;q=0.5
+                    browserHttpAcceptEncoding: gzip, deflate, br
+                    paymentInfo:
+                      creditCardPaymentInfo:
+                        cardNum: '4473707989493598'
+                        nameOnCard: Tyler Thomas
+                        expMonth: '04'
+                        expYear: '2026'
+                    subscriptionId: 900000000000000000
+                    targetClientAccnum: 900000
+                    targetClientSubacc: 1
+                    timeToLive: 30
+                    validNumberOfUse: 3
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenVerify'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenVerifyV2'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /transactions/payment-tokens/{paymentTokenId}:
+    get:
+      tags:
+        - /transactions
+      summary: View previous charge
+      description: |-
+        Use this endpoint to obtain data on a previously made charge. You will need to identify the charge by the ID.
+        Supply the payment token ID as a URI parameter.
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: currencyCode
+          in: query
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 840
+              - 978
+              - 826
+              - 124
+              - 36
+              - 392
+          description: |-
+            Currency code.  The following are available:
+              - USD - 840
+              - EUR - 978
+              - GBP - 826
+              - CAD - 124
+              - AUD - 36
+              - JPY - 392
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenTransaction'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - /transactions
+      summary: Create a transaction request
+      description: |-
+        The POST `/transactions/payment-tokens/{paymentTokenId}` API call will create a transaction request for a customer.
+        The customer is identified by a token that is obtained from an affiliate. If the token is short-lived, and this is the first billing for this customer a longer-lived token is returned.
+        Supply the payment token ID as a URI parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+            examples:
+              Required:
+                summary: Required fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  currencyCode: 840
+              All:
+                summary: All fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  recurringPrice: 15
+                  recurringPeriod: 30
+                  rebills: 99
+                  currencyCode: 840
+                  lifeTimeSubscription: false
+                  createNewPaymentToken: false
+                  passThroughInfo:
+                    - name: val1
+                      value: val2
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/TransactionInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+  /transactions/payment-tokens/threeds/{payment_token_id}:
+    post:
+      tags:
+        - /transactions
+      summary: Charge token with 3DS
+      description: |-
+        Use this API call to initiate a transaction with additional 3DS parameters.
+        Supply the payment token ID as a URI parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreedsTransactionRequest'
+            examples:
+              Required:
+                summary: Required fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  currencyCode: 840
+                  threedsCavv: cGFzc3dvcmQxMjM0NTZwYXNzd28=
+                  threedsCavvAlgorithm: '3'
+                  threedsEci: '05'
+              All:
+                summary: All fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  recurringPrice: 15
+                  recurringPeriod: 30
+                  rebills: 99
+                  currencyCode: 840
+                  lifeTimeSubscription: false
+                  createNewPaymentToken: false
+                  passThroughInfo:
+                    - name: val1
+                      value: val2
+                  threedsCavv: cGFzc3dvcmQxMjM0NTZwYXNzd28=
+                  threedsCavvAlgorithm: '3'
+                  threedsEci: '05'
+                  threedsError: ''
+                  threedsTransactionId: id-7kzs4vel57n
+                  threedsId: id-7kzs4vel57n
+                  threedsStatus: 'Y'
+                  threedsSuccess: true
+                  threedsVersion: 1.0.2
+                  threedsXid: '123'
+                  threedsAmount: '999'
+      parameters:
+        - name: payment_token_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/TransactionInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    MerchantDetail:
+      description: Merchant detail
+      type: object
+      properties:
+        companyName:
+          type: string
+        descriptor:
+          type: string
+        url:
+          type: string
+        displayableUrl:
+          type: string
+        listOfSupportedCreditCards:
+          $ref: '#/components/schemas/ListOfSupportedCreditCards'
+    ListOfSupportedCreditCards:
+      description: List Of Supported Credit Cards
+      type: array
+      items:
+        type: string
+    ErrorC:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: bfba73c7-969b-4c97-8d62-297ffb1a4266
+        errorCode:
+          type: integer
+          format: int64
+          example: 100901
+        generalMessage:
+          type: string
+          example: General error message
+        url:
+          type: string
+          example: /mcn/specific_endpoint
+        timestamp:
+          type: string
+          example: '2022-03-02T11:04:47.729Z'
+    CountryDetails:
+      description: Country details
+      type: object
+      properties:
+        countryName:
+          type: string
+          example: United States
+        countryCode:
+          type: integer
+          format: int32
+          example: 840
+        countryAbbr:
+          type: string
+          example: US
+    CreditCardPaymentInfo:
+      description: Elements of the `paymentInfo` array.
+      type: object
+      properties:
+        cardNum:
+          description: Card number
+          type: string
+        expMonth:
+          description: Card expiration month in mm format
+          type: string
+        expYear:
+          description: Card expiration year in yyyy format
+          type: string
+        nameOnCard:
+          description: Name as it appears on card
+          type: string
+      required:
+        - cardNum
+        - expMonth
+        - expYear
+        - nameOnCard
+    CreditCardWithCvvPaymentInfo:
+      description: Elements of the `paymentInfo` array with CVV2 authentication.
+      type: object
+      properties:
+        cardNum:
+          description: Card number
+          type: string
+        expMonth:
+          description: Card expiration month in mm format
+          type: string
+        expYear:
+          description: Card expiration year in yyyy format
+          type: string
+        nameOnCard:
+          description: Name as it appears on card
+          type: string
+        cvv2:
+          description: CVV2 code on the card
+          type: string
+      required:
+        - cardNum
+        - expMonth
+        - expYear
+        - nameOnCard
+        - cvv2
+    CustomerInfo:
+      description: Elements of the `customerInfo` array.
+      type: object
+      properties:
+        address1:
+          description: Customer's address
+          type: string
+        address2:
+          description: Customer's address (additional info)
+          type: string
+        browserHttpAccept:
+          description: Media type(s) that is(/are) acceptable for the response
+          type: string
+        browserHttpAcceptEncoding:
+          description: List of acceptable encodings
+          type: string
+        browserHttpAcceptLanguage:
+          description: List of acceptable human languages for response
+          type: string
+        browserHttpUserAgent:
+          description: The user agent string of the user agent
+          type: string
+        city:
+          description: Customer's city
+          type: string
+        country:
+          description: Customer's country
+          type: string
+        customerFname:
+          description: Customer's first name
+          type: string
+        customerLname:
+          description: Customer's last name
+          type: string
+        email:
+          description: Customer's email address
+          type: string
+        ipAddress:
+          description: Customer's IP address
+          type: string
+        phoneNumber:
+          description: Customer's phone number
+          type: string
+        state:
+          description: Customer's state
+          type: string
+        zipcode:
+          description: Customer's zip code
+          type: string
+      required:
+        - country
+        - customerFname
+        - customerLname
+        - email
+        - ipAddress
+        - zipcode
+        - city
+        - state
+        - address1
+    PassThroughInfo:
+      description: Elements of the `passThroughInfo` array represent custom paired information passed through to the transaction service.
+      type: object
+      properties:
+        name:
+          description: Custom passthrough value.
+          type: string
+        value:
+          description: Custom passthrough value.
+          type: string
+      required:
+        - name
+        - value
+      example:
+        name: "value1"
+        value: "value2"
+    PaymentInfo:
+      description: Payment information on the customer's payment card. Elements of the `creditCardPaymentInfo` array.
+      type: object
+      properties:
+        creditCardPaymentInfo:
+          description: Credit Card Payment Information
+          allOf:
+            - $ref: '#/components/schemas/CreditCardPaymentInfo'
+    PaymentInfoWithCvv:
+      description: Elements of the `creditCardPaymentInfo` array with CVV2 authentication.
+      type: object
+      properties:
+        creditCardPaymentInfo:
+          description: Credit Card Payment Information
+          allOf:
+            - $ref: '#/components/schemas/CreditCardWithCvvPaymentInfo'
+    PaymentToken:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creationf of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: integer
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        programParticipationId: 1
+        originalPaymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: 53104f5a54d3d43254def41c29aedba8
+    PaymentTokenV2:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creationf of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: string
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        programParticipationId: 1
+        originalPaymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: '900000000000000001'
+        paymentInfoId: 53104f5a54d3d43254def41c29aedba8
+    PaymentTokenVerify:
+      description: These response parameters are received when a payment token is successfully created. Including CVV2 and AVS authentication results.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creationf of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: integer
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+        cvv2Response:
+          description: The result of CVV2 verification
+          type: string
+        avsResponse:
+          description: The result of AVS verification
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+        - cvv2Response
+        - avsResponse
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+        cvv2Response: "M"
+        avsResponse: "Y"
+    PaymentTokenVerifyV2:
+      description: These response parameters are received when a payment token is successfully created. Including CVV2 and AVS authentication results.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creationf of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: string
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+        cvv2Response:
+          description: The result of CVV2 verification
+          type: string
+        avsResponse:
+          description: The result of AVS verification
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+        - cvv2Response
+        - avsResponse
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: '900000000000000001'
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+        cvv2Response: "M"
+        avsResponse: 'Y'
+    PaymentTokenTransaction:
+      type: object
+      properties:
+        clientAccnum:
+          description: clientAccnum of the merchant
+          type: integer
+        clientSubacc:
+          description: clientSubacc of the merchant
+          type: integer
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: string
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
+      example:
+        clientAccnum: 900112
+        clientSubacc: 2
+        subscriptionId: '918166501000000981'
+    PaymentTokenMerchantOnlyParams:
+      description: Parameters for creating a payment token without CVV2 and AVS authentication.
+      type: object
+      properties:
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        customerInfo:
+          description: Customer Information
+          allOf:
+            - $ref: '#/components/schemas/CustomerInfo'
+        paymentInfo:
+          description: Payment Information
+          allOf:
+            - $ref: '#/components/schemas/PaymentInfo'
+        subscriptionId:
+          description: Transaction subscription identification number
+          type: integer
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
+    PaymentTokenMerchantOnlyVerifyParams:
+      description: Parameters for creating a payment token that includes CVV2 and AVS authentication.
+      type: object
+      properties:
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        customerInfo:
+          description: Customer Information
+          allOf:
+            - $ref: '#/components/schemas/CustomerInfo'
+        paymentInfo:
+          description: Payment Information
+          allOf:
+            - $ref: '#/components/schemas/PaymentInfoWithCvv'
+        subscriptionId:
+          description: Transaction subscription identification number
+          type: integer
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
+    PaymentTokenProgramSpecifiedParams:
+      description: Parameters for generating payment tokens for cross-sale opportunities with other specified program participants (merchants).
+      type: object
+      properties:
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        customerInfo:
+          description: Customer Information
+          allOf:
+            - $ref: '#/components/schemas/CustomerInfo'
+        paymentInfo:
+          description: Payment Information
+          allOf:
+            - $ref: '#/components/schemas/PaymentInfo'
+        subscriptionId:
+          description: Transaction subscription identification number
+          type: integer
+        programParticipationId:
+          description: Identifier represents the program associated with the transaction
+          type: integer
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
+        - programParticipationId
+      example:
+        clientAccnum: 900000
+        clientSubacc: 0
+        customerInfo:
+          customerFname: Tyler
+          customerLname: Thomas
+          address1: Woodland Drive
+          address2: Apt 21
+          city: Tempe
+          state: AZ
+          zipcode: '85281'
+          country: US
+          phoneNumber: '5555555555'
+          email: tthomas@xyz.com
+          ipAddress: 10.70.60.14
+          browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+          browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+          browserHttpAcceptLanguage: en-US,en;q=0.5
+          browserHttpAcceptEncoding: gzip, deflate, br
+        paymentInfo:
+          creditCardPaymentInfo:
+            cardNum: '4473707989493598'
+            nameOnCard: Tyler Thomas
+            expMonth: '04'
+            expYear: '2026'
+        subscriptionId: 900000000000000000
+        programParticipationId: 1
+        timeToLive: 30
+        validNumberOfUse: 3
+    PaymentTokenTargetClientParams:
+      description: Parameters for generating a payment token for the specified merchant/client. It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
+      type: object
+      properties:
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        customerInfo:
+          description: Customer Information
+          allOf:
+            - $ref: '#/components/schemas/CustomerInfo'
+        paymentInfo:
+          description: Payment Information
+          allOf:
+            - $ref: '#/components/schemas/PaymentInfo'
+        subscriptionId:
+          description: Transaction subscription identification number
+          type: integer
+        targetClientAccnum:
+          description: Target Merchant Account Number
+          type: integer
+        targetClientSubacc:
+          description: Target Merchant Subaccount Number
+          type: integer
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
+        - targetClientAccnum
+        - targetClientSubacc
+      example:
+        clientAccnum: 900000
+        clientSubacc: 0
+        customerInfo:
+          customerFname: Tyler
+          customerLname: Thomas
+          address1: Woodland Drive
+          address2: Apt 21
+          city: Tempe
+          state: AZ
+          zipcode: '85281'
+          country: US
+          phoneNumber: '5555555555'
+          email: tthomas@xyz.com
+          ipAddress: 10.70.60.14
+          browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+          browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+          browserHttpAcceptLanguage: en-US,en;q=0.5
+          browserHttpAcceptEncoding: gzip, deflate, br
+        paymentInfo:
+          creditCardPaymentInfo:
+            cardNum: '4473707989493598'
+            nameOnCard: Tyler Thomas
+            expMonth: '04'
+            expYear: '2026'
+        subscriptionId: 900000000000000000
+        targetClientAccnum: 900000
+        targetClientSubacc: 1
+        timeToLive: 30
+        validNumberOfUse: 3
+    TransactionInfo:
+      description: Response parameters confirm that a customer was successfully charged using a payment token.
+      type: object
+      properties:
+        errorCode:
+          description: Error condition value of the transaction
+          type: integer
+        approved:
+          description: Approval status of the transaction
+          type: boolean
+        paymentUniqueId:
+          description: Unique key connected to payment account
+          type: string
+        sessionId:
+          description: Unique session ID value for transaction
+          type: string
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: integer
+        newPaymentTokenId:
+          description: New payment token for subsequent transactions
+          type: string
+      required:
+        - errorCode
+        - approved
+        - paymentUniqueId
+        - sessionId
+        - subscriptionId
+        - newPaymentTokenId
+      example:
+        errorCode: 200
+        approved: true
+        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
+        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        subscriptionId: 900000000000000000
+        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    TransactionRequest:
+      description: Request parameters for initiating a transaction request for a customer.
+      type: object
+      properties:
+        clientAccnum:
+          description: clientAccnum of the merchant
+          type: integer
+        clientSubacc:
+          description: clientSubacc of the merchant
+          type: integer
+        initialPrice:
+          description: price of initial transaction
+          type: number
+        initialPeriod:
+          description: time period of initial transaction
+          type: integer
+        currencyCode:
+          description: numerical representation of the currency used in transaction
+          type: string
+        recurringPrice:
+          description: price of recurrent transactions
+          type: number
+        recurringPeriod:
+          description: time period of recurrent transactions
+          type: integer
+        rebills:
+          description: number of times recurrent transactions can occur
+          type: integer
+        lifeTimeSubscription:
+          description: subscription is eternal or not.
+          type: boolean
+        createNewPaymentToken:
+          description: return new payment token for subsequent transactions or not
+          type: boolean
+        passThroughInfo:
+          description: Paired Information Passed Through to the Transaction Service
+          type: array
+          items:
+            $ref: '#/components/schemas/PassThroughInfo'
+      required:
+        - clientAccnum
+        - clientSubacc
+        - initialPrice
+        - initialPeriod
+        - currencyCode
+      example:
+        clientAccnum: 900123
+        clientSubacc: 10
+        initialPrice: 9.99
+        initialPeriod: 10
+        currencyCode: "840"
+        recurringPrice: 15
+        recurringPeriod: 30
+        rebills: 99
+        lifeTimeSubscription: false
+        createNewPaymentToken: false
+        passThroughInfo:
+          - name: "val1"
+            value: "val2"
+    ThreedsTransactionRequest:
+        description: Parameters for initiating a charge with 3DS authentication.
+        type: object
+        properties:
+            clientAccnum:
+                description: Merchant account number.
+                type: integer
+            clientSubacc:
+                description: Merchant subaccount number.
+                type: integer
+            initialPrice:
+                description: Initial transaction price.
+                type: number
+            initialPeriod:
+                description: The length (in days) of the initial billing period.
+                type: integer
+            currencyCode:
+                description: Three-digit currency code (ISO 4217 standard) for the currency used in the transaction.
+                type: string
+            recurringPrice:
+                description: The amount the consumer will be charged for each recurring bill.
+                type: number
+            recurringPeriod:
+                description: The length of time between rebills.
+                type: integer
+            rebills:
+                description: The total number of times the subscription will rebill.
+                type: integer
+            lifeTimeSubscription:
+                description: The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.
+                type: boolean
+            createNewPaymentToken:
+                description: Return new payment token for subsequent transactions or not.
+                type: boolean
+            passThroughInfo:
+                description: Paired information being passed through to the transaction service.
+                type: array
+                items:
+                    $ref: '#/components/schemas/PassThroughInfo'
+            threedsCardToken:
+                description: The encrypted cardToken you receive through the 3DS verification process. As we require only the first 16 characters, trim the string to that length before sending it to the CCBill API. Sending a string longer than 16 characters results in an error.
+                type: string
+            threedsEci:
+                description: An Electronic Commerce Indicator (ECI).
+                type: string
+            threedsStatus:
+                description: The status of the 3DS verification.
+                type: string
+            threedsVersion:
+                description: The version of the 3DS protocol to be followed for this specific card and transaction. Available versions are 1.0.2 and 2.1.0
+                type: string
+            threedsXid:
+                description: The transaction identifier (XID) is a unique tracking number set by the merchant for 3DS. It is a required parameter for threedsVersion 1.0.2.
+                type: string
+            threedsCavv:
+                description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow and is a required parameter for threedsVersion 1.0.2
+                type: string
+            threedsCavvAlgorithm:
+                description: CAVV Algorithm for threeds request. The threedsCavvAlgorithm parameter is required for threedsVersion 1.0.2
+                type: string
+            threedsDsTransId:
+                description: Directory Server Transaction ID. The threedsDsTransId parameter is required for threedsVersion 2.1.0
+                type: string
+            threedsAcsTransId:
+                description: Access Control Server Transaction ID. The threedsAcsTransId parameter is required for threedsVersion 2.1.0
+                type: string
+            threedsSdkTransId:
+                description: The 3DS vendor's transaction ID.
+                type: string
+            threedsAuthenticationType:
+                description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (v2.1.0).
+                type: string
+            threedsAuthenticationValue:
+                description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (v2.1.0).
+                type: string
+            threedsClientTransactionId:
+                description: The parameter is automatically generated by the Advanced Widget. Its purpose is to identify the origin of the 3DS authentication transaction.
+                type: string
+            threedsSuccess:
+                description: Verification of 3DS authentication success or failure.
+                type: boolean
+            threedsAmount:
+                description: The amount to be charged (same as `initialPrice`).
+                type: number
+            threedsCurrency:
+                description: The 3-digit currency code for the currency to be used in this transaction.
+                type: string
+            threedsError:
+                description: Error received from the 3DS vendor during the strong customer authentication process. The parameter is required if no threedsVersion is provided.
+                type: string
+            threedsErrorDetail:
+                description: Error details related to the `threedsError`.
+                type: string
+            threedsErrorCode:
+                description: Error code.
+                type: string
+            threedsResponse:
+                description: The complete response in case of an error.
+                type: string
+        required:
+            - clientAccnum
+            - clientSubacc
+            - initialPrice
+            - initialPeriod
+            - threedsCardToken
+            - currencyCode
+            - threedsCavv
+            - threedsEci
+            - threedsClientTransactionId
+            - threedsSuccess
+        example:
+            clientAccnum: 900123
+            clientSubacc: 10
+            initialPrice: 9.99
+            initialPeriod: 10
+            recurringPrice: 15.00
+            recurringPeriod: 30
+            rebills: 99
+            currencyCode: "840"
+            lifeTimeSubscription: false
+            createNewPaymentToken: false
+            passThroughInfo:
+                - name: "val1"
+                  value: "val2"
+            threedsEci: "05"
+            threedsError: ""
+            threedsStatus: "Y"
+            threedsSuccess: true
+            threedsVersion: "1.0.2"
+            threedsXid: "aWQteHc4ajJnNGIxZW8gICAgICA="
+            threedsCavv: "cGFzc3dvcmQxMjM0NTZwYXNzd28="
+            threedsCavvAlgorithm: "SHA-256"
+            threedsAmount: 10
+            threedsClientTransactionId: "id-wl9r6duc5zj"
+            threedsCurrency: "USD"
+            threedsSdkTransId: ""
+            threedsAcsTransId: ""
+            threedsDsTransId: ""
+            threedsAuthenticationType: ""
+            threedsCardToken: "gjeoB5NdJ1r6p0dG"
+            threedsErrorDetail: ""
+            threedsErrorCode: ""
+            threedsResponse: ""
+
+    ThreeDSRequired:
+      description: Response parameters after 3DS authentication request.
+      type: object
+      properties:
+        required:
+          description: 3DS required for payment card
+          type: boolean
+        amount:
+          description: Authorized charge amount.
+          type: number
+      example:
+        required: 'true'
+        amount: '1.0'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          description: Field in error
+          type: string
+        message:
+          description: User friendly message
+          type: string
+      required:
+        - field
+        - message
+      example:
+        field: string
+        message: string
+    Error:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: string
+        url: specific/endpoint
+        generalMessage: General error message
+        errorCode: 100013
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error400:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        errors:
+          description: Optional, only returned on 400 Bad Request errors for validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: General error message
+        errorCode: 100013
+        timestamp: '2022-03-02T11:04:47.729Z'
+  responses:
+    '400':
+      description: The response failed to complete due to an invalid header/parameter in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '401':
+      description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: The response failed to complete because access to the resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: The response failed to complete due to an invalid resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '405':
+      description: The response failed to complete due to an invalid method of request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '406':
+      description: The response failed to complete due to an unacceptable media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '415':
+      description: The response failed to complete due to an unsupported media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: The response failed to complete in some way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    trait_versioned_Accept:
+      name: '200'
+      in: header
+      description: API version
+      schema:
+        type: string
+  examples:
+    PaymentTokenMerchantOnlyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    PaymentTokenMerchantOnlyVerifyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyVerifyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    CustomerInfoAll:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        address1: Woodland Drive
+        address2: Apt 21
+        city: Tempe
+        state: AZ
+        zipcode: '85281'
+        country: US
+        phoneNumber: '5555555555'
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+        browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+        browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        browserHttpAcceptLanguage: en-US,en;q=0.5
+        browserHttpAcceptEncoding: gzip, deflate, br
+    CustomerInfoRequired:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        zipcode: '85281'
+        country: US
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+    CreditCardWithCvvPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+        cvv2: '123'
+    CreditCardPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+  requestBodies: {}
+  headers: {}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  links: {}
+  callbacks: {}
