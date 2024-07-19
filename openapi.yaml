@@ -649,41 +649,6 @@ paths:
         - /payment-tokens
       summary: Generate payment token for specified program participants
       description: This endpoint allows merchants to generate payment tokens for cross-sale opportunities with other specified program participants (merchants).
-      These response parameters are received when a payment token is successfully created, including CVV2 and AVS authentication results.
-        Possible CVV2 values:
-        Possible values:
-            - "M": CVV2 Match
-            - "N": CVV2 No Match
-            - "P": CVV2 Not Processed
-            - "S": CVV2 Service Not Allowed
-            - "U": CVV2 Unreadable
-        Possible AVS values:
-            - "A": Address matches, ZIP does not
-            - "B": Address and ZIP match (both are blank)
-            - "C": Address matches, ZIP does not
-            - "D": Address matches, ZIP does not
-            - "E": AVS error
-            - "F": Address and ZIP match
-            - "G": Address matches, ZIP does not
-            - "H": Address and ZIP match
-            - "I": AVS unavailable
-            - "J": Address matches, ZIP does not
-            - "K": Address matches, ZIP does not
-            - "L": Address matches, ZIP does not
-            - "M": Address and ZIP match
-            - "N": Address and ZIP do not match
-            - "O": Address and ZIP match (both are blank)
-            - "P": Address and ZIP match (both are blank)
-            - "Q": Address and ZIP match (both are blank)
-            - "R": Address matches, ZIP does not
-            - "S": Address matches, ZIP does not
-            - "T": Address matches, ZIP does not
-            - "U": Address matches, ZIP does not
-            - "V": Address matches, ZIP does not
-            - "W": Address matches, ZIP does not
-            - "X": Address and ZIP match
-            - "Y": Address and ZIP match
-            - "Z": Address and ZIP match
       requestBody:
         required: true
         content:
