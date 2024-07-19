@@ -14,7 +14,7 @@ paths:
       summary: Generate OAuth Bearer Token
       description: Use this endpoint to generate a CCBill OAuth Bearer Token using your MerchantApplicationID and SecretKey.
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
