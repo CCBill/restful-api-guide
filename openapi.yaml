@@ -1281,7 +1281,7 @@ components:
           type: string
         cvv2Response:
           description: |
-            [The result of CVV2 verification.](https://ccbill.com/doc/avs-and-cvv2-responses#ftoc-heading-2) 
+            The result of CVV2 verification.
           type: string
           enum:
             - "M"  # CVV2 Match
@@ -1290,7 +1290,7 @@ components:
             - "S"  # CVV2 Service Not Allowed
             - "U"  # CVV2 Unreadable
         avsResponse:
-          description: [The result of AVS verification.](https://ccbill.com/doc/avs-and-cvv2-responses#ftoc-heading-1) 
+          description: The result of AVS verification.
           type: string
           enum:
             - "A"  # Address matches, ZIP does not
@@ -1382,7 +1382,7 @@ components:
           type: string
         cvv2Response:
           description: |
-            [The result of CVV2 verification.](https://ccbill.com/doc/avs-and-cvv2-responses#ftoc-heading-2) 
+            The result of CVV2 verification. 
           type: string
           enum:
             - "M"  # CVV2 Match
@@ -1392,7 +1392,7 @@ components:
             - "U"  # CVV2 Unreadable
         avsResponse:
           description: |
-            [The result of AVS verification.](https://ccbill.com/doc/avs-and-cvv2-responses#ftoc-heading-1) 
+            The result of AVS verification. 
           type: string
           enum:
             - "A"  # Address matches, ZIP does not
