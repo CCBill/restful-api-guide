@@ -1290,7 +1290,8 @@ components:
             - "S"  # CVV2 Service Not Allowed
             - "U"  # CVV2 Unreadable
         avsResponse:
-          description: The result of AVS verification.
+          description: |
+             The result of AVS verification.
           type: string
           enum:
             - "A"  # Address matches, ZIP does not
