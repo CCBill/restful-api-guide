@@ -41,14 +41,6 @@ paths:
          description: Bad request
      parameters:
        - in: header
-         name: Authorization
-         schema:
-           type: string
-         example: Basic TWVyY2hhbnRfQXBwbGljYXRpb25fSUQ6U2VjcmV0X0tleQ==
-         description: |
-           Basic authentication with Merchant_Application_ID and Secret_Key.
-           The value should be a Base64 encoded string of `Merchant_Application_ID:Secret_Key`.
-       - in: header
          name: Content-Type
          schema:
            type: string
