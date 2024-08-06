@@ -8,7 +8,6 @@ paths:
      summary: Request OAuth Token
      description: This endpoint requests an OAuth token using client credentials.
      requestBody:
-       required: true
        content:
          application/x-www-form-urlencoded:
            schema:
@@ -43,7 +42,6 @@ paths:
      parameters:
        - in: header
          name: Authorization
-         required: true
          schema:
            type: string
          example: Basic TWVyY2hhbnRfQXBwbGljYXRpb25fSUQ6U2VjcmV0X0tleQ==
@@ -52,7 +50,6 @@ paths:
            The value should be a Base64 encoded string of `Merchant_Application_ID:Secret_Key`.
        - in: header
          name: Content-Type
-         required: true
          schema:
            type: string
          example: application/x-www-form-urlencoded
