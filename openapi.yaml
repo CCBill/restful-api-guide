@@ -1245,7 +1245,7 @@ components:
         paymentInfoId: 53104f5a54d3d43254def41c29aedba8
     PaymentTokenVerify:
       description: |
-        These response parameters are received when a payment token is successfully created, including [AVS and CVV2 authentication results](https://ccbill.com/doc/avs-and-cvv2-responses) {target="_blank"}.
+        These response parameters are received when a payment token is successfully created, including [AVS and CVV2 authentication results](https://ccbill.com/doc/avs-and-cvv2-responses) {:target="_blank"}.
       type: object
       properties:
         paymentTokenId:
