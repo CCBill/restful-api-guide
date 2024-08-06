@@ -1281,7 +1281,7 @@ components:
           type: string
         cvv2Response:
           description: |
-            [The result of CVV2 verification.](https://ccbill.com/doc/avs-and-cvv2-responses#ftoc-heading-2)
+            The result of CVV2 verification.
           type: string
           enum:
             - "M"  # CVV2 Match
