@@ -152,7 +152,7 @@ paths:
       summary: Create payment token (Enhanced Authentication)
       description: |-
         The resource is used to enhance authentication during payment token
-         creation. This endpoint includes `cvvResponse` and `avsResponse`
+         creation. This endpoint includes `cvvResponse` and `Response`
          parameters in the response. These parameters help in reducing the
          chargeback ratios for merchants.<br><br>One of the required parameters for this request is the Subscription ID. Every time customer makes a successful one-time payment or signs up for a recurring subscription, CCBill’s system creates a unique Subscription ID. <br><br>The Subscription ID is an 18-digit number used to track and monitor payments within CCBill’s system. Merchants can retrieve Subscription IDs using the [Lookup Report](https://ccbill.com/doc/lookup-report) in the CCBill Admin or via [Webhooks](https://ccbill.com/doc/webhooks-overview).
       x-codeSamples:
@@ -1245,7 +1245,7 @@ components:
         paymentInfoId: 53104f5a54d3d43254def41c29aedba8
     PaymentTokenVerify:
       description: |
-        These response parameters are received when a payment token is successfully created, including [AVS and CVV2 authentication results](https://ccbill.com/doc/avs-and-cvv2-responses target="_blank").
+        These response parameters are received when a payment token is successfully created, including ```markdown [AVS and CVV2 authentication results](https://ccbill.com/doc/avs-and-cvv2-responses target="_blank").```
       type: object
       properties:
         paymentTokenId:
