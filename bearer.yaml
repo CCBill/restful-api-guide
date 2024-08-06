@@ -39,13 +39,6 @@ paths:
                    description: The scopes associated with the token.
        '400':
          description: Bad request
-     parameters:
-       - in: header
-         name: Content-Type
-         schema:
-           type: string
-         example: application/x-www-form-urlencoded
-         description: Content type of the request body.
      x-code-samples:
       - lang: bash
         label: cURL (Auto-encode)
