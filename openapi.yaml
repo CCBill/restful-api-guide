@@ -24,7 +24,7 @@ paths:
       summary: Create a payment token
       description: |-
         This endpoint is used for creating a payment token. Tokenization turns the customer's payment details, like a credit card number,
-         into a unique randomly generated set of characters, called a token. The token can then be used to make payments without re-entering or referencing the credit card number. 
+         into a unique randomly generated set of characters called a token. The token can then be used to make payments without re-entering or referencing the credit card number. 
          In the context of the CCBill RESTful API, the Payment Token identifies a billable entity within the system.
       x-codeSamples:
         - lang: bash
