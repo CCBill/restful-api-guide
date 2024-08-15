@@ -82,7 +82,7 @@ paths:
             xhr.setRequestHeader("Authorization", "Bearer TOKEN");
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.send(data);
-        - lang: PHP
+        - lang: php
           label: PHP
           source: |
             <?php
@@ -149,12 +149,11 @@ paths:
     post:
       tags:
         - /payment-tokens
-      summary: Create payment token (Enhanced Authentication)
+      summary: Create payment token (Includes CVV)
       description: |-
-        The resource is used to enhance authentication during payment token
-         creation. This endpoint includes `cvvResponse` and `Response`
+        The resource is used to create a payment token. This endpoint requires CVV in the credit card details, and includes `cvvResponse` and `Response`
          parameters in the response. These parameters help in reducing the
-         chargeback ratios for merchants.<br><br>One of the required parameters for this request is the Subscription ID. Every time customer makes a successful one-time payment or signs up for a recurring subscription, CCBill’s system creates a unique Subscription ID. <br><br>The Subscription ID is an 18-digit number used to track and monitor payments within CCBill’s system. Merchants can retrieve Subscription IDs using the <a href="https://ccbill.com/doc/lookup-report" target="_blank">Lookup Report</a> in the CCBill Admin or via <a href="https://ccbill.com/doc/webhooks-overview" target="_blank">Webhooks</a>.
+         chargeback ratios for merchants.<br><br>One of the required parameters for this request is the Subscription ID. Every time customer makes a successful one-time payment or signs up for a recurring subscription, CCBill's system creates a unique Subscription ID. <br><br>The Subscription ID is an 18-digit number used to track and monitor payments within CCBill's system. Merchants can retrieve Subscription IDs using the <a href="https://ccbill.com/doc/lookup-report" target="_blank">Lookup Report</a> in the CCBill Admin or via <a href="https://ccbill.com/doc/webhooks-overview" target="_blank">Webhooks</a>.
       x-codeSamples:
         - lang: bash
           label: cURL
@@ -212,7 +211,7 @@ paths:
             xhr.setRequestHeader("Authorization", "Bearer TOKEN");
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.send(data);
-        - lang: PHP
+        - lang: php
           label: PHP
           source: |
             <?php
@@ -1179,16 +1178,16 @@ components:
         - validNumberOfUse
         - subscriptionId
       example:
-        paymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         programParticipationId: 1
-        originalPaymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         clientAccnum: 900000
         clientSubacc: 0
-        createdDatetime: '2022-01-01T01:00:00'
+        createdDatetime: "2022-01-01T01:00:00"
         timeToLive: 30
         validNumberOfUse: 20
         subscriptionId: 900000000000000000
-        paymentInfoId: 53104f5a54d3d43254def41c29aedba8
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
     PaymentTokenV2:
       description: These response parameters are received when a payment token is successfully created.
       type: object
@@ -1209,7 +1208,7 @@ components:
           description: Merchant subaccount number
           type: integer
         createdDatetime:
-          description: Date Time of creationf of the Payment Token
+          description: Date Time of creation of the Payment Token
           type: string
         timeToLive:
           description: Time for the token to exist
@@ -1233,16 +1232,16 @@ components:
         - validNumberOfUse
         - subscriptionId
       example:
-        paymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         programParticipationId: 1
-        originalPaymentTokenId: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         clientAccnum: 900000
         clientSubacc: 0
         createdDatetime: '2022-01-01T01:00:00'
         timeToLive: 30
         validNumberOfUse: 20
-        subscriptionId: '900000000000000001'
-        paymentInfoId: 53104f5a54d3d43254def41c29aedba8
+        subscriptionId: "900000000000000001"
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
     PaymentTokenVerify:
       description: |
         These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
@@ -1960,7 +1959,7 @@ components:
         id: string
         url: specific/endpoint
         generalMessage: General error message
-        errorCode: 100013
+        errorCode: "100013"
         timestamp: '2022-03-02T11:04:47.729Z'
     Error400:
       type: object
@@ -2000,9 +1999,19 @@ components:
         errors:
           - field: string
             message: string
-        generalMessage: General error message
-        errorCode: 100013
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
         timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
   responses:
     '400':
       description: The response failed to complete due to an invalid header/parameter in the request.
@@ -2015,43 +2024,43 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error401'
     '403':
       description: The response failed to complete because access to the resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error400'
     '404':
       description: The response failed to complete due to an invalid resource.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error400'
     '405':
       description: The response failed to complete due to an invalid method of request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error400'
     '406':
       description: The response failed to complete due to an unacceptable media type in the request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error400'
     '415':
       description: The response failed to complete due to an unsupported media type in the request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error400'
     '500':
       description: The response failed to complete in some way.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Error400'
   parameters:
     trait_versioned_Accept:
       name: '200'
@@ -2148,10 +2157,5 @@ components:
         expYear: '2026'
   requestBodies: {}
   headers: {}
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   links: {}
   callbacks: {}
