@@ -1154,7 +1154,7 @@ components:
           description: Merchant subaccount number
           type: integer
         createdDatetime:
-          description: Date Time of creationf of the Payment Token
+          description: Date Time of creation of the Payment Token
           type: string
         timeToLive:
           description: Time for the token to exist
