@@ -1,0 +1,570 @@
+openapi: 3.0.0
+info:
+  title: RESTful API Endpoints
+  version: 1.0.0
+servers:
+  - url: https://api.ccbill.com
+    description: Production Server
+  - url: https://api.dev.ccbill.com
+    description: Deveopment Server
+tags:
+  - name: /payment-tokens
+    description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
+security:
+  - bearerAuth: []
+paths:
+  /payment-tokens/{paymentTokenId}:
+    get:
+      tags:
+        - /payment-tokens
+      summary: Get payment token by ID
+      description: Use this request to retrieve details of a Payment Token based on its ID.
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X GET "https://api.ccbill.com/payment-tokens/{paymentTokenId}" \
+              -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
+              -H "authorization: Bearer TOKEN" \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = null;
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+              if (this.readyState === 4) {
+                console.log(this.responseText);
+              }
+            });
+            xhr.open("GET", "https://api.ccbill.com/payment-tokens/{paymentTokenId}");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: php
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request->setUrl('https://api.ccbill.com/payment-tokens/01047ed6f3b440c7a2ccc6abc1ad0a84');
+            $request->setMethod(HTTP_METH_GET);
+            $request->setHeaders(array(
+              'Cache-Control' => 'no-cache',
+              'Authorization' => 'Bearer TOKEN'
+            ));
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Complex representation of Payment Token Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenV2'
+            application/vnd.mcn.transaction-service.api.v.3+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenVerify'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    PaymentToken:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creation of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: integer
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: "2022-01-01T01:00:00"
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+    PaymentTokenV2:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creation of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: string
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: "900000000000000001"
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+    PaymentTokenVerify:
+      description: |
+        These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
+      type: object
+      properties:
+        paymentTokenId:
+          description: "Complex representation of Payment Token Id"
+          type: string
+        programParticipationId:
+          description: "Program connected to the Payment Token"
+          type: integer
+        originalPaymentTokenId:
+          description: "Reference to a previous Token Id"
+          type: string
+        clientAccnum:
+          description: "Merchant account number"
+          type: integer
+        clientSubacc:
+          description: "Merchant subaccount number"
+          type: integer
+        createdDatetime:
+          description: "Date Time of creation of the Payment Token"
+          type: string
+          format: date-time
+        timeToLive:
+          description: "Time for the token to exist"
+          type: integer
+        validNumberOfUse:
+          description: "Total number of times the Payment Token can be used for purchases"
+          type: integer
+        subscriptionId:
+          description: "Identification of the subscription associated with the transaction"
+          type: integer
+        paymentInfoId:
+          description: "Information associated with the payment"
+          type: string
+        cvv2Response:
+          description: |
+            The result of CVV2 verification.
+          type: string
+          enum:
+            - "M"  # CVV2 Match
+            - "N"  # CVV2 No Match
+            - "P"  # CVV2 Not Processed
+            - "S"  # CVV2 Service Not Allowed
+            - "U"  # CVV2 Unreadable
+        avsResponse:
+          description: |
+             The result of AVS verification.
+          type: string
+          enum:
+            - "A"  # Address matches, ZIP does not
+            - "B"  # Address and ZIP match (both are blank)
+            - "C"  # Address matches, ZIP does not
+            - "D"  # Address matches, ZIP does not
+            - "E"  # AVS error
+            - "F"  # Address and ZIP match
+            - "G"  # Address matches, ZIP does not
+            - "H"  # Address and ZIP match
+            - "I"  # AVS unavailable
+            - "J"  # Address matches, ZIP does not
+            - "K"  # Address matches, ZIP does not
+            - "L"  # Address matches, ZIP does not
+            - "M"  # Address and ZIP match
+            - "N"  # Address and ZIP do not match
+            - "O"  # Address and ZIP match (both are blank)
+            - "P"  # Address and ZIP match (both are blank)
+            - "Q"  # Address and ZIP match (both are blank)
+            - "R"  # Address matches, ZIP does not
+            - "S"  # Address matches, ZIP does not
+            - "T"  # Address matches, ZIP does not
+            - "U"  # Address matches, ZIP does not
+            - "V"  # Address matches, ZIP does not
+            - "W"  # Address matches, ZIP does not
+            - "X"  # Address and ZIP match
+            - "Y"  # Address and ZIP match
+            - "Z"  # Address and ZIP match
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+        - cvv2Response
+        - avsResponse
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+        cvv2Response: "M"
+        avsResponse: "Y"
+
+    PaymentTokenVerifyV2:
+      description: |
+        These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
+      type: object
+      properties:
+        paymentTokenId:
+          description: "Complex representation of Payment Token Id"
+          type: string
+        programParticipationId:
+          description: "Program connected to the Payment Token"
+          type: integer
+        originalPaymentTokenId:
+          description: "Reference to a previous Token Id"
+          type: string
+        clientAccnum:
+          description: "Merchant account number"
+          type: integer
+        clientSubacc:
+          description: "Merchant subaccount number"
+          type: integer
+        createdDatetime:
+          description: "Date Time of creation of the Payment Token"
+          type: string
+          format: date-time
+        timeToLive:
+          description: "Time for the token to exist"
+          type: integer
+        validNumberOfUse:
+          description: "Total number of times the Payment Token can be used for purchases"
+          type: integer
+        subscriptionId:
+          description: "Identification of the subscription associated with the transaction"
+          type: string
+        paymentInfoId:
+          description: "Information associated with the payment"
+          type: string
+        cvv2Response:
+          description: |
+            The result of CVV2 verification. 
+          type: string
+          enum:
+            - "M"  # CVV2 Match
+            - "N"  # CVV2 No Match
+            - "P"  # CVV2 Not Processed
+            - "S"  # CVV2 Service Not Allowed
+            - "U"  # CVV2 Unreadable
+        avsResponse:
+          description: |
+            The result of AVS verification. 
+          type: string
+          enum:
+            - "A"  # Address matches, ZIP does not
+            - "B"  # Address and ZIP match (both are blank)
+            - "C"  # Address matches, ZIP does not
+            - "D"  # Address matches, ZIP does not
+            - "E"  # AVS error
+            - "F"  # Address and ZIP match
+            - "G"  # Address matches, ZIP does not
+            - "H"  # Address and ZIP match
+            - "I"  # AVS unavailable
+            - "J"  # Address matches, ZIP does not
+            - "K"  # Address matches, ZIP does not
+            - "L"  # Address matches, ZIP does not
+            - "M"  # Address and ZIP match
+            - "N"  # Address and ZIP do not match
+            - "O"  # Address and ZIP match (both are blank)
+            - "P"  # Address and ZIP match (both are blank)
+            - "Q"  # Address and ZIP match (both are blank)
+            - "R"  # Address matches, ZIP does not
+            - "S"  # Address matches, ZIP does not
+            - "T"  # Address matches, ZIP does not
+            - "U"  # Address matches, ZIP does not
+            - "V"  # Address matches, ZIP does not
+            - "W"  # Address matches, ZIP does not
+            - "X"  # Address and ZIP match
+            - "Y"  # Address and ZIP match
+            - "Z"  # Address and ZIP match
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+        - cvv2Response
+        - avsResponse
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: '900000000000000001'
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+        cvv2Response: "M"
+        avsResponse: 'Y'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          description: Field in error
+          type: string
+        message:
+          description: User friendly message
+          type: string
+      required:
+        - field
+        - message
+      example:
+        field: string
+        message: string
+    Error:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: string
+        url: specific/endpoint
+        generalMessage: General error message
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error400:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        errors:
+          description: Optional, only returned on 400 Bad Request errors for validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
+  responses:
+    '400':
+      description: The response failed to complete due to an invalid header/parameter in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '401':
+      description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    '403':
+      description: The response failed to complete because access to the resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '404':
+      description: The response failed to complete due to an invalid resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '405':
+      description: The response failed to complete due to an invalid method of request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '406':
+      description: The response failed to complete due to an unacceptable media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '415':
+      description: The response failed to complete due to an unsupported media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '500':
+      description: The response failed to complete in some way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+  parameters:
+    trait_versioned_Accept:
+      name: '200'
+      in: header
+      description: API version
+      schema:
+        type: string
+
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
