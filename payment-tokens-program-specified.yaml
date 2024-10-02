@@ -10,10 +10,6 @@ servers:
 tags:
   - name: /payment-tokens
     description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
-  - name: /transactions
-    description: |-
-      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
-      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
 security:
   - bearerAuth: []
 paths:
