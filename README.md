@@ -540,7 +540,7 @@ After you have generated a new bearer token, and after you have generated the pa
 
 #### Headers
 
-* `Accept: application/vnd.mcn.transaction-service.api.v.1+json`
+* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
 
 #### Request Parameters
 
@@ -595,7 +595,7 @@ After you have generated a new bearer token, and after you have generated the pa
 | approved          | boolean | Approval status of the transaction.                                             |
 | paymentUniqueId   | string  | Unique key connected to the payment account.                                    |
 | sessionId         | string  | Unique session ID value pertaining to the transaction.                          |
-| subscriptionId    | integer | Subscription ID which uniquely identifies the transaction.                      |
+| subscriptionId    | string  | Subscription ID which uniquely identifies the transaction.                      |
 | newPaymentTokenId | string  | The new payment token ID to be used for subsequent transactions (if created).   |
 
 #### Example Response
@@ -621,7 +621,7 @@ After you have generated a new bearer token, and after you have generated the pa
 
 #### Headers
 
-* `Accept: application/vnd.mcn.transaction-service.api.v.1+json`
+* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
 
 #### Request Parameters
 
@@ -692,7 +692,7 @@ After you have generated a new bearer token, and after you have generated the pa
 | approved          | boolean | Approval status of the transaction.                                             |
 | paymentUniqueId   | string  | Unique key connected to the payment account.                                    |
 | sessionId         | string  | Unique session ID value pertaining to the transaction.                          |
-| subscriptionId    | integer | Subscription ID which uniquely identifies the transaction.                      |
+| subscriptionId    | string  | Subscription ID which uniquely identifies the transaction.                      |
 | newPaymentTokenId | string  | The new payment token ID to be used for subsequent transactions (if created).   |
 
 #### Example Response
