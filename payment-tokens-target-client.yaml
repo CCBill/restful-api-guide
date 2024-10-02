@@ -21,7 +21,7 @@ paths:
       description: |-
         This endpoint generates a payment token for the specified merchant/client.
         It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
-        CCBill enables merchants to create Merchant Connect sponsor programs and share revenue with other merchants for referred sales. 
+        CCBill enables merchants to create <a href="https://ccbill.com/docs/Merchant-Connect/merchant-connect.pdf" target="_blank">Merchant Connect</a> sponsor programs and share revenue with other merchants for referred sales. 
         CCBill is a matchmaker between sponsor merchants and affiliate merchants. The platform supports one-click transactions, allowing affiliate merchants to easily and legally offer instant purchases to your audience on their websites. 
         CCBill tracks and handles the one-click transactions, calculates revenue sharing, and facilitates payouts to sponsors and affiliates.
       requestBody:
