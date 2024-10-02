@@ -1,0 +1,581 @@
+openapi: 3.0.0
+info:
+  title: RESTful API Endpoints
+  version: 1.0.0
+servers:
+  - url: https://api.ccbill.com
+    description: Production Server
+  - url: https://api.dev.ccbill.com
+    description: Deveopment Server
+tags:
+  - name: /transactions
+    description: |-
+      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
+      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
+security:
+  - bearerAuth: []
+paths:
+  /transactions/payment-tokens/threeds/{payment_token_id}:
+    post:
+      tags:
+        - /transactions
+      summary: Charge token with 3DS
+      description: |-
+        Use this API call to initiate a transaction with additional 3DS parameters.
+        Supply the payment token ID as a URI parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreedsTransactionRequest'
+            examples:
+              Required:
+                summary: Required fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  currencyCode: 840
+                  threedsCavv: cGFzc3dvcmQxMjM0NTZwYXNzd28=
+                  threedsCavvAlgorithm: '3'
+                  threedsEci: '05'
+              All:
+                summary: All fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  recurringPrice: 15
+                  recurringPeriod: 30
+                  rebills: 99
+                  currencyCode: 840
+                  lifeTimeSubscription: false
+                  createNewPaymentToken: false
+                  passThroughInfo:
+                    - name: val1
+                      value: val2
+                  threedsCavv: cGFzc3dvcmQxMjM0NTZwYXNzd28=
+                  threedsCavvAlgorithm: '3'
+                  threedsEci: '05'
+                  threedsError: ''
+                  threedsTransactionId: id-7kzs4vel57n
+                  threedsId: id-7kzs4vel57n
+                  threedsStatus: 'Y'
+                  threedsSuccess: true
+                  threedsVersion: 1.0.2
+                  threedsXid: '123'
+                  threedsAmount: '999'
+      parameters:
+        - name: payment_token_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/TransactionInfo'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/TransactionInfoV2'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    PassThroughInfo:
+      description: Elements of the `passThroughInfo` array represent custom paired information passed through to the transaction service.
+      type: object
+      properties:
+        name:
+          description: Custom passthrough value.
+          type: string
+        value:
+          description: Custom passthrough value.
+          type: string
+      required:
+        - name
+        - value
+      example:
+        name: "value1"
+        value: "value2"
+    TransactionInfo:
+      description: Response parameters confirm that a customer was successfully charged using a payment token.
+      type: object
+      properties:
+        errorCode:
+          description: Error condition value of the transaction
+          type: integer
+        approved:
+          description: Approval status of the transaction
+          type: boolean
+        paymentUniqueId:
+          description: Unique key connected to payment account
+          type: string
+        sessionId:
+          description: Unique session ID value for transaction
+          type: string
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: integer
+        newPaymentTokenId:
+          description: New payment token for subsequent transactions
+          type: string
+      required:
+        - errorCode
+        - approved
+        - paymentUniqueId
+        - sessionId
+        - subscriptionId
+        - newPaymentTokenId
+      example:
+        errorCode: 200
+        approved: true
+        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
+        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        subscriptionId: 900000000000000000
+        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    TransactionInfoV2:
+      description: Response parameters confirm that a customer was successfully charged using a payment token.
+      type: object
+      properties:
+        errorCode:
+          description: Error condition value of the transaction
+          type: integer
+        approved:
+          description: Approval status of the transaction
+          type: boolean
+        paymentUniqueId:
+          description: Unique key connected to payment account
+          type: string
+        sessionId:
+          description: Unique session ID value for transaction
+          type: string
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: string
+        newPaymentTokenId:
+          description: New payment token for subsequent transactions
+          type: string
+      required:
+        - errorCode
+        - approved
+        - paymentUniqueId
+        - sessionId
+        - subscriptionId
+        - newPaymentTokenId
+      example:
+        errorCode: 200
+        approved: true
+        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
+        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        subscriptionId: "900000000000000000"
+        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    ThreedsTransactionRequest:
+        description: Parameters for initiating a charge with 3DS authentication.
+        type: object
+        properties:
+            clientAccnum:
+                description: Merchant account number.
+                type: integer
+            clientSubacc:
+                description: Merchant subaccount number.
+                type: integer
+            initialPrice:
+                description: Initial transaction price.
+                type: number
+            initialPeriod:
+                description: The length (in days) of the initial billing period.
+                type: integer
+            currencyCode:
+                description: Three-digit currency code (ISO 4217 standard) for the currency used in the transaction.
+                type: string
+            recurringPrice:
+                description: The amount the consumer will be charged for each recurring bill.
+                type: number
+            recurringPeriod:
+                description: The length of time between rebills.
+                type: integer
+            rebills:
+                description: The total number of times the subscription will rebill.
+                type: integer
+            lifeTimeSubscription:
+                description: The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.
+                type: boolean
+            createNewPaymentToken:
+                description: Return new payment token for subsequent transactions or not.
+                type: boolean
+            passThroughInfo:
+                description: Paired information being passed through to the transaction service.
+                type: array
+                items:
+                    $ref: '#/components/schemas/PassThroughInfo'
+            threedsCardToken:
+                description: The encrypted cardToken you receive through the 3DS verification process. As we require only the first 16 characters, trim the string to that length before sending it to the CCBill API. Sending a string longer than 16 characters results in an error.
+                type: string
+            threedsEci:
+                description: An Electronic Commerce Indicator (ECI).
+                type: string
+            threedsStatus:
+                description: The status of the 3DS verification.
+                type: string
+            threedsVersion:
+                description: The version of the 3DS protocol to be followed for this specific card and transaction. Available versions are 1.0.2 and 2.1.0
+                type: string
+            threedsXid:
+                description: The transaction identifier (XID) is a unique tracking number set by the merchant for 3DS. It is a required parameter for threedsVersion 1.0.2.
+                type: string
+            threedsCavv:
+                description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow and is a required parameter for threedsVersion 1.0.2
+                type: string
+            threedsCavvAlgorithm:
+                description: CAVV Algorithm for threeds request. The threedsCavvAlgorithm parameter is required for threedsVersion 1.0.2
+                type: string
+            threedsDsTransId:
+                description: Directory Server Transaction ID. The threedsDsTransId parameter is required for threedsVersion 2.1.0
+                type: string
+            threedsAcsTransId:
+                description: Access Control Server Transaction ID. The threedsAcsTransId parameter is required for threedsVersion 2.1.0
+                type: string
+            threedsSdkTransId:
+                description: The 3DS vendor's transaction ID.
+                type: string
+            threedsAuthenticationType:
+                description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (v2.1.0).
+                type: string
+            threedsAuthenticationValue:
+                description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (v2.1.0).
+                type: string
+            threedsClientTransactionId:
+                description: The parameter is automatically generated by the Advanced Widget. Its purpose is to identify the origin of the 3DS authentication transaction.
+                type: string
+            threedsSuccess:
+                description: Verification of 3DS authentication success or failure.
+                type: boolean
+            threedsAmount:
+                description: The amount to be charged (same as `initialPrice`).
+                type: number
+            threedsCurrency:
+                description: The 3-digit currency code for the currency to be used in this transaction.
+                type: string
+            threedsError:
+                description: Error received from the 3DS vendor during the strong customer authentication process. The parameter is required if no threedsVersion is provided.
+                type: string
+            threedsErrorDetail:
+                description: Error details related to the `threedsError`.
+                type: string
+            threedsErrorCode:
+                description: Error code.
+                type: string
+            threedsResponse:
+                description: The complete response in case of an error.
+                type: string
+        required:
+            - clientAccnum
+            - clientSubacc
+            - initialPrice
+            - initialPeriod
+            - threedsCardToken
+            - currencyCode
+            - threedsCavv
+            - threedsEci
+            - threedsClientTransactionId
+            - threedsSuccess
+        example:
+            clientAccnum: 900123
+            clientSubacc: 10
+            initialPrice: 9.99
+            initialPeriod: 10
+            recurringPrice: 15.00
+            recurringPeriod: 30
+            rebills: 99
+            currencyCode: "840"
+            lifeTimeSubscription: false
+            createNewPaymentToken: false
+            passThroughInfo:
+                - name: "val1"
+                  value: "val2"
+            threedsEci: "05"
+            threedsError: ""
+            threedsStatus: "Y"
+            threedsSuccess: true
+            threedsVersion: "1.0.2"
+            threedsXid: "aWQteHc4ajJnNGIxZW8gICAgICA="
+            threedsCavv: "cGFzc3dvcmQxMjM0NTZwYXNzd28="
+            threedsCavvAlgorithm: "SHA-256"
+            threedsAmount: 10
+            threedsClientTransactionId: "id-wl9r6duc5zj"
+            threedsCurrency: "USD"
+            threedsSdkTransId: ""
+            threedsAcsTransId: ""
+            threedsDsTransId: ""
+            threedsAuthenticationType: ""
+            threedsCardToken: "gjeoB5NdJ1r6p0dG"
+            threedsErrorDetail: ""
+            threedsErrorCode: ""
+            threedsResponse: ""
+    ValidationError:
+      type: object
+      properties:
+        field:
+          description: Field in error
+          type: string
+        message:
+          description: User friendly message
+          type: string
+      required:
+        - field
+        - message
+      example:
+        field: string
+        message: string
+    Error:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: string
+        url: specific/endpoint
+        generalMessage: General error message
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error400:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        errors:
+          description: Optional, only returned on 400 Bad Request errors for validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
+  responses:
+    '400':
+      description: The response failed to complete due to an invalid header/parameter in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '401':
+      description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    '403':
+      description: The response failed to complete because access to the resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '404':
+      description: The response failed to complete due to an invalid resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '405':
+      description: The response failed to complete due to an invalid method of request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '406':
+      description: The response failed to complete due to an unacceptable media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '415':
+      description: The response failed to complete due to an unsupported media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '500':
+      description: The response failed to complete in some way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+  parameters:
+    trait_versioned_Accept:
+      name: '200'
+      in: header
+      description: API version
+      schema:
+        type: string
+  examples:
+    PaymentTokenMerchantOnlyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    PaymentTokenMerchantOnlyVerifyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyVerifyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    CustomerInfoAll:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        address1: Woodland Drive
+        address2: Apt 21
+        city: Tempe
+        state: AZ
+        zipcode: '85281'
+        country: US
+        phoneNumber: '5555555555'
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+        browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+        browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        browserHttpAcceptLanguage: en-US,en;q=0.5
+        browserHttpAcceptEncoding: gzip, deflate, br
+    CustomerInfoRequired:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        zipcode: '85281'
+        country: US
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+    CreditCardWithCvvPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+        cvv2: '123'
+    CreditCardPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
