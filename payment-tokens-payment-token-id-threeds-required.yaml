@@ -1,0 +1,257 @@
+openapi: 3.0.0
+info:
+  title: RESTful API Endpoints
+  version: 1.0.0
+servers:
+  - url: https://api.ccbill.com
+    description: Production Server
+  - url: https://api.dev.ccbill.com
+    description: Deveopment Server
+tags:
+  - name: /payment-tokens
+    description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
+  - name: /transactions
+    description: |-
+      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
+      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
+security:
+  - bearerAuth: []
+paths:
+  /payment-tokens/{paymentTokenId}/threeds-required:
+    get:
+      tags:
+        - /payment-tokens
+      summary: 3DS payment token check
+      description: Use this endpoint to determine if a transaction must undergo 3DS verification based on the payment token ID.<br><br> European laws, such as <a href="https://ccbill.com/blog/what-is-psd2" target="_blank">PSD2</a>, require the use of <a href="https://ccbill.com/kb/strong-customer-authentication" target="_blank">Strong Customer Authentication</a>, such as the <a href="https://ccbill.com/kb/3d-secure-2" target="_blank">3DS</a> protocol, for online payment processing.<br><br> When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+      x-codeSample:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X GET \
+            https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d/threeds-required \
+            -H 'Authorization: Bearer TOKEN' \
+            -H 'Cache-Control: no-cache'
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Complex representation of Payment Token Id
+        - name: currencyCode
+          in: query
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 840
+              - 978
+              - 826
+              - 124
+              - 36
+              - 392
+          description: |-
+            Currency code.  The following are available:
+              - USD - 840
+              - EUR - 978
+              - GBP - 826
+              - CAD - 124
+              - AUD - 036
+              - JPY - 392
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/ThreeDSRequired'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    ThreeDSRequired:
+      description: Response parameters after 3DS authentication request.
+      type: object
+      properties:
+        required:
+          description: 3DS required for payment card
+          type: boolean
+        amount:
+          description: Authorized charge amount.
+          type: number
+      example:
+        required: 'true'
+        amount: '1.0'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          description: Field in error
+          type: string
+        message:
+          description: User friendly message
+          type: string
+      required:
+        - field
+        - message
+      example:
+        field: string
+        message: string
+    Error:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: string
+        url: specific/endpoint
+        generalMessage: General error message
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error400:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        errors:
+          description: Optional, only returned on 400 Bad Request errors for validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
+  responses:
+    '400':
+      description: The response failed to complete due to an invalid header/parameter in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '401':
+      description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    '403':
+      description: The response failed to complete because access to the resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '404':
+      description: The response failed to complete due to an invalid resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '405':
+      description: The response failed to complete due to an invalid method of request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '406':
+      description: The response failed to complete due to an unacceptable media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '415':
+      description: The response failed to complete due to an unsupported media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '500':
+      description: The response failed to complete in some way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+  parameters:
+    trait_versioned_Accept:
+      name: '200'
+      in: header
+      description: API version
+      schema:
+        type: string
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
