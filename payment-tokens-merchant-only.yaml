@@ -1,0 +1,545 @@
+openapi: 3.0.0
+info:
+  title: RESTful API Endpoints
+  version: 1.0.0
+servers:
+  - url: https://api.ccbill.com
+    description: Production Server
+  - url: https://api.dev.ccbill.com
+    description: Deveopment Server
+tags:
+  - name: /payment-tokens
+    description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
+  - name: /transactions
+    description: |-
+      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
+      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
+security:
+  - bearerAuth: []
+paths:
+  /payment-tokens/merchant-only:
+    post:
+      tags:
+        - /payment-tokens
+      summary: Create a payment token
+      description: |-
+        This endpoint is used for creating a payment token. Tokenization turns the customer's payment details, like a credit card number,
+         into a unique randomly generated set of characters called a token. The token can then be used to make payments without re-entering or referencing the credit card number. 
+         In the context of the CCBill RESTful API, the Payment Token identifies a billable entity within the system.
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X POST "https://api.ccbill.com/payment-tokens/merchant-only" \
+             -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
+             -H "authorization: Bearer TOKEN"\
+             -H "content-type: application/json" \
+             -d '{"clientAccnum":900000,"clientSubacc":2,"customerInfo":{"value":{"customerFname":"Tyler","customerLname":"Thomas","address1":"Woodland Drive","address2":"Apt 21","city":"Tempe","state":"AZ","zipcode":"85281","country":"US","phoneNumber":"5555555555","email":"tthomas@xyz.com","ipAddress":"10.70.60.14","browserHttpUserAgent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0","browserHttpAccept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","browserHttpAcceptLanguage":"en-US,en;q=0.5","browserHttpAcceptEncoding":"gzip, deflate, br"}},"paymentInfo":{"creditCardPaymentInfo":{"value":{"cardNum":"4473707989493598","nameOnCard":"Tyler Thomas","expMonth":"04","expYear":"2026"}}},"subscriptionId":900000000000000000,"timeToLive":30,"validNumberOfUse":3}' \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = JSON.stringify({
+              "clientAccnum": 900000,
+              "clientSubacc": 0,
+              "customerInfo": {
+                "customerFname": "Tyler",
+                "customerLname": "Thomas",
+                "address1": "Woodland Drive",
+                "address2": "Apt 21",
+                "city": "Tempe",
+                "state": "AZ",
+                "zipcode": "85281",
+                "country": "US",
+                "phoneNumber": "5555555555",
+                "email": "tthomas@xyz.com",
+                "ipAddress": "10.70.60.14",
+                "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
+                "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "browserHttpAcceptLanguage": "en-US,en;q=0.5",
+                "browserHttpAcceptEncoding": "gzip, deflate, br"
+                },
+              "paymentInfo": {
+                "creditCardPaymentInfo": {
+                  "cardNum": "4473707989493598",
+                  "nameOnCard": "Tyler Thomas",
+                  "expMonth": "04",
+                  "expYear": "2026"
+                }
+              },
+            "subscriptionId": 900000000000000000,
+            "timeToLive": 30,
+            "validNumberOfUse": 3
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+              console.log(this.responseText);
+            }
+            });
+            xhr.open("POST", "https://api.ccbill.com/payment-tokens/merchant-only");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: php
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request->setUrl('https://api.ccbill.com/payment-tokens/merchant-only');
+            $request->setMethod(HTTP_METH_POST);
+            $request->setHeaders(array(
+              'Cache-Control' => 'no-cache',
+              'Authorization' => 'Bearer TOKEN',
+              'Content-Type' => 'application/json'
+            ));
+            $request->setBody('{ "clientAccnum": 900000, "clientSubacc": 0, "customerInfo": { "customerFname": "Tyler", "customerLname": "Thomas", "address1": "Woodland Drive", "address2": "Apt 21", "city": "Tempe", "state": "AZ", "zipcode": "85281", "country": "US", "phoneNumber": "5555555555", "email": "tthomas@xyz.com", "ipAddress": "10.70.60.14", "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0", "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "browserHttpAcceptLanguage": "en-US,en;q=0.5", "browserHttpAcceptEncoding": "gzip, deflate, br" }, "paymentInfo": { "creditCardPaymentInfo": { "cardNum": "4473707989493598", "nameOnCard": "Tyler Thomas", "expMonth": "04", "expYear": "2026" } }, "subscriptionId":900000000000000001, "timeToLive": 30, "validNumberOfUse": 3 }');
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentTokenMerchantOnlyParams'
+            examples:
+              Required:
+                $ref: '#/components/examples/PaymentTokenMerchantOnlyParamsRequired'
+              All:
+                $ref: '#/components/examples/PaymentTokenMerchantOnlyParamsAll'
+      parameters:
+        - name: Cache-Control
+          in: header
+          schema:
+            default: no-cache
+          description: Bypass the server-side cache
+      responses:
+        '200':
+          description: The request has been successful. Extract the `paymentTokenID` string to create a charge for the customer.
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenV2'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+		  
+
+components:
+  schemas:
+    CreditCardPaymentInfo:
+      description: Elements of the `paymentInfo` array.
+      type: object
+      properties:
+        cardNum:
+          description: Card number
+          type: string
+        expMonth:
+          description: Card expiration month in mm format
+          type: string
+        expYear:
+          description: Card expiration year in yyyy format
+          type: string
+        nameOnCard:
+          description: Name as it appears on card
+          type: string
+      required:
+        - cardNum
+        - expMonth
+        - expYear
+        - nameOnCard
+    CustomerInfo:
+      description: Elements of the `customerInfo` array.
+      type: object
+      properties:
+        address1:
+          description: Customer's address
+          type: string
+        address2:
+          description: Customer's address (additional info)
+          type: string
+        browserHttpAccept:
+          description: Media type(s) that is(/are) acceptable for the response
+          type: string
+        browserHttpAcceptEncoding:
+          description: List of acceptable encodings
+          type: string
+        browserHttpAcceptLanguage:
+          description: List of acceptable human languages for response
+          type: string
+        browserHttpUserAgent:
+          description: The user agent string of the user agent
+          type: string
+        city:
+          description: Customer's city
+          type: string
+        country:
+          description: Customer's country
+          type: string
+        customerFname:
+          description: Customer's first name
+          type: string
+        customerLname:
+          description: Customer's last name
+          type: string
+        email:
+          description: Customer's email address
+          type: string
+        ipAddress:
+          description: Customer's IP address
+          type: string
+        phoneNumber:
+          description: Customer's phone number
+          type: string
+        state:
+          description: Customer's state
+          type: string
+        zipcode:
+          description: Customer's zip code
+          type: string
+      required:
+        - country
+        - customerFname
+        - customerLname
+        - email
+        - ipAddress
+        - zipcode
+        - city
+        - state
+        - address1
+    PassThroughInfo:
+      description: Elements of the `passThroughInfo` array represent custom paired information passed through to the transaction service.
+      type: object
+      properties:
+        name:
+          description: Custom passthrough value.
+          type: string
+        value:
+          description: Custom passthrough value.
+          type: string
+      required:
+        - name
+        - value
+      example:
+        name: "value1"
+        value: "value2"
+    PaymentInfo:
+      description: Payment information on the customer's payment card. Elements of the `creditCardPaymentInfo` array.
+      type: object
+      properties:
+        creditCardPaymentInfo:
+          description: Credit Card Payment Information
+          allOf:
+            - $ref: '#/components/schemas/CreditCardPaymentInfo'
+    PaymentToken:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creation of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: integer
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: "2022-01-01T01:00:00"
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+    PaymentTokenV2:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creation of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: string
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: "900000000000000001"
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+    PaymentTokenMerchantOnlyParams:
+      description: Parameters for creating a payment token without CVV2 and AVS authentication.
+      type: object
+      properties:
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        customerInfo:
+          description: Customer Information
+          allOf:
+            - $ref: '#/components/schemas/CustomerInfo'
+        paymentInfo:
+          description: Payment Information
+          allOf:
+            - $ref: '#/components/schemas/PaymentInfo'
+        subscriptionId:
+          description: Transaction subscription identification number
+          type: integer
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId	
+    ValidationError:
+      type: object
+      properties:
+        field:
+          description: Field in error
+          type: string
+        message:
+          description: User friendly message
+          type: string
+      required:
+        - field
+        - message
+      example:
+        field: string
+        message: string
+    Error400:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        errors:
+          description: Optional, only returned on 400 Bad Request errors for validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
+  responses:
+    '400':
+      description: The response failed to complete due to an invalid header/parameter in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '401':
+      description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    '403':
+      description: The response failed to complete because access to the resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '404':
+      description: The response failed to complete due to an invalid resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '405':
+      description: The response failed to complete due to an invalid method of request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '406':
+      description: The response failed to complete due to an unacceptable media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '415':
+      description: The response failed to complete due to an unsupported media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '500':
+      description: The response failed to complete in some way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+  parameters:
+    trait_versioned_Accept:
+      name: '200'
+      in: header
+      description: API version
+      schema:
+        type: string
+  examples:
+    PaymentTokenMerchantOnlyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
