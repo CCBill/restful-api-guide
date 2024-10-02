@@ -1,0 +1,342 @@
+openapi: 3.0.0
+info:
+  title: RESTful API Endpoints
+  version: 1.0.0
+servers:
+  - url: https://api.ccbill.com
+    description: Production Server
+  - url: https://api.dev.ccbill.com
+    description: Deveopment Server
+tags:
+  - name: /transactions
+    description: |-
+      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
+      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
+security:
+  - bearerAuth: []
+paths:
+  /transactions/payment-tokens/{paymentTokenId}:
+    get:
+      tags:
+        - /transactions
+      summary: View previous charge
+      description: |-
+        Use this endpoint to obtain data on a previously made charge. You will need to identify the charge by the ID.
+        Supply the payment token ID as a URI parameter.
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: currencyCode
+          in: query
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 840
+              - 978
+              - 826
+              - 124
+              - 36
+              - 392
+          description: |-
+            Currency code.  The following are available:
+              - USD - 840
+              - EUR - 978
+              - GBP - 826
+              - CAD - 124
+              - AUD - 36
+              - JPY - 392
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenTransaction'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '405':
+          $ref: '#/components/responses/405'
+        '406':
+          $ref: '#/components/responses/406'
+        '415':
+          $ref: '#/components/responses/415'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    PaymentTokenTransaction:
+      type: object
+      properties:
+        clientAccnum:
+          description: clientAccnum of the merchant
+          type: integer
+        clientSubacc:
+          description: clientSubacc of the merchant
+          type: integer
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: string
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
+      example:
+        clientAccnum: 900112
+        clientSubacc: 2
+        subscriptionId: '918166501000000981'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          description: Field in error
+          type: string
+        message:
+          description: User friendly message
+          type: string
+      required:
+        - field
+        - message
+      example:
+        field: string
+        message: string
+    Error:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: string
+        url: specific/endpoint
+        generalMessage: General error message
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error400:
+      type: object
+      properties:
+        id:
+          pattern: ^[a-zA-Z0-9-]*$
+          description: Randomly generated GUID
+          type: string
+        url:
+          description: The RELATIVE url that has caused this error
+          type: string
+        errors:
+          description: Optional, only returned on 400 Bad Request errors for validation errors
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
+  responses:
+    '400':
+      description: The response failed to complete due to an invalid header/parameter in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '401':
+      description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    '403':
+      description: The response failed to complete because access to the resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '404':
+      description: The response failed to complete due to an invalid resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '405':
+      description: The response failed to complete due to an invalid method of request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '406':
+      description: The response failed to complete due to an unacceptable media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '415':
+      description: The response failed to complete due to an unsupported media type in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    '500':
+      description: The response failed to complete in some way.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+  parameters:
+    trait_versioned_Accept:
+      name: '200'
+      in: header
+      description: API version
+      schema:
+        type: string
+  examples:
+    PaymentTokenMerchantOnlyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    PaymentTokenMerchantOnlyVerifyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyVerifyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    CustomerInfoAll:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        address1: Woodland Drive
+        address2: Apt 21
+        city: Tempe
+        state: AZ
+        zipcode: '85281'
+        country: US
+        phoneNumber: '5555555555'
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+        browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+        browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        browserHttpAcceptLanguage: en-US,en;q=0.5
+        browserHttpAcceptEncoding: gzip, deflate, br
+    CustomerInfoRequired:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        zipcode: '85281'
+        country: US
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+    CreditCardWithCvvPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+        cvv2: '123'
+    CreditCardPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
