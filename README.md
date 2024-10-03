@@ -608,7 +608,7 @@ After you have generated a new bearer token, and after you have generated the pa
   "approved": true,
   "paymentUniqueId": "dG4P1t8dL58pA3rNxE+Phw",
   "sessionId": null,
-  "subscriptionId": 121095101000018190,
+  "subscriptionId": "121095101000018190",
   "newPaymentTokenId":null
 }
 ```
@@ -705,7 +705,7 @@ After you have generated a new bearer token, and after you have generated the pa
   "approved": true,
   "paymentUniqueId": "dG4P1t8dL58pA3rNxE+Phw",
   "sessionId": null,
-  "subscriptionId": 121095101000018190,
+  "subscriptionId": "121095101000018190",
   "newPaymentTokenId":null
 }
 ```
