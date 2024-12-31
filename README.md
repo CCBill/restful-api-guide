@@ -532,15 +532,19 @@ const result = widget.authenticateCustomer(authToken, form, clientAccnum, client
 
 After you have generated a new bearer token, and after you have generated the payment token, you will then be able to use those two new tokens to charge the consumer’s credit card.
 
+#### Versioning
+
+CCBill's RESTful API uses **Media Type Versioning** to specify the API version and media type. You can explicitly request a specific API version by including the desired media type in the `Accept` header of your requests. To request the latest version of the API, include the following in the request headers:
+
+`Accept: application/vnd.mcn.transaction-service.api.v.2+json`
+
+All API request and response examples in this guide use the latest version header. Check the headers in each example to ensure it is compatible with your implementation.
+
 ### Charge Payment Token (Without 3DS Authentication)
 
 #### Endpoint URL
 
 * **https://api.ccbill.com/transactions/payment-tokens/{paymentTokenId}**
-
-#### Headers
-
-* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
 
 #### Request Parameters
 
