@@ -5,96 +5,37 @@ info:
 servers:
   - url: https://api.ccbill.com
     description: Production Server
-  - url: https://api.dev.ccbill.com
-    description: Deveopment Server
 tags:
   - name: /payment-tokens
     description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
+  - name: /transactions
+    description: |-
+      Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
+      A charge can represent a transaction on a customer's billing details by a sponsor, based on a token obtained from an affiliate that identifies one of their clients.
 security:
   - bearerAuth: []
 paths:
-  /payment-tokens/threeds-required:
+  /payment-tokens/{paymentTokenId}/threeds-required:
     get:
       tags:
         - /payment-tokens
-      summary: 3DS card check
-      description: Use this request to determine if a payment card must undergo 3DS verification. The financial institution that issued the payment card to the cardholder (the customer's bank) needs to support the 3DS function. The issuing bank authenticates the transaction, and either approves or declines it.<br><br>
-      x-codeSamples:
+      summary: 3DS payment token check
+      description: Use this endpoint to determine if a transaction must undergo 3DS verification based on the payment token ID.<br><br> European laws, such as <a href="https://ccbill.com/blog/what-is-psd2" target="_blank">PSD2</a>, require the use of <a href="https://ccbill.com/kb/strong-customer-authentication" target="_blank">Strong Customer Authentication</a>, such as the <a href="https://ccbill.com/kb/3d-secure-2" target="_blank">3DS</a> protocol, for online payment processing.<br><br> When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
+      x-codeSample:
         - lang: bash
           label: cURL
           source: |
-            curl -X GET "https://api.ccbill.com/payment-tokens/threeds-required?bin=411111&last4=1111&clientAccnum=900000&clientSubacc=2" \
-            -H "accept: application/vnd.mcn.transaction-service.api.v.2+json"\
-            -H "authorization: Bearer TOKEN" \
-        - lang: javascript
-          label: JavaScript
-          source: |
-            var data = null;
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-            xhr.addEventListener("readystatechange", function () {
-              if (this.readyState === 4) {
-                console.log(this.responseText);
-              }
-            });
-            xhr.open("GET", "https://api.ccbill.com/payment-tokens/threeds-required?bin=411111&last4=1111&clientAccnum=900000&clientSubacc=2");
-            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
-            xhr.setRequestHeader("Accept", "*/*");
-            xhr.setRequestHeader("Cache-Control", "no-cache");
-            xhr.send(data);
-        - lang: php
-          label: PHP
-          source: |
-            <?php
-            $request = new HttpRequest();
-            $request--->setUrl('https://api.ccbill.com/payment-tokens/threeds-required');
-            $request->setMethod(HTTP_METH_GET);
-            $request->setQueryData(array(
-              'bin' => '411111',
-              'last4' => '1111',
-              'clientAccnum' => '900684',
-              'clientSubacc' => '0000'
-            ));
-            $request->setHeaders(array(
-              'cache-control' => 'no-cache',
-              'Accept' => '*/*',
-              'Authorization' => 'Bearer TOKEN'
-            ));
-            try {
-              $response = $request->send();
-              echo $response->getBody();
-            } catch (HttpException $ex) {
-              echo $ex;
-            }
-            ?>
+            curl -X GET \
+            https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d/threeds-required \
+            -H 'Authorization: Bearer TOKEN' \
+            -H 'Cache-Control: no-cache'
       parameters:
-        - name: bin
-          in: query
+        - name: paymentTokenId
+          in: path
           required: true
-          description: The Bank Identification Number (Usually the first 4-6 digits of the card number).
-          schema:
-            type: integer
-        - name: last4
-          in: query
-          required: true
-          description: The last 4 digits of the credit card number.
           schema:
             type: string
-        - name: clientAccnum
-          in: query
-          required: true
-          description: Merchant's account number.
-          schema:
-            minimum: 900000
-            maximum: 999999
-            type: integer
-        - name: clientSubacc
-          in: query
-          description: Merchant's sub-account number.
-          schema:
-            minimum: 0
-            maximum: 9999
-            type: integer
+          description: Complex representation of Payment Token Id
         - name: currencyCode
           in: query
           required: true

@@ -78,12 +78,12 @@ paths:
         '200':
           description: Successful Response
           content:
-            application/vnd.mcn.transaction-service.api.v.1+json:
-              schema:
-                $ref: '#/components/schemas/TransactionInfo'
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfoV2'
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/TransactionInfo'
         '400':
           $ref: '#/components/responses/400'
         '401':

@@ -8,24 +8,28 @@ servers:
   - url: https://api.dev.ccbill.com
     description: Deveopment Server
 tags:
-  - name: /payment-tokens
+  - name: "/payment-tokens"
     description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
 security:
   - bearerAuth: []
 paths:
-  /payment-tokens/program-specified:
+  /payment-tokens/target-client:
     post:
       tags:
         - /payment-tokens
-      summary: Generate payment token for specified program participants
+      summary: Create payment token for merchant/client
       description: |-
-        This endpoint allows merchants to generate payment tokens for cross-sale opportunities with other specified program participants (merchants).
+        This endpoint generates a payment token for the specified merchant/client.
+        It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
+        CCBill enables merchants to create <a href="https://ccbill.com/docs/Merchant-Connect/merchant-connect.pdf" target="_blank">Merchant Connect</a> sponsor programs and share revenue with other merchants for referred sales. 
+        CCBill is a matchmaker between sponsor merchants and affiliate merchants. The platform supports one-click transactions, allowing affiliate merchants to easily and legally offer instant purchases to your audience on their websites. 
+        CCBill tracks and handles the one-click transactions, calculates revenue sharing, and facilitates payouts to sponsors and affiliates.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaymentTokenProgramSpecifiedParams'
+              $ref: '#/components/schemas/PaymentTokenTargetClientParams'
             examples:
               Required:
                 summary: Required fields
@@ -84,12 +88,12 @@ paths:
         '200':
           description: Successful Response
           content:
-            application/vnd.mcn.transaction-service.api.v.1+json:
-              schema:
-                $ref: '#/components/schemas/PaymentTokenVerify'
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
-                $ref: '#/components/schemas/PaymentTokenVerifyV2'
+                $ref: '#/components/schemas/PaymentTokenV2'
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -106,8 +110,117 @@ paths:
           $ref: '#/components/responses/415'
         '500':
           $ref: '#/components/responses/500'
+  
 components:
   schemas:
+    PaymentToken:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creation of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: integer
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: "2022-01-01T01:00:00"
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+    PaymentTokenV2:
+      description: These response parameters are received when a payment token is successfully created.
+      type: object
+      properties:
+        paymentTokenId:
+          description: Complex representation of Payment Token Id
+          type: string
+        programParticipationId:
+          description: Program connected to the Payment Token
+          type: integer
+        originalPaymentTokenId:
+          description: Reference to a previous Token Id
+          type: string
+        clientAccnum:
+          description: Merchant account number
+          type: integer
+        clientSubacc:
+          description: Merchant subaccount number
+          type: integer
+        createdDatetime:
+          description: Date Time of creation of the Payment Token
+          type: string
+        timeToLive:
+          description: Time for the token to exist
+          type: integer
+        validNumberOfUse:
+          description: Total number of times the Payment Token can be used for purchases
+          type: integer
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: string
+        paymentInfoId:
+          description: Information associated with the payment
+          type: string
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: "900000000000000001"
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
     CreditCardPaymentInfo:
       description: Elements of the `paymentInfo` array.
       type: object
@@ -196,211 +309,8 @@ components:
           description: Credit Card Payment Information
           allOf:
             - $ref: '#/components/schemas/CreditCardPaymentInfo'
-    PaymentTokenVerify:
-      description: |
-        These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
-      type: object
-      properties:
-        paymentTokenId:
-          description: "Complex representation of Payment Token Id"
-          type: string
-        programParticipationId:
-          description: "Program connected to the Payment Token"
-          type: integer
-        originalPaymentTokenId:
-          description: "Reference to a previous Token Id"
-          type: string
-        clientAccnum:
-          description: "Merchant account number"
-          type: integer
-        clientSubacc:
-          description: "Merchant subaccount number"
-          type: integer
-        createdDatetime:
-          description: "Date Time of creation of the Payment Token"
-          type: string
-          format: date-time
-        timeToLive:
-          description: "Time for the token to exist"
-          type: integer
-        validNumberOfUse:
-          description: "Total number of times the Payment Token can be used for purchases"
-          type: integer
-        subscriptionId:
-          description: "Identification of the subscription associated with the transaction"
-          type: integer
-        paymentInfoId:
-          description: "Information associated with the payment"
-          type: string
-        cvv2Response:
-          description: |
-            The result of CVV2 verification.
-          type: string
-          enum:
-            - "M"  # CVV2 Match
-            - "N"  # CVV2 No Match
-            - "P"  # CVV2 Not Processed
-            - "S"  # CVV2 Service Not Allowed
-            - "U"  # CVV2 Unreadable
-        avsResponse:
-          description: |
-             The result of AVS verification.
-          type: string
-          enum:
-            - "A"  # Address matches, ZIP does not
-            - "B"  # Address and ZIP match (both are blank)
-            - "C"  # Address matches, ZIP does not
-            - "D"  # Address matches, ZIP does not
-            - "E"  # AVS error
-            - "F"  # Address and ZIP match
-            - "G"  # Address matches, ZIP does not
-            - "H"  # Address and ZIP match
-            - "I"  # AVS unavailable
-            - "J"  # Address matches, ZIP does not
-            - "K"  # Address matches, ZIP does not
-            - "L"  # Address matches, ZIP does not
-            - "M"  # Address and ZIP match
-            - "N"  # Address and ZIP do not match
-            - "O"  # Address and ZIP match (both are blank)
-            - "P"  # Address and ZIP match (both are blank)
-            - "Q"  # Address and ZIP match (both are blank)
-            - "R"  # Address matches, ZIP does not
-            - "S"  # Address matches, ZIP does not
-            - "T"  # Address matches, ZIP does not
-            - "U"  # Address matches, ZIP does not
-            - "V"  # Address matches, ZIP does not
-            - "W"  # Address matches, ZIP does not
-            - "X"  # Address and ZIP match
-            - "Y"  # Address and ZIP match
-            - "Z"  # Address and ZIP match
-      required:
-        - paymentTokenId
-        - programParticipationId
-        - clientAccnum
-        - clientSubacc
-        - createdDatetime
-        - timeToLive
-        - validNumberOfUse
-        - subscriptionId
-        - cvv2Response
-        - avsResponse
-      example:
-        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        programParticipationId: 1
-        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        clientAccnum: 900000
-        clientSubacc: 0
-        createdDatetime: '2022-01-01T01:00:00'
-        timeToLive: 30
-        validNumberOfUse: 20
-        subscriptionId: 900000000000000000
-        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
-        cvv2Response: "M"
-        avsResponse: "Y"
-
-    PaymentTokenVerifyV2:
-      description: |
-        These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
-      type: object
-      properties:
-        paymentTokenId:
-          description: "Complex representation of Payment Token Id"
-          type: string
-        programParticipationId:
-          description: "Program connected to the Payment Token"
-          type: integer
-        originalPaymentTokenId:
-          description: "Reference to a previous Token Id"
-          type: string
-        clientAccnum:
-          description: "Merchant account number"
-          type: integer
-        clientSubacc:
-          description: "Merchant subaccount number"
-          type: integer
-        createdDatetime:
-          description: "Date Time of creation of the Payment Token"
-          type: string
-          format: date-time
-        timeToLive:
-          description: "Time for the token to exist"
-          type: integer
-        validNumberOfUse:
-          description: "Total number of times the Payment Token can be used for purchases"
-          type: integer
-        subscriptionId:
-          description: "Identification of the subscription associated with the transaction"
-          type: string
-        paymentInfoId:
-          description: "Information associated with the payment"
-          type: string
-        cvv2Response:
-          description: |
-            The result of CVV2 verification. 
-          type: string
-          enum:
-            - "M"  # CVV2 Match
-            - "N"  # CVV2 No Match
-            - "P"  # CVV2 Not Processed
-            - "S"  # CVV2 Service Not Allowed
-            - "U"  # CVV2 Unreadable
-        avsResponse:
-          description: |
-            The result of AVS verification. 
-          type: string
-          enum:
-            - "A"  # Address matches, ZIP does not
-            - "B"  # Address and ZIP match (both are blank)
-            - "C"  # Address matches, ZIP does not
-            - "D"  # Address matches, ZIP does not
-            - "E"  # AVS error
-            - "F"  # Address and ZIP match
-            - "G"  # Address matches, ZIP does not
-            - "H"  # Address and ZIP match
-            - "I"  # AVS unavailable
-            - "J"  # Address matches, ZIP does not
-            - "K"  # Address matches, ZIP does not
-            - "L"  # Address matches, ZIP does not
-            - "M"  # Address and ZIP match
-            - "N"  # Address and ZIP do not match
-            - "O"  # Address and ZIP match (both are blank)
-            - "P"  # Address and ZIP match (both are blank)
-            - "Q"  # Address and ZIP match (both are blank)
-            - "R"  # Address matches, ZIP does not
-            - "S"  # Address matches, ZIP does not
-            - "T"  # Address matches, ZIP does not
-            - "U"  # Address matches, ZIP does not
-            - "V"  # Address matches, ZIP does not
-            - "W"  # Address matches, ZIP does not
-            - "X"  # Address and ZIP match
-            - "Y"  # Address and ZIP match
-            - "Z"  # Address and ZIP match
-      required:
-        - paymentTokenId
-        - programParticipationId
-        - clientAccnum
-        - clientSubacc
-        - createdDatetime
-        - timeToLive
-        - validNumberOfUse
-        - subscriptionId
-        - cvv2Response
-        - avsResponse
-      example:
-        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        programParticipationId: 1
-        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        clientAccnum: 900000
-        clientSubacc: 0
-        createdDatetime: '2022-01-01T01:00:00'
-        timeToLive: 30
-        validNumberOfUse: 20
-        subscriptionId: '900000000000000001'
-        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
-        cvv2Response: "M"
-        avsResponse: 'Y'
-    PaymentTokenProgramSpecifiedParams:
-      description: Parameters for generating payment tokens for cross-sale opportunities with other specified program participants (merchants).
+    PaymentTokenTargetClientParams:
+      description: Parameters for generating a payment token for the specified merchant/client. It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
       type: object
       properties:
         clientAccnum:
@@ -420,8 +330,11 @@ components:
         subscriptionId:
           description: Transaction subscription identification number
           type: integer
-        programParticipationId:
-          description: Identifier represents the program associated with the transaction
+        targetClientAccnum:
+          description: Target Merchant Account Number
+          type: integer
+        targetClientSubacc:
+          description: Target Merchant Subaccount Number
           type: integer
         timeToLive:
           description: Time for the token to exist
@@ -433,7 +346,8 @@ components:
         - clientAccnum
         - clientSubacc
         - subscriptionId
-        - programParticipationId
+        - targetClientAccnum
+        - targetClientSubacc
       example:
         clientAccnum: 900000
         clientSubacc: 0
@@ -460,9 +374,11 @@ components:
             expMonth: '04'
             expYear: '2026'
         subscriptionId: 900000000000000000
-        programParticipationId: 1
+        targetClientAccnum: 900000
+        targetClientSubacc: 1
         timeToLive: 30
         validNumberOfUse: 3
+
     ValidationError:
       type: object
       properties:

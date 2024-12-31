@@ -5,11 +5,7 @@ info:
 servers:
   - url: https://api.ccbill.com
     description: Production Server
-  - url: https://api.dev.ccbill.com
-    description: Deveopment Server
 tags:
-  - name: /payment-tokens
-    description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
   - name: /transactions
     description: |-
       Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
@@ -17,27 +13,20 @@ tags:
 security:
   - bearerAuth: []
 paths:
-  /payment-tokens/{paymentTokenId}/threeds-required:
+  /transactions/payment-tokens/{paymentTokenId}:
     get:
       tags:
-        - /payment-tokens
-      summary: 3DS payment token check
-      description: Use this endpoint to determine if a transaction must undergo 3DS verification based on the payment token ID.<br><br> European laws, such as <a href="https://ccbill.com/blog/what-is-psd2" target="_blank">PSD2</a>, require the use of <a href="https://ccbill.com/kb/strong-customer-authentication" target="_blank">Strong Customer Authentication</a>, such as the <a href="https://ccbill.com/kb/3d-secure-2" target="_blank">3DS</a> protocol, for online payment processing.<br><br> When an EU-based cardholder makes a payment online, SCA is initiated. Merchants can use CCBill's Advanced Widget and its functions to facilitate strong customer authentication.
-      x-codeSample:
-        - lang: bash
-          label: cURL
-          source: |
-            curl -X GET \
-            https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d/threeds-required \
-            -H 'Authorization: Bearer TOKEN' \
-            -H 'Cache-Control: no-cache'
+        - /transactions
+      summary: View previous charge
+      description: |-
+        Use this endpoint to obtain data on a previously made charge. You will need to identify the charge by the ID.
+        Supply the payment token ID as a URI parameter.
       parameters:
         - name: paymentTokenId
           in: path
           required: true
           schema:
             type: string
-          description: Complex representation of Payment Token Id
         - name: currencyCode
           in: query
           required: true
@@ -56,15 +45,15 @@ paths:
               - EUR - 978
               - GBP - 826
               - CAD - 124
-              - AUD - 036
+              - AUD - 36
               - JPY - 392
       responses:
         '200':
           description: Successful Response
           content:
-            application/vnd.mcn.transaction-service.api.v.2+json:
+            application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
-                $ref: '#/components/schemas/ThreeDSRequired'
+                $ref: '#/components/schemas/PaymentTokenTransaction'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -83,19 +72,26 @@ paths:
           $ref: '#/components/responses/500'
 components:
   schemas:
-    ThreeDSRequired:
-      description: Response parameters after 3DS authentication request.
+    PaymentTokenTransaction:
       type: object
       properties:
-        required:
-          description: 3DS required for payment card
-          type: boolean
-        amount:
-          description: Authorized charge amount.
-          type: number
+        clientAccnum:
+          description: clientAccnum of the merchant
+          type: integer
+        clientSubacc:
+          description: clientSubacc of the merchant
+          type: integer
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: string
+      required:
+        - clientAccnum
+        - clientSubacc
+        - subscriptionId
       example:
-        required: 'true'
-        amount: '1.0'
+        clientAccnum: 900112
+        clientSubacc: 2
+        subscriptionId: '918166501000000981'
     ValidationError:
       type: object
       properties:
@@ -251,6 +247,93 @@ components:
       description: API version
       schema:
         type: string
+  examples:
+    PaymentTokenMerchantOnlyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardPaymentInfo/value'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    PaymentTokenMerchantOnlyVerifyParamsRequired:
+      summary: Required fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoRequired/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo/value'
+        subscriptionId: 900000000000000000
+    PaymentTokenMerchantOnlyVerifyParamsAll:
+      summary: All fields
+      value:
+        clientAccnum: 900000
+        clientSubacc: 2
+        customerInfo:
+          $ref: '#/components/examples/CustomerInfoAll/value'
+        paymentInfo:
+          creditCardPaymentInfo:
+            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo'
+        subscriptionId: 900000000000000000
+        timeToLive: 30
+        validNumberOfUse: 3
+    CustomerInfoAll:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        address1: Woodland Drive
+        address2: Apt 21
+        city: Tempe
+        state: AZ
+        zipcode: '85281'
+        country: US
+        phoneNumber: '5555555555'
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+        browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+        browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        browserHttpAcceptLanguage: en-US,en;q=0.5
+        browserHttpAcceptEncoding: gzip, deflate, br
+    CustomerInfoRequired:
+      value:
+        customerFname: Tyler
+        customerLname: Thomas
+        zipcode: '85281'
+        country: US
+        email: tthomas@xyz.com
+        ipAddress: 10.70.60.14
+    CreditCardWithCvvPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
+        cvv2: '123'
+    CreditCardPaymentInfo:
+      value:
+        cardNum: '4473707989493598'
+        nameOnCard: Tyler Thomas
+        expMonth: '04'
+        expYear: '2026'
   requestBodies: {}
   headers: {}
   links: {}
