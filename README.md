@@ -314,7 +314,7 @@ The Advanced Widget will automatically collect the ID value if the form is creat
 or the `<select>` element for the currencyCode ID:
 
 ```html
-<select data-ccbill="currencyCode" />
+<select data-ccbill="currencyCode">
       
         <option>…</option>
         <option>…</option>
@@ -334,7 +334,7 @@ or the `<select>` element for the currencyCode ID:
 ```
 or the `<select>` element for **_ccbillId_currencyCode**: 
 ```html
-      <select id="_ccbillId_currencyCode" />
+      <select id="_ccbillId_currencyCode">
 
         <option>…</option>
         <option>…</option>
@@ -403,7 +403,7 @@ The Advanced Widget will automatically collect the ID value if the form is creat
 or the `<select>` element for the currencyCode ID:
 
 ```html
-<select data-ccbill="currencyCode" />
+<select data-ccbill="currencyCode">
       
         <option>…</option>
         <option>…</option>
@@ -423,7 +423,7 @@ or the `<select>` element for the currencyCode ID:
 ```
 or the `<select>` element for **_ccbillId_currencyCode**: 
 ```html
-      <select id="_ccbillId_currencyCode" />
+      <select id="_ccbillId_currencyCode">
 
         <option>…</option>
         <option>…</option>
