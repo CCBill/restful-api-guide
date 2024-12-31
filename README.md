@@ -48,7 +48,7 @@ This document describes the API resources and endpoints of the CCBill Transactio
 Below are the 3 essential steps for charging the consumer using a payment token:
 
 1. Generate the CCBill OAuth Bearer Token
-   * **The request to generate the `CCBill OAuth` token must be sent from your back-end services directly to the CCBill API, and it can not be requested from within the browser**
+   * **The request to generate the `CCBill OAuth` token must be sent from your back-end services directly to the CCBill API, and it can not be requested from within the browser.**
 
 2. Create the [Payment Token](https://ccbill.com/kb/credit-card-tokenization)
 
