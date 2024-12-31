@@ -8,6 +8,8 @@ servers:
   - url: https://api.dev.ccbill.com
     description: Deveopment Server
 tags:
+  - name: /payment-tokens
+    description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
   - name: /transactions
     description: |-
       Use the `/transactions` endpoint to create a charge for an existing or new customer, or to retrieve data on a charge.
@@ -16,46 +18,61 @@ security:
   - bearerAuth: []
 paths:
   /transactions/payment-tokens/{paymentTokenId}:
-    get:
+    post:
       tags:
         - /transactions
-      summary: View previous charge
+      summary: Create a transaction request
       description: |-
-        Use this endpoint to obtain data on a previously made charge. You will need to identify the charge by the ID.
+        The POST `/transactions/payment-tokens/{paymentTokenId}` API call will create a transaction request for a customer.
+        The customer is identified by a token that is obtained from an affiliate. If the token is short-lived, and this is the first billing for this customer a longer-lived token is returned.
         Supply the payment token ID as a URI parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+            examples:
+              Required:
+                summary: Required fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  currencyCode: 840
+              All:
+                summary: All fields
+                value:
+                  clientAccnum: 900123
+                  clientSubacc: 10
+                  initialPrice: 9.99
+                  initialPeriod: 10
+                  recurringPrice: 15
+                  recurringPeriod: 30
+                  rebills: 99
+                  currencyCode: 840
+                  lifeTimeSubscription: false
+                  createNewPaymentToken: false
+                  passThroughInfo:
+                    - name: val1
+                      value: val2
       parameters:
         - name: paymentTokenId
           in: path
           required: true
           schema:
             type: string
-        - name: currencyCode
-          in: query
-          required: true
-          schema:
-            type: integer
-            enum:
-              - 840
-              - 978
-              - 826
-              - 124
-              - 36
-              - 392
-          description: |-
-            Currency code.  The following are available:
-              - USD - 840
-              - EUR - 978
-              - GBP - 826
-              - CAD - 124
-              - AUD - 36
-              - JPY - 392
       responses:
         '200':
           description: Successful Response
           content:
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/TransactionInfoV2'
             application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
-                $ref: '#/components/schemas/PaymentTokenTransaction'
+                $ref: '#/components/schemas/TransactionInfo'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -74,7 +91,96 @@ paths:
           $ref: '#/components/responses/500'
 components:
   schemas:
-    PaymentTokenTransaction:
+    PassThroughInfo:
+      description: Elements of the `passThroughInfo` array represent custom paired information passed through to the transaction service.
+      type: object
+      properties:
+        name:
+          description: Custom passthrough value.
+          type: string
+        value:
+          description: Custom passthrough value.
+          type: string
+      required:
+        - name
+        - value
+      example:
+        name: "value1"
+        value: "value2"
+    TransactionInfo:
+      description: Response parameters confirm that a customer was successfully charged using a payment token.
+      type: object
+      properties:
+        errorCode:
+          description: Error condition value of the transaction
+          type: integer
+        approved:
+          description: Approval status of the transaction
+          type: boolean
+        paymentUniqueId:
+          description: Unique key connected to payment account
+          type: string
+        sessionId:
+          description: Unique session ID value for transaction
+          type: string
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: integer
+        newPaymentTokenId:
+          description: New payment token for subsequent transactions
+          type: string
+      required:
+        - errorCode
+        - approved
+        - paymentUniqueId
+        - sessionId
+        - subscriptionId
+        - newPaymentTokenId
+      example:
+        errorCode: 200
+        approved: true
+        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
+        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        subscriptionId: 900000000000000000
+        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    TransactionInfoV2:
+      description: Response parameters confirm that a customer was successfully charged using a payment token.
+      type: object
+      properties:
+        errorCode:
+          description: Error condition value of the transaction
+          type: integer
+        approved:
+          description: Approval status of the transaction
+          type: boolean
+        paymentUniqueId:
+          description: Unique key connected to payment account
+          type: string
+        sessionId:
+          description: Unique session ID value for transaction
+          type: string
+        subscriptionId:
+          description: subscription ID to which the transaction belongs
+          type: string
+        newPaymentTokenId:
+          description: New payment token for subsequent transactions
+          type: string
+      required:
+        - errorCode
+        - approved
+        - paymentUniqueId
+        - sessionId
+        - subscriptionId
+        - newPaymentTokenId
+      example:
+        errorCode: 200
+        approved: true
+        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
+        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        subscriptionId: "900000000000000000"
+        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    TransactionRequest:
+      description: Request parameters for initiating a transaction request for a customer.
       type: object
       properties:
         clientAccnum:
@@ -83,17 +189,55 @@ components:
         clientSubacc:
           description: clientSubacc of the merchant
           type: integer
-        subscriptionId:
-          description: subscription ID to which the transaction belongs
+        initialPrice:
+          description: price of initial transaction
+          type: number
+        initialPeriod:
+          description: time period of initial transaction
+          type: integer
+        currencyCode:
+          description: numerical representation of the currency used in transaction
           type: string
+        recurringPrice:
+          description: price of recurrent transactions
+          type: number
+        recurringPeriod:
+          description: time period of recurrent transactions
+          type: integer
+        rebills:
+          description: number of times recurrent transactions can occur
+          type: integer
+        lifeTimeSubscription:
+          description: subscription is eternal or not.
+          type: boolean
+        createNewPaymentToken:
+          description: return new payment token for subsequent transactions or not
+          type: boolean
+        passThroughInfo:
+          description: Paired Information Passed Through to the Transaction Service
+          type: array
+          items:
+            $ref: '#/components/schemas/PassThroughInfo'
       required:
         - clientAccnum
         - clientSubacc
-        - subscriptionId
+        - initialPrice
+        - initialPeriod
+        - currencyCode
       example:
-        clientAccnum: 900112
-        clientSubacc: 2
-        subscriptionId: '918166501000000981'
+        clientAccnum: 900123
+        clientSubacc: 10
+        initialPrice: 9.99
+        initialPeriod: 10
+        currencyCode: "840"
+        recurringPrice: 15
+        recurringPeriod: 30
+        rebills: 99
+        lifeTimeSubscription: false
+        createNewPaymentToken: false
+        passThroughInfo:
+          - name: "val1"
+            value: "val2"
     ValidationError:
       type: object
       properties:

@@ -5,8 +5,6 @@ info:
 servers:
   - url: https://api.ccbill.com
     description: Production Server
-  - url: https://api.dev.ccbill.com
-    description: Deveopment Server
 tags:
   - name: /payment-tokens
     description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
@@ -123,12 +121,12 @@ paths:
         '200':
           description: The request has been successful. Extract the `paymentTokenID` string to create a charge for the customer.
           content:
-            application/vnd.mcn.transaction-service.api.v.1+json:
-              schema:
-                $ref: '#/components/schemas/PaymentToken'
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/PaymentTokenV2'
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
         '400':
           $ref: '#/components/responses/400'
         '401':

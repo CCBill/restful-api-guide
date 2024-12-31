@@ -5,95 +5,75 @@ info:
 servers:
   - url: https://api.ccbill.com
     description: Production Server
-  - url: https://api.dev.ccbill.com
-    description: Deveopment Server
 tags:
-  - name: "/payment-tokens"
+  - name: /payment-tokens
     description: Use the `/payment-tokens` resource to create a token that identifies a user in the system. The token can be passed on to the system in a transaction request, thus enabling you to bill a customer.
 security:
   - bearerAuth: []
 paths:
-  /payment-tokens/target-client:
-    post:
+  /payment-tokens/{paymentTokenId}:
+    get:
       tags:
         - /payment-tokens
-      summary: Create payment token for merchant/client
-      description: |-
-        This endpoint generates a payment token for the specified merchant/client.
-        It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
-        CCBill enables merchants to create <a href="https://ccbill.com/docs/Merchant-Connect/merchant-connect.pdf" target="_blank">Merchant Connect</a> sponsor programs and share revenue with other merchants for referred sales. 
-        CCBill is a matchmaker between sponsor merchants and affiliate merchants. The platform supports one-click transactions, allowing affiliate merchants to easily and legally offer instant purchases to your audience on their websites. 
-        CCBill tracks and handles the one-click transactions, calculates revenue sharing, and facilitates payouts to sponsors and affiliates.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PaymentTokenTargetClientParams'
-            examples:
-              Required:
-                summary: Required fields
-                value:
-                  clientAccnum: 900000
-                  clientSubacc: 0
-                  customerInfo:
-                    customerFname: Tyler
-                    customerLname: Thomas
-                    zipcode: '85281'
-                    country: US
-                    email: tthomas@xyz.com
-                    ipAddress: 10.70.60.14
-                  paymentInfo:
-                    creditCardPaymentInfo:
-                      cardNum: '4473707989493598'
-                      nameOnCard: Tyler Thomas
-                      expMonth: '04'
-                      expYear: '2026'
-                  subscriptionId: 900000000000000000
-                  targetClientAccnum: 900000
-                  targetClientSubacc: 1
-              All:
-                summary: All fields
-                value:
-                  clientAccnum: 900000
-                  clientSubacc: 0
-                  customerInfo:
-                    customerFname: Tyler
-                    customerLname: Thomas
-                    address1: Woodland Drive
-                    address2: Apt 21
-                    city: Tempe
-                    state: AZ
-                    zipcode: '85281'
-                    country: US
-                    phoneNumber: '5555555555'
-                    email: tthomas@xyz.com
-                    ipAddress: 10.70.60.14
-                    browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
-                    browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-                    browserHttpAcceptLanguage: en-US,en;q=0.5
-                    browserHttpAcceptEncoding: gzip, deflate, br
-                    paymentInfo:
-                      creditCardPaymentInfo:
-                        cardNum: '4473707989493598'
-                        nameOnCard: Tyler Thomas
-                        expMonth: '04'
-                        expYear: '2026'
-                    subscriptionId: 900000000000000000
-                    targetClientAccnum: 900000
-                    targetClientSubacc: 1
-                    timeToLive: 30
-                    validNumberOfUse: 3
+      summary: Get payment token by ID
+      description: Use this request to retrieve details of a Payment Token based on its ID.
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |
+            curl -X GET "https://api.ccbill.com/payment-tokens/{paymentTokenId}" \
+              -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
+              -H "authorization: Bearer TOKEN" \
+        - lang: javascript
+          label: JavaScript
+          source: |
+            var data = null;
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function () {
+              if (this.readyState === 4) {
+                console.log(this.responseText);
+              }
+            });
+            xhr.open("GET", "https://api.ccbill.com/payment-tokens/{paymentTokenId}");
+            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.send(data);
+        - lang: php
+          label: PHP
+          source: |
+            <?php
+            $request = new HttpRequest();
+            $request->setUrl('https://api.ccbill.com/payment-tokens/01047ed6f3b440c7a2ccc6abc1ad0a84');
+            $request->setMethod(HTTP_METH_GET);
+            $request->setHeaders(array(
+              'Cache-Control' => 'no-cache',
+              'Authorization' => 'Bearer TOKEN'
+            ));
+            try {
+              $response = $request->send();
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+            ?>
+      parameters:
+        - name: paymentTokenId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Complex representation of Payment Token Id
       responses:
         '200':
           description: Successful Response
           content:
-            application/vnd.mcn.transaction-service.api.v.1+json:
-              schema:
-                $ref: '#/components/schemas/PaymentToken'
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/PaymentTokenV2'
+            application/vnd.mcn.transaction-service.api.v.1+json:
+              schema:
+                $ref: '#/components/schemas/PaymentToken'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -110,7 +90,6 @@ paths:
           $ref: '#/components/responses/415'
         '500':
           $ref: '#/components/responses/500'
-  
 components:
   schemas:
     PaymentToken:
@@ -221,164 +200,209 @@ components:
         validNumberOfUse: 20
         subscriptionId: "900000000000000001"
         paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
-    CreditCardPaymentInfo:
-      description: Elements of the `paymentInfo` array.
+    PaymentTokenVerify:
+      description: |
+        These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
       type: object
       properties:
-        cardNum:
-          description: Card number
+        paymentTokenId:
+          description: "Complex representation of Payment Token Id"
           type: string
-        expMonth:
-          description: Card expiration month in mm format
+        programParticipationId:
+          description: "Program connected to the Payment Token"
+          type: integer
+        originalPaymentTokenId:
+          description: "Reference to a previous Token Id"
           type: string
-        expYear:
-          description: Card expiration year in yyyy format
-          type: string
-        nameOnCard:
-          description: Name as it appears on card
-          type: string
-      required:
-        - cardNum
-        - expMonth
-        - expYear
-        - nameOnCard
-    CustomerInfo:
-      description: Elements of the `customerInfo` array.
-      type: object
-      properties:
-        address1:
-          description: Customer's address
-          type: string
-        address2:
-          description: Customer's address (additional info)
-          type: string
-        browserHttpAccept:
-          description: Media type(s) that is(/are) acceptable for the response
-          type: string
-        browserHttpAcceptEncoding:
-          description: List of acceptable encodings
-          type: string
-        browserHttpAcceptLanguage:
-          description: List of acceptable human languages for response
-          type: string
-        browserHttpUserAgent:
-          description: The user agent string of the user agent
-          type: string
-        city:
-          description: Customer's city
-          type: string
-        country:
-          description: Customer's country
-          type: string
-        customerFname:
-          description: Customer's first name
-          type: string
-        customerLname:
-          description: Customer's last name
-          type: string
-        email:
-          description: Customer's email address
-          type: string
-        ipAddress:
-          description: Customer's IP address
-          type: string
-        phoneNumber:
-          description: Customer's phone number
-          type: string
-        state:
-          description: Customer's state
-          type: string
-        zipcode:
-          description: Customer's zip code
-          type: string
-      required:
-        - country
-        - customerFname
-        - customerLname
-        - email
-        - ipAddress
-        - zipcode
-        - city
-        - state
-        - address1
-    PaymentInfo:
-      description: Payment information on the customer's payment card. Elements of the `creditCardPaymentInfo` array.
-      type: object
-      properties:
-        creditCardPaymentInfo:
-          description: Credit Card Payment Information
-          allOf:
-            - $ref: '#/components/schemas/CreditCardPaymentInfo'
-    PaymentTokenTargetClientParams:
-      description: Parameters for generating a payment token for the specified merchant/client. It requires an active program participation and enables merchants to create payment tokens for cross-sale opportunities with other merchants.
-      type: object
-      properties:
         clientAccnum:
-          description: Merchant account number
+          description: "Merchant account number"
           type: integer
         clientSubacc:
-          description: Merchant subaccount number
+          description: "Merchant subaccount number"
           type: integer
-        customerInfo:
-          description: Customer Information
-          allOf:
-            - $ref: '#/components/schemas/CustomerInfo'
-        paymentInfo:
-          description: Payment Information
-          allOf:
-            - $ref: '#/components/schemas/PaymentInfo'
-        subscriptionId:
-          description: Transaction subscription identification number
-          type: integer
-        targetClientAccnum:
-          description: Target Merchant Account Number
-          type: integer
-        targetClientSubacc:
-          description: Target Merchant Subaccount Number
-          type: integer
+        createdDatetime:
+          description: "Date Time of creation of the Payment Token"
+          type: string
+          format: date-time
         timeToLive:
-          description: Time for the token to exist
+          description: "Time for the token to exist"
           type: integer
         validNumberOfUse:
-          description: Total number of times the Payment Token can be used for purchases
+          description: "Total number of times the Payment Token can be used for purchases"
           type: integer
+        subscriptionId:
+          description: "Identification of the subscription associated with the transaction"
+          type: integer
+        paymentInfoId:
+          description: "Information associated with the payment"
+          type: string
+        cvv2Response:
+          description: |
+            The result of CVV2 verification.
+          type: string
+          enum:
+            - "M"  # CVV2 Match
+            - "N"  # CVV2 No Match
+            - "P"  # CVV2 Not Processed
+            - "S"  # CVV2 Service Not Allowed
+            - "U"  # CVV2 Unreadable
+        avsResponse:
+          description: |
+             The result of AVS verification.
+          type: string
+          enum:
+            - "A"  # Address matches, ZIP does not
+            - "B"  # Address and ZIP match (both are blank)
+            - "C"  # Address matches, ZIP does not
+            - "D"  # Address matches, ZIP does not
+            - "E"  # AVS error
+            - "F"  # Address and ZIP match
+            - "G"  # Address matches, ZIP does not
+            - "H"  # Address and ZIP match
+            - "I"  # AVS unavailable
+            - "J"  # Address matches, ZIP does not
+            - "K"  # Address matches, ZIP does not
+            - "L"  # Address matches, ZIP does not
+            - "M"  # Address and ZIP match
+            - "N"  # Address and ZIP do not match
+            - "O"  # Address and ZIP match (both are blank)
+            - "P"  # Address and ZIP match (both are blank)
+            - "Q"  # Address and ZIP match (both are blank)
+            - "R"  # Address matches, ZIP does not
+            - "S"  # Address matches, ZIP does not
+            - "T"  # Address matches, ZIP does not
+            - "U"  # Address matches, ZIP does not
+            - "V"  # Address matches, ZIP does not
+            - "W"  # Address matches, ZIP does not
+            - "X"  # Address and ZIP match
+            - "Y"  # Address and ZIP match
+            - "Z"  # Address and ZIP match
       required:
+        - paymentTokenId
+        - programParticipationId
         - clientAccnum
         - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
         - subscriptionId
-        - targetClientAccnum
-        - targetClientSubacc
+        - cvv2Response
+        - avsResponse
       example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         clientAccnum: 900000
         clientSubacc: 0
-        customerInfo:
-          customerFname: Tyler
-          customerLname: Thomas
-          address1: Woodland Drive
-          address2: Apt 21
-          city: Tempe
-          state: AZ
-          zipcode: '85281'
-          country: US
-          phoneNumber: '5555555555'
-          email: tthomas@xyz.com
-          ipAddress: 10.70.60.14
-          browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
-          browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-          browserHttpAcceptLanguage: en-US,en;q=0.5
-          browserHttpAcceptEncoding: gzip, deflate, br
-        paymentInfo:
-          creditCardPaymentInfo:
-            cardNum: '4473707989493598'
-            nameOnCard: Tyler Thomas
-            expMonth: '04'
-            expYear: '2026'
-        subscriptionId: 900000000000000000
-        targetClientAccnum: 900000
-        targetClientSubacc: 1
+        createdDatetime: '2022-01-01T01:00:00'
         timeToLive: 30
-        validNumberOfUse: 3
+        validNumberOfUse: 20
+        subscriptionId: 900000000000000000
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+        cvv2Response: "M"
+        avsResponse: "Y"
 
+    PaymentTokenVerifyV2:
+      description: |
+        These response parameters are received when a payment token is successfully created, including <a href="https://ccbill.com/doc/avs-and-cvv2-responses" target="_blank">AVS and CVV2 authentication results</a>.
+      type: object
+      properties:
+        paymentTokenId:
+          description: "Complex representation of Payment Token Id"
+          type: string
+        programParticipationId:
+          description: "Program connected to the Payment Token"
+          type: integer
+        originalPaymentTokenId:
+          description: "Reference to a previous Token Id"
+          type: string
+        clientAccnum:
+          description: "Merchant account number"
+          type: integer
+        clientSubacc:
+          description: "Merchant subaccount number"
+          type: integer
+        createdDatetime:
+          description: "Date Time of creation of the Payment Token"
+          type: string
+          format: date-time
+        timeToLive:
+          description: "Time for the token to exist"
+          type: integer
+        validNumberOfUse:
+          description: "Total number of times the Payment Token can be used for purchases"
+          type: integer
+        subscriptionId:
+          description: "Identification of the subscription associated with the transaction"
+          type: string
+        paymentInfoId:
+          description: "Information associated with the payment"
+          type: string
+        cvv2Response:
+          description: |
+            The result of CVV2 verification. 
+          type: string
+          enum:
+            - "M"  # CVV2 Match
+            - "N"  # CVV2 No Match
+            - "P"  # CVV2 Not Processed
+            - "S"  # CVV2 Service Not Allowed
+            - "U"  # CVV2 Unreadable
+        avsResponse:
+          description: |
+            The result of AVS verification. 
+          type: string
+          enum:
+            - "A"  # Address matches, ZIP does not
+            - "B"  # Address and ZIP match (both are blank)
+            - "C"  # Address matches, ZIP does not
+            - "D"  # Address matches, ZIP does not
+            - "E"  # AVS error
+            - "F"  # Address and ZIP match
+            - "G"  # Address matches, ZIP does not
+            - "H"  # Address and ZIP match
+            - "I"  # AVS unavailable
+            - "J"  # Address matches, ZIP does not
+            - "K"  # Address matches, ZIP does not
+            - "L"  # Address matches, ZIP does not
+            - "M"  # Address and ZIP match
+            - "N"  # Address and ZIP do not match
+            - "O"  # Address and ZIP match (both are blank)
+            - "P"  # Address and ZIP match (both are blank)
+            - "Q"  # Address and ZIP match (both are blank)
+            - "R"  # Address matches, ZIP does not
+            - "S"  # Address matches, ZIP does not
+            - "T"  # Address matches, ZIP does not
+            - "U"  # Address matches, ZIP does not
+            - "V"  # Address matches, ZIP does not
+            - "W"  # Address matches, ZIP does not
+            - "X"  # Address and ZIP match
+            - "Y"  # Address and ZIP match
+            - "Z"  # Address and ZIP match
+      required:
+        - paymentTokenId
+        - programParticipationId
+        - clientAccnum
+        - clientSubacc
+        - createdDatetime
+        - timeToLive
+        - validNumberOfUse
+        - subscriptionId
+        - cvv2Response
+        - avsResponse
+      example:
+        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        programParticipationId: 1
+        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        clientAccnum: 900000
+        clientSubacc: 0
+        createdDatetime: '2022-01-01T01:00:00'
+        timeToLive: 30
+        validNumberOfUse: 20
+        subscriptionId: '900000000000000001'
+        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+        cvv2Response: "M"
+        avsResponse: 'Y'
     ValidationError:
       type: object
       properties:
@@ -534,3 +558,8 @@ components:
       description: API version
       schema:
         type: string
+
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
