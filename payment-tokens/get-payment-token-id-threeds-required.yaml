@@ -88,12 +88,8 @@ components:
         required:
           description: 3DS required for payment card
           type: boolean
-        amount:
-          description: Authorized charge amount.
-          type: number
       example:
         required: 'true'
-        amount: '1.0'
     ValidationError:
       type: object
       properties:
