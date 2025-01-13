@@ -23,7 +23,7 @@ paths:
           source: |
             curl -X GET "https://api.ccbill.com/payment-tokens/threeds-required?bin=411111&last4=1111&clientAccnum=900000&clientSubacc=2" \
             -H "accept: application/vnd.mcn.transaction-service.api.v.2+json"\
-            -H "authorization: Bearer TOKEN" \
+            -H "authorization: Bearer [access_token]" \
         - lang: javascript
           label: JavaScript
           source: |
@@ -36,8 +36,8 @@ paths:
               }
             });
             xhr.open("GET", "https://api.ccbill.com/payment-tokens/threeds-required?bin=411111&last4=1111&clientAccnum=900000&clientSubacc=2");
-            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
-            xhr.setRequestHeader("Accept", "*/*");
+            xhr.setRequestHeader("Authorization", "Bearer [access_token]");
+            xhr.setRequestHeader("Accept", "application/vnd.mcn.transaction-service.api.v.2+json");
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.send(data);
         - lang: php
@@ -55,8 +55,8 @@ paths:
             ));
             $request->setHeaders(array(
               'cache-control' => 'no-cache',
-              'Accept' => '*/*',
-              'Authorization' => 'Bearer TOKEN'
+              'Accept' => 'application/vnd.mcn.transaction-service.api.v.2+json',
+              'Authorization' => 'Bearer [access_token]'
             ));
             try {
               $response = $request->send();

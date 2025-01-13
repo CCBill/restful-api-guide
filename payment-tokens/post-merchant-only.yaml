@@ -29,8 +29,8 @@ paths:
           label: cURL
           source: |
             curl -X POST "https://api.ccbill.com/payment-tokens/merchant-only" \
-             -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
-             -H "authorization: Bearer TOKEN"\
+             -H "accept: application/vnd.mcn.transaction-service.api.v.2+json"\
+             -H "authorization: Bearer [access_token]"\
              -H "content-type: application/json" \
              -d '{"clientAccnum":900000,"clientSubacc":2,"customerInfo":{"value":{"customerFname":"Tyler","customerLname":"Thomas","address1":"Woodland Drive","address2":"Apt 21","city":"Tempe","state":"AZ","zipcode":"85281","country":"US","phoneNumber":"5555555555","email":"tthomas@xyz.com","ipAddress":"10.70.60.14","browserHttpUserAgent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0","browserHttpAccept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","browserHttpAcceptLanguage":"en-US,en;q=0.5","browserHttpAcceptEncoding":"gzip, deflate, br"}},"paymentInfo":{"creditCardPaymentInfo":{"value":{"cardNum":"4473707989493598","nameOnCard":"Tyler Thomas","expMonth":"04","expYear":"2026"}}},"subscriptionId":900000000000000000,"timeToLive":30,"validNumberOfUse":3}' \
         - lang: javascript
@@ -79,6 +79,7 @@ paths:
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Authorization", "Bearer TOKEN");
             xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.setRequestHeader("Accept", "application/vnd.mcn.transaction-service.api.v.2+json");
             xhr.send(data);
         - lang: php
           label: PHP
@@ -89,8 +90,9 @@ paths:
             $request->setMethod(HTTP_METH_POST);
             $request->setHeaders(array(
               'Cache-Control' => 'no-cache',
-              'Authorization' => 'Bearer TOKEN',
-              'Content-Type' => 'application/json'
+              'Authorization' => 'Bearer [access_token]',
+              'Content-Type' => 'application/json',
+              'Accept' => 'application/vnd.mcn.transaction-service.api.v.2+json'
             ));
             $request->setBody('{ "clientAccnum": 900000, "clientSubacc": 0, "customerInfo": { "customerFname": "Tyler", "customerLname": "Thomas", "address1": "Woodland Drive", "address2": "Apt 21", "city": "Tempe", "state": "AZ", "zipcode": "85281", "country": "US", "phoneNumber": "5555555555", "email": "tthomas@xyz.com", "ipAddress": "10.70.60.14", "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0", "browserHttpAccept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "browserHttpAcceptLanguage": "en-US,en;q=0.5", "browserHttpAcceptEncoding": "gzip, deflate, br" }, "paymentInfo": { "creditCardPaymentInfo": { "cardNum": "4473707989493598", "nameOnCard": "Tyler Thomas", "expMonth": "04", "expYear": "2026" } }, "subscriptionId":900000000000000001, "timeToLive": 30, "validNumberOfUse": 3 }');
             try {
