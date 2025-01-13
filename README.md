@@ -48,7 +48,7 @@ This document describes the API resources and endpoints of the CCBill Transactio
 Below are the 3 essential steps for charging the consumer using a payment token:
 
 1. Generate the CCBill OAuth Bearer Token
-   * **the request to generate the `CCBill OAuth` token must be sent from your back-end services directly to the CCBill API, and it can not be requested from within the browser**
+   * **The request to generate the `CCBill OAuth` token must be sent from your back-end services directly to the CCBill API, and it can not be requested from within the browser.**
 
 2. Create the [Payment Token](https://ccbill.com/kb/credit-card-tokenization)
 
@@ -314,7 +314,7 @@ The Advanced Widget will automatically collect the ID value if the form is creat
 or the `<select>` element for the currencyCode ID:
 
 ```html
-<select data-ccbill="currencyCode" />
+<select data-ccbill="currencyCode">
       
         <option>…</option>
         <option>…</option>
@@ -334,7 +334,7 @@ or the `<select>` element for the currencyCode ID:
 ```
 or the `<select>` element for **_ccbillId_currencyCode**: 
 ```html
-      <select id="_ccbillId_currencyCode" />
+      <select id="_ccbillId_currencyCode">
 
         <option>…</option>
         <option>…</option>
@@ -403,7 +403,7 @@ The Advanced Widget will automatically collect the ID value if the form is creat
 or the `<select>` element for the currencyCode ID:
 
 ```html
-<select data-ccbill="currencyCode" />
+<select data-ccbill="currencyCode">
       
         <option>…</option>
         <option>…</option>
@@ -423,7 +423,7 @@ or the `<select>` element for the currencyCode ID:
 ```
 or the `<select>` element for **_ccbillId_currencyCode**: 
 ```html
-      <select id="_ccbillId_currencyCode" />
+      <select id="_ccbillId_currencyCode">
 
         <option>…</option>
         <option>…</option>
@@ -532,15 +532,19 @@ const result = widget.authenticateCustomer(authToken, form, clientAccnum, client
 
 After you have generated a new bearer token, and after you have generated the payment token, you will then be able to use those two new tokens to charge the consumer’s credit card.
 
+#### Versioning
+
+CCBill's RESTful API uses **Media Type Versioning** to specify the API version and media type. You can explicitly request a specific API version by including the desired media type in the `Accept` header of your requests. To request the latest version of the API, include the following in the request headers:
+
+`Accept: application/vnd.mcn.transaction-service.api.v.2+json`
+
+All API request and response examples in this guide use the latest version header. Check the headers in each example to ensure it is compatible with your implementation.
+
 ### Charge Payment Token (Without 3DS Authentication)
 
 #### Endpoint URL
 
 * **https://api.ccbill.com/transactions/payment-tokens/{paymentTokenId}**
-
-#### Headers
-
-* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
 
 #### Request Parameters
 
@@ -619,10 +623,6 @@ After you have generated a new bearer token, and after you have generated the pa
 
 * **https://api.ccbill.com/transactions/payment-tokens/threeds/{payment_token_id}**
 
-#### Headers
-
-* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
-
 #### Request Parameters
 
 | PARAMETER                                    | TYPE    | DESCRIPTION                                                                                                                                                                                      |
@@ -668,10 +668,10 @@ After you have generated a new bearer token, and after you have generated the pa
   $request->setMethod(HTTP_METH_POST);
   $request->setHeaders(array(
     'Cache-Control' => 'no-cache',
-    'Authorization' => 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibWNuLXRyYW5zYWN0aW9uLXNlcnZpY2UiLCJtY24tYWRtaW4tc2VydmljZSJdLCJzY29wZSI6WyJjcmVhdGVfdG9rZW4iLCJyZWFkX3Rva2VuIiwiY2hhcmdlX3Rva2VuIiwiY3JlYXRlX3Byb2dyYW0iLCJyZWFkX3Byb2dyYW0iLCJjcmVhdGVfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIiwicmVhZF9wcm9ncmFtX3BhcnRpY2lwYXRpb24iLCJtb2RpZnlfcHJvZ3JhbV9wYXJ0aWNpcGF0aW9uIl0sImV4cCI6MTUzNzM4MDczNiwiYXV0aG9yaXRpZXMiOlsiTUNOX0FQSV9UT0tFTl9DSEFSR0VSIiwiTUNOX0FQSV9UT0tFTl9DUkVBVE9SIiwiTUNOX0FQSV9BRE1JTiJdLCJqdGkiOiI4YzI2Njg1MC00NjMzLTQzZDMtYjZjOC1lNzIyY2ExNjQ1YTUiLCJjbGllbnRfaWQiOiI1MjE3NjhhYTc1OGQxMWU4YWE2YjAwNTA1NjlkMTU4NSJ9.HRYXZFATkIcI2_LJ1W_xo67IfBnbN9atyYNzyHqseLxYUxzgwBsAV5rNqCixKemOrDIeQLBN4jrwRsBIHDpEvshwBC8XmTodDJzpGmMaU9s1r20RV68X0_d1yTgSDke_Of7VCrVmJRbSuDl7AgsfTqQ1J7nWyu9vcIaER93ms-vadser_Ot9Z68_HAmCJL3DCLpdIFq3PYtBMKKKqXbvhfhSZQZD3b6-aewAnBo0VzpvK6tREqw1rv9_73oAvYcW2aHAj79ILr8viWMM40LyDKMMYOYkneg3hJUQsUVeh9WzztYUJKzERYNXje9fYIGN-eofoLvX7OZJ3eXmIfkrfQ',
+    'Authorization' => 'Bearer [access_token]',
     'Content-Type' => 'application/json'
   ));
-  $request->setBody('{"clientAccnum":"901505","clientSubacc":"0","initialPrice":"10.00","currencyCode":"840","initialPeriod":"30","threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4ajJnNGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmQxMjM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9r6duc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"gjeoB5NdJ1r6p0dG","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
+  $request->setBody('{"clientAccnum":900000,"clientSubacc":0,"initialPrice":10.00,"currencyCode":840,"initialPeriod":30,"threedsEci":"05","threedsError":"","threedsStatus":"Y","threedsSuccess":"true","threedsVersion":"1.0.2","threedsXid":"aWQteHc4agyuygvGIxZW8gICAgICA=","threedsCavv":"cGFzc3dvcmhhbhmM0NTZwYXNzd28=","threedsCavvAlgorithm":"SHA-256","threedsAmount":"10","threedsClientTransactionId":"id-wl9o9uduc5zj","threedsCurrency":"USD","threedsSdkTransId":"","threedsAcsTransId":"","threedsDsTransId":"","threedsAuthenticationType":"","threedsCardToken":"gjeoB5njJ1r6p0dG","threedsErrorDetail":"","threedsErrorCode":"","threedsResponse":""}');
 
   try {
     $response = $request->send();
@@ -719,10 +719,6 @@ Use this API endpoint to obtain the data on a previously made charge. You will n
 ### Endpoint URL
 
 * [https://api.ccbill.com/payment-tokens/{paymentTokenId}](https://api.ccbill.com/payment-tokens/%7bpaymentTokenId%7d)
-
-### Headers
-
-* `Accept: application/vnd.mcn.transaction-service.api.v.2+json`
 
 ### Example Request
 
