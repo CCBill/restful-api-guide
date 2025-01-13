@@ -77,7 +77,7 @@ paths:
             });
             xhr.open("POST", "https://api.ccbill.com/payment-tokens/merchant-only");
             xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.setRequestHeader("Authorization", "Bearer [access_token]");
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.setRequestHeader("Accept", "application/vnd.mcn.transaction-service.api.v.2+json");
             xhr.send(data);
