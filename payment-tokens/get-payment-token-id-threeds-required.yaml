@@ -27,8 +27,9 @@ paths:
           source: |
             curl -X GET \
             https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d/threeds-required \
-            -H 'Authorization: Bearer TOKEN' \
-            -H 'Cache-Control: no-cache'
+            -H 'Authorization: Bearer [access_token]' \
+            -H 'Cache-Control: no-cache' \
+            -H 'Accept: application/vnd.mcn.transaction-service.api.v.2+json'
       parameters:
         - name: paymentTokenId
           in: path

@@ -21,9 +21,10 @@ paths:
         - lang: bash
           label: cURL
           source: |
-            curl -X GET "https://api.ccbill.com/payment-tokens/{paymentTokenId}" \
-              -H "accept: application/vnd.mcn.transaction-service.api.v.1+json"\
-              -H "authorization: Bearer TOKEN" \
+            curl -X GET "https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d" \
+              -H "accept: application/vnd.mcn.transaction-service.api.v.2+json"\
+              -H "authorization: Bearer [access_token]" \
+              -H "cache-control: no-cache" \
         - lang: javascript
           label: JavaScript
           source: |
@@ -35,20 +36,22 @@ paths:
                 console.log(this.responseText);
               }
             });
-            xhr.open("GET", "https://api.ccbill.com/payment-tokens/{paymentTokenId}");
-            xhr.setRequestHeader("Authorization", "Bearer TOKEN");
+            xhr.open("GET", "https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d");
+            xhr.setRequestHeader("Authorization", "Bearer [access_token]");
             xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.setRequestHeader("Accept", "application/vnd.mcn.transaction-service.api.v.2+json");
             xhr.send(data);
         - lang: php
           label: PHP
           source: |
             <?php
             $request = new HttpRequest();
-            $request->setUrl('https://api.ccbill.com/payment-tokens/01047ed6f3b440c7a2ccc6abc1ad0a84');
+            $request->setUrl('https://api.ccbill.com/payment-tokens/01f1142953204411a7e399e0f100fc4d');
             $request->setMethod(HTTP_METH_GET);
             $request->setHeaders(array(
               'Cache-Control' => 'no-cache',
-              'Authorization' => 'Bearer TOKEN'
+              'Authorization' => 'Bearer [access_token]',
+              'Accept' => 'application/vnd.mcn.transaction-service.api.v.2+json'
             ));
             try {
               $response = $request->send();
