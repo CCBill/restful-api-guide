@@ -144,31 +144,52 @@ components:
       properties:
         id:
           pattern: ^[a-zA-Z0-9-]*$
-          description: The unique ID used to locate an error in the logs.
+          description: Randomly generated GUID
           type: string
-          format: uuid
-        errorCode:
-          pattern: ^[0-9]*$
-          description: Product defined error code.
-          type: integer
-          format: int32
-        generalMessage:
-          description: The general user message.
-          type: string
-          nullable: true
         url:
-          description: The requested relative URL that has caused this error response.
+          description: The RELATIVE url that has caused this error
           type: string
-          format: uri-reference
-        timestamp:
-          description: The timestamp of the request that resulted in this error response.
-          type: string
-          format: date-time
         errors:
-          description: List of validation errors, which resulted in this error response.
+          description: Optional, only returned on 400 Bad Request errors for validation errors
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
+        generalMessage:
+          description: Something human readable
+          type: string
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code
+          type: string
+        timestamp:
+          description: Timestamp of the call
+          type: string
+          format: date-time
+      required:
+        - id
+        - url
+        - generalMessage
+        - errorCode
+        - timestamp
+      example:
+        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
+        url: specific/endpoint
+        errors:
+          - field: string
+            message: string
+        generalMessage: "An error occurred, please try again later."
+        errorCode: "100013"
+        timestamp: '2022-03-02T11:04:47.729Z'
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: "unauthorized"
+        error_description: "Full authentication is required to access this resource"
   responses:
     '400':
       description: The response failed to complete due to an invalid header/parameter in the request.
@@ -178,6 +199,10 @@ components:
             $ref: '#/components/schemas/Error400'
     '401':
       description: The response failed to complete due to authorization problem.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
     '403':
       description: The response failed to complete because access to the resource is forbidden.
       content:
