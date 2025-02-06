@@ -19,9 +19,9 @@ paths:
     post:
       tags:
         - /payment-tokens
-      summary: Create a payment token
+      summary: Create a Payment Token (without providing a CVV for verification)
       description: |-
-        This endpoint is used for creating a payment token. Tokenization turns the customer's payment details, like a credit card number,
+        This endpoint is used for creating a Payment Token. Tokenization turns the customer's payment details, like a credit card number,
          into a unique randomly generated set of characters called a token. The token can then be used to make payments without re-entering or referencing the credit card number. 
          In the context of the CCBill RESTful API, the Payment Token identifies a billable entity within the system.
       x-codeSamples:
@@ -109,43 +109,411 @@ paths:
             schema:
               $ref: '#/components/schemas/PaymentTokenMerchantOnlyParams'
             examples:
-              Required:
-                $ref: '#/components/examples/PaymentTokenMerchantOnlyParamsRequired'
-              All:
-                $ref: '#/components/examples/PaymentTokenMerchantOnlyParamsAll'
+              Single use Payment Token creation (without providing CVV):
+                value:
+                  {
+                    "clientAccnum": 900684,
+                    "clientSubacc": 0,
+                    "subscriptionId": 0,
+                    "customerInfo": {
+                      "customerFname": "Tyler",
+                      "customerLname": "Thomas",
+                      "address1": "Woodland Drive",
+                      "address2": "Apt 21",
+                      "city": "Tempe",
+                      "state": "AZ",
+                      "zipcode": "85281",
+                      "country": "US",
+                      "phoneNumber": "5555555555",
+                      "email": "tthomas@xyz.com",
+                      "ipAddress": "10.70.60.14'",
+                      "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
+                      "browserHttpAccept": "application/json",
+                      "browserHttpAcceptLanguage": "en-US",
+                      "browserHttpAcceptEncoding": "gzip"
+                    },
+                    "paymentInfo": {
+                      "creditCardPaymentInfo": {
+                        "cardNum": "4473707989493598",
+                        "nameOnCard": "Tyler Thomas",
+                        "expMonth": "04",
+                        "expYear": "2019"
+                      }
+                    },
+                    "validNumberOfUse": 1
+                  }
+              24 hours valid Payment Token creation (without providing CVV):
+                value:
+                  {
+                    "clientAccnum": 900684,
+                    "clientSubacc": 0,
+                    "subscriptionId": 0,
+                    "customerInfo": {
+                      "customerFname": "Tyler",
+                      "customerLname": "Thomas",
+                      "address1": "Woodland Drive",
+                      "address2": "Apt 21",
+                      "city": "Tempe",
+                      "state": "AZ",
+                      "zipcode": "85281",
+                      "country": "US",
+                      "phoneNumber": "5555555555",
+                      "email": "tthomas@xyz.com",
+                      "ipAddress": "10.70.60.14'",
+                      "browserHttpUserAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
+                      "browserHttpAccept": "application/json",
+                      "browserHttpAcceptLanguage": "en-US",
+                      "browserHttpAcceptEncoding": "gzip"
+                    },
+                    "paymentInfo": {
+                      "creditCardPaymentInfo": {
+                        "cardNum": "4473707989493598",
+                        "nameOnCard": "Tyler Thomas",
+                        "expMonth": "04",
+                        "expYear": "2019"
+                      }
+                    },
+                    "timeToLive": 24
+                  }
+              Payment Token creation using previous subscription:
+                value:
+                  {
+                    "clientAccnum": 900684,
+                    "clientSubacc": 0,
+                    "subscriptionId": 924366201000000000
+                  }
       parameters:
-        - name: Cache-Control
+        - name: Widget-Version
           in: header
           schema:
-            default: no-cache
-          description: Bypass the server-side cache
+            default: Unversioned
+            example: 1.11.0
+            type: string
+          description: Version of the MCN Widget making the call
       responses:
         '200':
-          description: The request has been successful. Extract the `paymentTokenID` string to create a charge for the customer.
+          description: Successful Response
           content:
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/PaymentTokenV2'
-            application/vnd.mcn.transaction-service.api.v.1+json:
+              examples:
+                Single use Payment Token response:
+                  value:              
+                    paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
+                    programParticipationId: null
+                    originalPaymentTokenId: null
+                    clientAccnum: 900684
+                    clientSubacc: 0
+                    createdDatetime: "2024-11-08T12:22:51"
+                    timeToLive: 2147483647
+                    validNumberOfUse: 1
+                    subscriptionId: "924313501000000101"
+                    paymentInfoId: null
+                24 hour Payment Token response:
+                  value:              
+                    paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
+                    programParticipationId: null
+                    originalPaymentTokenId: null
+                    clientAccnum: 900684
+                    clientSubacc: 0
+                    createdDatetime: "2024-11-08T12:22:51"
+                    timeToLive: 24
+                    validNumberOfUse: 2147483647
+                    subscriptionId: "924313501000000101"
+                    paymentInfoId: null
+            application/vnd.mcn.transaction-service.api.v.1+json:  
               schema:
                 $ref: '#/components/schemas/PaymentToken'
+              examples:
+                Single use Payment Token response:
+                  value:              
+                    paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
+                    programParticipationId: null
+                    originalPaymentTokenId: null
+                    clientAccnum: 900684
+                    clientSubacc: 0
+                    createdDatetime: "2024-11-08T12:22:51"
+                    timeToLive: 2147483647
+                    validNumberOfUse: 1
+                    subscriptionId: 924313501000000101
+                    paymentInfoId: null
+                24 hour Payment Token response:
+                  value:              
+                    paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
+                    programParticipationId: null
+                    originalPaymentTokenId: null
+                    clientAccnum: 900684
+                    clientSubacc: 0
+                    createdDatetime: "2024-11-08T12:22:51"
+                    timeToLive: 24
+                    validNumberOfUse: 2147483647
+                    subscriptionId: 924313501000000101
+                    paymentInfoId: null
         '400':
-          $ref: '#/components/responses/400'
+          description: Bad Request. The response failed to complete due to an invalid header, query or request body parameter. This response does not differ between versions.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  description: |- 
+                    Returned when one of `requestBody`'s fields is not valid.
+                    <em>Note</em>: For completeness the `errors` array in this example holds errors for all existing validated fields, but any subset of these can be returned.
+	
+                  value:
+                    {
+                      "id": "a90a6a04-da1a-4b58-a78d-f55e1bc09efd",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [
+                        {
+                          "field": "clientAccnum",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "clientAccnum",
+                          "message": "Problem with attribute size"
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Problem with attribute size"
+                        },
+                        {
+                          "field": "subscriptionId",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "customerInfo.customerFname",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "customerInfo.customerLname",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "customerInfo.email",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "customerInfo.email",
+                          "message": "Invalid email address"
+                        },
+                        {
+                          "field": "customerInfo.country",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "customerInfo.country",
+                          "message": "Invalid postal code"
+                        },
+                        {
+                          "field": "customerInfo.zipcode",
+                          "message": "Invalid postal code"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.cardNum",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.cardNum",
+                          "message": "Invalid credit card number"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.expMonth",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.expMonth",
+                          "message": "Problem with the attribute values"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.expYear",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.expYear",
+                          "message": "Problem with the attribute values"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.expYear",
+                          "message": "Invalid expiration year"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.nameOnCard",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "paymentInfo.creditCardPaymentInfo.nameOnCard",
+                          "message": "Problem with the attribute values"
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2024-12-31T07:37:34.748Z"
+                    }
+                Customer and Payment information required:
+                  description: Returned when either `customerInfo` or `paymentInfo` fields are not provided and `subscriptionId` field is `0`.
+                  value:
+                    {
+                      "id": "a90a6a04-da1a-4b58-a78d-f55e1bc09efd",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [
+                        {
+                          "field": null,
+                          "message": "Customer and Payment Information required for zero Subscription ID"
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2024-12-31T07:37:34.748Z"
+                    }
+                Invalid subscription ID:
+                  description: Returned when subscription with the provided `subscriptionId` is not found, inactive, not properly formated or does not belong to the provided merchant.
+                  value:
+                    {
+                      "id": "62432dd8-97d9-400a-8da8-4a5c1951f935",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [
+                        {
+                          "field": "subscriptionId",
+                          "message": "Invalid Subscription ID"
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2025-01-02T07:27:45.734Z"
+                    }
+                Unsupported characters:
+                  description: Returned when provided customer first/last name, address and/or name on card contain invalid characters (only ASCII character set is allowed).
+                  value:
+                    {
+                      "id": "9343a797-bcb2-4f27-bb8d-931b5e57cb3c",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [
+                        {
+                          "field": null,
+                          "message": "Unsupported characters"
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2025-01-12T07:27:45.734Z"
+                    }
+
         '401':
-          $ref: '#/components/responses/401'
+          description: Unauthorized. Returned when the caller is not authorized to perform the requested action. This response does not have a response body.
         '403':
-          $ref: '#/components/responses/403'
+          description: Forbidden. Returned when the caller does not have adequate permissions to access the requested resource.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Forbidden:
+                 value:
+                  {
+                    "id": "89e8a24a-e1b3-4366-a968-20d21b1023f3",
+                    "url": "/payment-tokens/merchant-only",
+                    "errors": [],
+                    "generalMessage": "Forbidden",
+                    "errorCode": 100020,
+                    "timestamp": "2024-12-30T09:10:16.615Z"
+                  }
         '404':
-          $ref: '#/components/responses/404'
+          description: Not Found. Returned when the requested resource or any of the required related resources is not found.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Found:
+                  value:
+                    {
+                      "id": "98efcc51-51aa-4989-bd35-88041489c8d1",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [],
+                      "generalMessage": "Not Found",
+                      "errorCode": 130000,
+                      "timestamp": "2024-12-27T15:06:01.190Z"
+                    }
+
         '405':
-          $ref: '#/components/responses/405'
+          description: Method Not Allowed. Returned when the requested method is not allowed for the requested resource.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Method Not Allowed:
+                  value:
+                    {
+                      "id": "399f8978-e8f0-48f9-bedc-e1725534cc6b",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [],
+                      "generalMessage": "Method Not Allowed",
+                      "errorCode": 130000,
+                      "timestamp": "2024-12-30T09:21:25.724Z"
+                    }
         '406':
-          $ref: '#/components/responses/406'
+          description: Not Acceptable. Returned when the requested media type is not supported.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Acceptable:
+                  value:
+                    {
+                      "id": "4dfa73a9-9fd0-4995-9e00-4984464c3f91",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [],
+                      "generalMessage": "Not Acceptable",
+                      "errorCode": 100015,
+                      "timestamp": "2024-12-30T09:45:11.962Z"
+                    }
         '415':
-          $ref: '#/components/responses/415'
+          description: Unsupported Media Type. Returned when the requested media type is not supported.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unsupported Media Type:
+                  value:
+                    {
+                      "id": "ac10e72b-0124-481c-a7f8-44875352cf87",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [],
+                      "generalMessage": "Unsupported Media Type",
+                      "errorCode": 100004,
+                      "timestamp": "2024-12-30T19:39:18.861Z"
+                    }
         '500':
-          $ref: '#/components/responses/500'
-		  
+          description: Internal Server Error. Returned when the server encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    {
+                      "id": "f82d6175-c992-4342-8271-7a181d031415",
+                      "url": "/payment-tokens/merchant-only",
+                      "errors": [],
+                      "generalMessage": "An error occurred, please try again later.",
+                      "errorCode": 100100,
+                      "timestamp": "2024-12-30T13:50:51.218Z"
+                    }
 
 components:
   schemas:
@@ -407,106 +775,81 @@ components:
       example:
         field: string
         message: string
-    Error400:
+    Error:
       type: object
       properties:
         id:
           pattern: ^[a-zA-Z0-9-]*$
-          description: Randomly generated GUID
+          description: The unique ID used to locate an error in the logs.
           type: string
+          format: uuid
+        errorCode:
+          pattern: ^[0-9]*$
+          description: Product defined error code.
+          type: integer
+          format: int32
+        generalMessage:
+          description: The general user message.
+          type: string
+          nullable: true
         url:
-          description: The RELATIVE url that has caused this error
+          description: The requested relative URL that has caused this error response.
           type: string
+          format: uri-reference
+        timestamp:
+          description: The timestamp of the request that resulted in this error response.
+          type: string
+          format: date-time
         errors:
-          description: Optional, only returned on 400 Bad Request errors for validation errors
+          description: List of validation errors, which resulted in this error response.
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-        generalMessage:
-          description: Something human readable
-          type: string
-        errorCode:
-          pattern: ^[0-9]*$
-          description: Product defined error code
-          type: string
-        timestamp:
-          description: Timestamp of the call
-          type: string
-          format: date-time
-      required:
-        - id
-        - url
-        - generalMessage
-        - errorCode
-        - timestamp
-      example:
-        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
-        url: specific/endpoint
-        errors:
-          - field: string
-            message: string
-        generalMessage: "An error occurred, please try again later."
-        errorCode: "100013"
-        timestamp: '2022-03-02T11:04:47.729Z'
-    Error401:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: "unauthorized"
-        error_description: "Full authentication is required to access this resource"
   responses:
     '400':
       description: The response failed to complete due to an invalid header/parameter in the request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
     '401':
       description: The response failed to complete due to authorization problem.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error401'
     '403':
       description: The response failed to complete because access to the resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
     '404':
       description: The response failed to complete due to an invalid resource.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
     '405':
       description: The response failed to complete due to an invalid method of request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
     '406':
       description: The response failed to complete due to an unacceptable media type in the request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
     '415':
       description: The response failed to complete due to an unsupported media type in the request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
     '500':
       description: The response failed to complete in some way.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error400'
+            $ref: '#/components/schemas/Error'
   parameters:
     trait_versioned_Accept:
       name: '200'
@@ -514,31 +857,6 @@ components:
       description: API version
       schema:
         type: string
-  examples:
-    PaymentTokenMerchantOnlyParamsRequired:
-      summary: Required fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoRequired/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardPaymentInfo/value'
-        subscriptionId: 900000000000000000
-    PaymentTokenMerchantOnlyParamsAll:
-      summary: All fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoAll/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardPaymentInfo/value'
-        subscriptionId: 900000000000000000
-        timeToLive: 30
-        validNumberOfUse: 3
   requestBodies: {}
   headers: {}
   links: {}
