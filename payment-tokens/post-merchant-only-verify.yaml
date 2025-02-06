@@ -134,7 +134,7 @@ paths:
                         "cardNum": "4473707989493598",
                         "nameOnCard": "Tyler Thomas",
                         "expMonth": "04",
-                        "expYear": "2019"
+                        "expYear": "2019",
                         "cvv2": "951"
                       }
                     },
@@ -168,7 +168,7 @@ paths:
                         "cardNum": "4473707989493598",
                         "nameOnCard": "Tyler Thomas",
                         "expMonth": "04",
-                        "expYear": "2019"
+                        "expYear": "2019",
                         "cvv2": "951"
                       }
                     },
