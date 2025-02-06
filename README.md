@@ -114,10 +114,10 @@ The following instructions describe how to set up and use the `CCBill Advanced W
 
 Add the following preload link and script HTML elements to the HTML page that will host your payment form:
 ```
-<link rel="preload" href="https://js.ccbill.com/v1.9.0/ccbill-advanced-widget.js" as="script"/>
-<script type="text/javascript" src="https://js.ccbill.com/v1.9.0/ccbill-advanced-widget.js"></script>
+<link rel="preload" href="https://js.ccbill.com/v1.12.2/ccbill-advanced-widget.js" as="script"/>
+<script type="text/javascript" src="https://js.ccbill.com/v1.12.2/ccbill-advanced-widget.js"></script>
 ```
-**Note:** The version in this URI example is **v1.9.0**. Pay special attention to the version in the URI path as the version number may be subject to change.
+**Note:** The version in this URI example is **v1.12.2**. Pay special attention to the version in the URI path as the version number may be subject to change.
 
 ### Step 2. Define the Field IDs
 
@@ -137,28 +137,29 @@ The table below shows the values that should be set for the `data-ccbill` attrib
 
 | **data-ccbill**                                                                                            | **Default IDs**                                                                                                      |
 |------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| **nameOnCard** *                                                                                             | **\_ccbillId\_nameOnCard** *                                                                                          |
+| **nameOnCard**                                                                                             | **\_ccbillId\_nameOnCard**                                                                                         |
 | **cardNumber**                                                                                             | **\_ccbillId\_cardNumber**                                                                                           |
 | **expMonth**                                                                                               | **\_ccbillId\_expMonth**                                                                                             |
 | **expYear**                                                                                                | **\_ccbillId\_expYear**                                                                                              |
 | **cvv2**                                                                                                | **\_ccbillId\_cvv2**                                                                                              |
 | **firstName**                                                                                              | **\_ccbillId\_firstName**                                                                                            |
 | **lastName**                                                                                               | **\_ccbillId\_lastName**                                                                                             |
-| **address1** (optional)                                                                                    | **\_ccbillId\_address1** (optional)                                                                                  |
-| **address2** (optional)                                                                                    | **\_ccbillId\_address2** (optional)                                                                                  |
-| **city** (optional)                                                                                        | **\_ccbillId\_city** (optional)                                                                                      |
+| **address1**                                                                                     | **\_ccbillId\_address1**                                                                                   |
+| **address2**                                                                                     | **\_ccbillId\_address2**                                                                                  |
+| **city**                                                                                        | **\_ccbillId\_city**                                                                                       |
 | **country**                                                                                                | **\_ccbillId\_country**                                                                                              |
-| **state** (optional)                                                                                       | **\_ccbillId\_state** (optional)                                                                                     |
-| **postalCode**                                                                                             | **\_ccbillId\_postalCode**                                                                                           |
-| **phoneNumber** (optional)                                                                                 | **\_ccbillId\_phoneNumber** (optional)                                                                               |
-| **email** *                                                                                                 | **\_ccbillId\_email**  *                                                                                              |
-| **currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) | **_ccbillId_currencyCode** (A three-digit currency code for the currency used in the transaction. Required for SCA.) |
-| **ipAddress** (required, recommended hidden field auto-populated by JavaScript)                            | **\_ccbillId\_ipAddress** (required, recommended hidden field auto-populated by JavaScript)                          |
-| **browserHttpAccept** (optional, recommended hidden field auto-populated by JavaScript)                    | **\_ccbillId\_browserHttpAccept** (optional, recommended hidden field auto-populated by JavaScript)                  |
-| **browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptEncoding** (optional, recommended hidden field auto-populated by javascript)          |
-| **browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)            | **\_ccbillId\_browserHttpAcceptLanguage** (optional, recommended hidden field auto-populated by javascript)          |
+| **state**                                                                                     | **\_ccbillId\_state**                                                                                    |
+| **postalCode**                                                                                             | **\_ccbillId\_postalCode**                                                                                           |  
+| **amount**                                                                                             | **\_ccbillId\_amount**                                                                                           |                   
+| **phoneNumber**                                                                                 | **\_ccbillId\_phoneNumber**                                                                             |
+| **email**                                                                                                 | **\_ccbillId\_email**                                                                                            |
+| **currencyCode**  | **_ccbillId_currencyCode** |
+| **ipAddress**                            | **\_ccbillId\_ipAddress**                           |
+| **browserUserAgent**                    | **\_ccbillId\_browserUserAgent**                |
+| **browserHttpAccept**                     | **\_ccbillId\_browserHttpAccept**                   |
+| **browserHttpAcceptEncoding**             | **\_ccbillId\_browserHttpAcceptEncoding**          |
+| **browserHttpAcceptLanguage**             | **\_ccbillId\_browserHttpAcceptLanguage**          |
 
-*Required for Strong Customer Authentication (SCA) effective from August 5, 2024.
 ### Step 3. Create JavaScript Method
 
 Create a JavaScript function that will call the `CCBill Advanced Widget's` `createPaymentToken()` function. This is the main function merchants need to incorporate into their JavaScript in order to create payment tokens.
