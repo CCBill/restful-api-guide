@@ -626,55 +626,44 @@ components:
       type: object
       properties:
         paymentTokenId:
-          description: Complex representation of Payment Token Id
+          description: Complex representation of the Payment Token Id
           type: string
         programParticipationId:
           description: Program connected to the Payment Token
           type: integer
+          format: int32
+          nullable: true
         originalPaymentTokenId:
           description: Reference to a previous Token Id
           type: string
+          nullable: true
         clientAccnum:
           description: Merchant account number
           type: integer
+          format: int32
         clientSubacc:
           description: Merchant subaccount number
           type: integer
+          format: int32
         createdDatetime:
           description: Date Time of creation of the Payment Token
           type: string
         timeToLive:
           description: Time for the token to exist
           type: integer
+          format: int64
         validNumberOfUse:
           description: Total number of times the Payment Token can be used for purchases
           type: integer
-        subscriptionId:
-          description: Identification of the subscription associated with the transaction
-          type: integer
+          format: int64
         paymentInfoId:
           description: Information associated with the payment
           type: string
-      required:
-        - paymentTokenId
-        - programParticipationId
-        - clientAccnum
-        - clientSubacc
-        - createdDatetime
-        - timeToLive
-        - validNumberOfUse
-        - subscriptionId
-      example:
-        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        programParticipationId: 1
-        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        clientAccnum: 900000
-        clientSubacc: 0
-        createdDatetime: "2022-01-01T01:00:00"
-        timeToLive: 30
-        validNumberOfUse: 20
-        subscriptionId: 900000000000000000
-        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+          nullable: true
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: integer
+          format: int64
     PaymentTokenV2:
       description: These response parameters are received when a payment token is successfully created.
       type: object
@@ -685,50 +674,38 @@ components:
         programParticipationId:
           description: Program connected to the Payment Token
           type: integer
+          format: int32
+          nullable: true
         originalPaymentTokenId:
           description: Reference to a previous Token Id
           type: string
+          nullable: true
         clientAccnum:
           description: Merchant account number
           type: integer
+          format: int32
         clientSubacc:
           description: Merchant subaccount number
           type: integer
+          format: int32
         createdDatetime:
           description: Date Time of creation of the Payment Token
           type: string
         timeToLive:
           description: Time for the token to exist
           type: integer
+          format: int64
         validNumberOfUse:
           description: Total number of times the Payment Token can be used for purchases
           type: integer
-        subscriptionId:
-          description: Identification of the subscription associated with the transaction
-          type: string
+          format: int64
         paymentInfoId:
           description: Information associated with the payment
           type: string
-      required:
-        - paymentTokenId
-        - programParticipationId
-        - clientAccnum
-        - clientSubacc
-        - createdDatetime
-        - timeToLive
-        - validNumberOfUse
-        - subscriptionId
-      example:
-        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        programParticipationId: 1
-        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        clientAccnum: 900000
-        clientSubacc: 0
-        createdDatetime: '2022-01-01T01:00:00'
-        timeToLive: 30
-        validNumberOfUse: 20
-        subscriptionId: "900000000000000001"
-        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
+          nullable: true
+        subscriptionId:
+          description: Identification of the subscription associated with the transaction
+          type: string
     PaymentTokenMerchantOnlyParams:
       description: Parameters for creating a payment token without CVV2 and AVS authentication.
       type: object
