@@ -324,39 +324,6 @@ components:
       properties:
         id:
           pattern: ^[a-zA-Z0-9-]*$
-          description: Randomly generated GUID
-          type: string
-        url:
-          description: The RELATIVE url that has caused this error
-          type: string
-        generalMessage:
-          description: Something human readable
-          type: string
-        errorCode:
-          pattern: ^[0-9]*$
-          description: Product defined error code
-          type: string
-        timestamp:
-          description: Timestamp of the call
-          type: string
-          format: date-time
-      required:
-        - id
-        - url
-        - generalMessage
-        - errorCode
-        - timestamp
-      example:
-        id: string
-        url: specific/endpoint
-        generalMessage: General error message
-        errorCode: "100013"
-        timestamp: '2022-03-02T11:04:47.729Z'
-    Error:
-      type: object
-      properties:
-        id:
-          pattern: ^[a-zA-Z0-9-]*$
           description: The unique ID used to locate an error in the logs.
           type: string
           format: uuid
@@ -382,55 +349,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-  responses:
-    '400':
-      description: The response failed to complete due to an invalid header/parameter in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '401':
-      description: The response failed to complete due to authorization problem.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error401'
-    '403':
-      description: The response failed to complete because access to the resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '404':
-      description: The response failed to complete due to an invalid resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '405':
-      description: The response failed to complete due to an invalid method of request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '406':
-      description: The response failed to complete due to an unacceptable media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '415':
-      description: The response failed to complete due to an unsupported media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '500':
-      description: The response failed to complete in some way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
   parameters:
     trait_versioned_Accept:
       name: '200'

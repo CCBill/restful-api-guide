@@ -31,30 +31,36 @@ paths:
             schema:
               $ref: '#/components/schemas/TransactionRequest'
             examples:
-              Required:
-                summary: Required fields
+              30 day subscription (non-recurring):
+                description: Request body for charging a token and initiating a 30 day 9.99 USD subscription which is non-recurring.
                 value:
                   clientAccnum: 900123
-                  clientSubacc: 10
+                  clientSubacc: 0
                   initialPrice: 9.99
-                  initialPeriod: 10
+                  initialPeriod: 30
                   currencyCode: 840
-              All:
-                summary: All fields
+              1 year recurring subscription:
+                description: Request body for charging a token and initiating a subscription for 30 day 9.99 EUR initial period that will be renewed for 11 more times every 30 days with amount of 4.99 EUR.
                 value:
-                  clientAccnum: 900123
-                  clientSubacc: 10
+                  clientAccnum: 900684
+                  clientSubacc: 0
                   initialPrice: 9.99
-                  initialPeriod: 10
-                  recurringPrice: 15
+                  initialPeriod: 30
+                  recurringPrice: 4.99
                   recurringPeriod: 30
-                  rebills: 99
+                  rebills: 11
                   currencyCode: 840
-                  lifeTimeSubscription: false
-                  createNewPaymentToken: false
+              Single billing transaction:
+                description: Request body for charging a token and initiating one time transaction of 50 EUR passing a customer reference as a pass-through parameter.
+                value:
+                  clientAccnum: 900684
+                  clientSubacc: 0
+                  initialPrice: 50
+                  initialPeriod: 0
+                  currencyCode: 978
                   passThroughInfo:
-                    - name: val1
-                      value: val2
+                    - name: "customerRef"
+                      value: "cus_123"
       parameters:
         - name: paymentTokenId
           in: path
@@ -68,9 +74,52 @@ paths:
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfoV2'
+              description: Processed Transaction object
+              examples: 
+                Succesful Transaction:
+                  description: Successfully processed transaction.
+                  values:
+                    {
+                      "declineCode": null,
+                      "declineText": null,
+                      "denialId": null,
+                      "approved": true,
+                      "paymentUniqueId": "z8Zprmki+WoAyOwj74Ei3w",
+                      "sessionId": null,
+                      "newPaymentTokenId": null,
+                      "subscriptionId": "925014201000000206"
+                    }
             application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfo'
+                            description: Processed Transaction object
+              examples: 
+                Succesful Transaction:
+                  description: Successfully processed transaction.
+                  values:
+                    {
+                      "declineCode": null,
+                      "declineText": null,
+                      "denialId": null,
+                      "approved": true,
+                      "paymentUniqueId": "z8Zprmki+WoAyOwj74Ei3w",
+                      "sessionId": null,
+                      "newPaymentTokenId": null,
+                      "subscriptionId": 925014201000000206
+                    }
+                Failed Transaction:
+                  description: Transaction that was decline due to a system error
+                  values:
+                    {
+                      "declineCode": 27,
+                      "declineText": "System Error, Please Try Again",
+                      "denialId": 925013101000000100,
+                      "approved": false,
+                      "paymentUniqueId": null,
+                      "sessionId": null,
+                      "newPaymentTokenId": null,
+                      "subscriptionId": null
+                    }
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -90,129 +139,150 @@ paths:
 components:
   schemas:
     PassThroughInfo:
-      description: Elements of the `passThroughInfo` array represent custom paired information passed through to the transaction service.
+      description: Holds a single piece of data that merchants can pass through a transaction processing flow and that will be provided back to them in the approval/denial background posts.
       type: object
       properties:
         name:
-          description: Custom passthrough value.
+          description: Name of the pass through parameter.
           type: string
+          example: "customerRef"
         value:
-          description: Custom passthrough value.
+          description: Value of the pass through parameter
           type: string
+          example: "customerOne"
       required:
         - name
         - value
-      example:
-        name: "value1"
-        value: "value2"
     TransactionInfo:
-      description: Response parameters confirm that a customer was successfully charged using a payment token.
+     description: Response parameters confirm that a customer was successfully charged using a payment token.
       type: object
       properties:
-        errorCode:
-          description: Error condition value of the transaction
+        declineCode:
+          description: Decline code returned in case of error.
           type: integer
+          format: int64
+          example: 22
+        declineText:
+          description: Decline message returned in case of error.
+          type: string
+          example: "Error contacting bank, please try again later"
+        denialId:
+          description: Decline ID returned in case of error.
+          type: integer
+          example: 925013101000000000
         approved:
-          description: Approval status of the transaction
+          description: Approval status of the transaction.
           type: boolean
+          example: true
         paymentUniqueId:
-          description: Unique key connected to payment account
+          description: Unique key connected to payment account.
           type: string
+          example: z8Zprmki+WoAyOwj74Ei3w
         sessionId:
-          description: Unique session ID value for transaction
+          description: Unique session ID value for transaction.
           type: string
+          example: null
         subscriptionId:
-          description: subscription ID to which the transaction belongs
+          description: Subscription ID associated with the transaction.
           type: integer
+          format: int64
+          example: 925014201000000300
         newPaymentTokenId:
-          description: New payment token for subsequent transactions
+          description: New payment token for subsequent transactions.
           type: string
-      required:
-        - errorCode
-        - approved
-        - paymentUniqueId
-        - sessionId
-        - subscriptionId
-        - newPaymentTokenId
-      example:
-        errorCode: 200
-        approved: true
-        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
-        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        subscriptionId: 900000000000000000
-        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+          example: null
     TransactionInfoV2:
       description: Response parameters confirm that a customer was successfully charged using a payment token.
       type: object
       properties:
-        errorCode:
-          description: Error condition value of the transaction
+        declineCode:
+          description: Decline code returned in case of error.
           type: integer
+          format: int64
+          example: 22
+        declineText:
+          description: Decline message returned in case of error.
+          type: string
+          example: "Error contacting bank, please try again later"
+        denialId:
+          description: Decline ID returned in case of error.
+          type: integer
+          example: 925013101000000000
         approved:
-          description: Approval status of the transaction
+          description: Approval status of the transaction.
           type: boolean
+          example: true
         paymentUniqueId:
-          description: Unique key connected to payment account
+          description: Unique key connected to payment account.
           type: string
+          example: z8Zprmki+WoAyOwj74Ei3w
         sessionId:
-          description: Unique session ID value for transaction
+          description: Unique session ID value for transaction.
           type: string
+          example: null
         subscriptionId:
-          description: subscription ID to which the transaction belongs
+          description: Subscription ID associated with the transaction.
           type: string
+          example: 925014201000000300
         newPaymentTokenId:
-          description: New payment token for subsequent transactions
+          description: New payment token for subsequent transactions.
           type: string
-      required:
-        - errorCode
-        - approved
-        - paymentUniqueId
-        - sessionId
-        - subscriptionId
-        - newPaymentTokenId
-      example:
-        errorCode: 200
-        approved: true
-        paymentUniqueId: "53104f5a54d3d43254def41c29aedba8"
-        sessionId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        subscriptionId: "900000000000000000"
-        newPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+          example: null
     TransactionRequest:
       description: Request parameters for initiating a transaction request for a customer.
       type: object
       properties:
         clientAccnum:
-          description: clientAccnum of the merchant
+          description: Merchant account number.
           type: integer
+          format: int32
+          requited: true
         clientSubacc:
-          description: clientSubacc of the merchant
+          description: Merchant subaccount number
           type: integer
+          format: int32
+          required: true
         initialPrice:
-          description: price of initial transaction
+          description: Price for the initial subscription period.
           type: number
+          format: decimal
+          example: 10
         initialPeriod:
-          description: time period of initial transaction
+          description: Initial subscription period after which the first recurring price will be charged.
           type: integer
+          required: true
+          format: int64
+          example: 30
         currencyCode:
-          description: numerical representation of the currency used in transaction
-          type: string
+          description: 3-digit currency code used for the transaction.
+          type: integer
+          example: 978
+          format: int64
         recurringPrice:
-          description: price of recurrent transactions
+          description: Price of the subscription renewal that will be charged regularly, after each recurring period.
           type: number
+          format: decimal
+          example: 5
         recurringPeriod:
-          description: time period of recurrent transactions
+          description: Renewal subscription period after which the next recurring price will be charged.
           type: integer
+          format: int64
+          example: 30
         rebills:
-          description: number of times recurrent transactions can occur
+          description: Number of renewals for the recurring transaction.
           type: integer
+          example: 12
+          format: int64
         lifeTimeSubscription:
-          description: subscription is eternal or not.
+          description: Whether the subscription is eternal or not.
           type: boolean
+          example: false
         createNewPaymentToken:
-          description: return new payment token for subsequent transactions or not
+          description: Whether new payment token, that can be used for the subsequent transaction, should be generated and returned.
           type: boolean
+          example: true
         passThroughInfo:
-          description: Paired Information Passed Through to the Transaction Service
+          description: Miscellaneous data that the merchant can pass in and will be provided back to them in the approval/denial background posts.
           type: array
           items:
             $ref: '#/components/schemas/PassThroughInfo'
@@ -221,21 +291,6 @@ components:
         - clientSubacc
         - initialPrice
         - initialPeriod
-        - currencyCode
-      example:
-        clientAccnum: 900123
-        clientSubacc: 10
-        initialPrice: 9.99
-        initialPeriod: 10
-        currencyCode: "840"
-        recurringPrice: 15
-        recurringPeriod: 30
-        rebills: 99
-        lifeTimeSubscription: false
-        createNewPaymentToken: false
-        passThroughInfo:
-          - name: "val1"
-            value: "val2"
     ValidationError:
       type: object
       properties:
