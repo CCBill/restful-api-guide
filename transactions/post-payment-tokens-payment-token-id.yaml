@@ -74,11 +74,10 @@ paths:
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfoV2'
-              description: Processed Transaction object
               examples: 
-                Succesful Transaction:
+                Successful Transaction:
                   description: Successfully processed transaction.
-                  values:
+                  value:
                     {
                       "declineCode": null,
                       "declineText": null,
@@ -92,11 +91,10 @@ paths:
             application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfo'
-              description: Processed Transaction object
               examples: 
-                Succesful Transaction:
+                Successful Transaction:
                   description: Successfully processed transaction.
-                  values:
+                  value:
                     {
                       "declineCode": null,
                       "declineText": null,
@@ -109,7 +107,7 @@ paths:
                     }
                 Failed Transaction:
                   description: Transaction that was decline due to a system error
-                  values:
+                  value:
                     {
                       "declineCode": 27,
                       "declineText": "System Error, Please Try Again",
@@ -154,7 +152,7 @@ components:
         - name
         - value
     TransactionInfo:
-     description: Response parameters confirm that a customer was successfully charged using a payment token.
+      description: Response parameters confirm that a customer was successfully charged using a payment token.
       type: object
       properties:
         declineCode:
@@ -236,12 +234,10 @@ components:
           description: Merchant account number.
           type: integer
           format: int32
-          requited: true
         clientSubacc:
           description: Merchant subaccount number
           type: integer
           format: int32
-          required: true
         initialPrice:
           description: Price for the initial subscription period.
           type: number
@@ -250,7 +246,6 @@ components:
         initialPeriod:
           description: Initial subscription period after which the first recurring price will be charged.
           type: integer
-          required: true
           format: int64
           example: 30
         currencyCode:
