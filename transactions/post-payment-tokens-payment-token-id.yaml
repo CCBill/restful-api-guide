@@ -92,7 +92,7 @@ paths:
             application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfo'
-                            description: Processed Transaction object
+              description: Processed Transaction object
               examples: 
                 Succesful Transaction:
                   description: Successfully processed transaction.
