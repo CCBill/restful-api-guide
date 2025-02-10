@@ -27,43 +27,203 @@ paths:
           required: true
           schema:
             type: string
+          example: ee0d05a3c41127025decd7c37855f42a
         - name: clientAccnum
           in: query
-          required: false
+          required: true
           schema:
             type: integer
+            format: int32
           description: Merchant's account number.
-          example: 900001
+          example: 900684
         - name: clientSubacc
           in: query
           required: false
           schema:
             type: integer
           description: Merchant's subaccount number.
-          example: 2
+          example: 3
       responses:
         '200':
-          description: Successful Response
+          description: List of retrieved Transaction objects
           content:
+            application/vnd.mcn.transaction-service.api.v.2+json:
+              schema:
+                $ref: '#/components/schemas/PaymentTokenTransaction'
+              examples:
+                Single-subaccount transactions charged by a Payment Token:
+                  description: List of transactions made by a merchant using a single subaccount.
+                  value:
+                    - clientAccnum: 900684
+                      clientSubacc: 0
+                      subscriptionId: "924313501000000101"
+                    - clientAccnum: 900684
+                      clientSubacc: 0
+                      subscriptionId: "924313501000000102"
+                Multi-subaccount transactions charged by a Payment Token:
+                  description: List of transactions made by a merchant using multiple subaccounts.
+                  value:
+                    - clientAccnum: 900684
+                      clientSubacc: 0
+                      subscriptionId: "924313501000000101"
+                    - clientAccnum: 900684
+                      clientSubacc: 1
+                      subscriptionId: "924313501000000102"
             application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
                 $ref: '#/components/schemas/PaymentTokenTransaction'
+              examples:
+                Single-subaccount transactions charged by a Payment Token:
+                  description: List of transactions made by a merchant using a single subaccount.
+                  value:
+                    - clientAccnum: 900684
+                      clientSubacc: 0
+                      subscriptionId: "924313501000000101"
+                    - clientAccnum: 900684
+                      clientSubacc: 0
+                      subscriptionId: "924313501000000102"
+                Multi-subaccount transactions charged by a Payment Token:
+                  description: List of transactions made by a merchant using multiple subaccounts.
+                  value:
+                    - clientAccnum: 900684
+                      clientSubacc: 0
+                      subscriptionId: "924313501000000101"
+                    - clientAccnum: 900684
+                      clientSubacc: 1
+                      subscriptionId: "924313501000000102"
         '400':
-          $ref: '#/components/responses/400'
+          description: Bad request. This response failed due to an invalid header, query, or request body parameter.
+          content:
+            application/vnd.com.cwie.error.v1.+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  description: |- 
+                    Returned when `paymentTokenId` or one of the query parameters is not valid.<br>
+                    <em>Note</em>: For completeness the `errors` array in this example holds errors for all existing validated fields, but any subset of these can be returned.
+                  value:
+                    {
+                      "id": "5ea81718-6617-42d1-8852-77e5a18ecb57",
+                      "url": "/transactions/payment-tokens/{paymentTokenId}",
+                      "errors": [
+                        {
+                          "field": "clientAccnum",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "clientAccnum",
+                          "message": "Problem with attribute size"
+                        },
+                        {
+                          "field": "clientAccnum",
+                          "message": "Failed to convert property value of type 'java.lang.String' to required type 'java.lang.Integer' for property 'clientAccnum'; For input string: \"abc\""
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Problem with attribute size"
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Failed to convert property value of type 'java.lang.String' to required type 'java.lang.Integer' for property 'clientSubacc'; For input string: \"abc\""
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2024-12-30T14:58:56.914Z"
+                    }
         '401':
-          $ref: '#/components/responses/401'
+          description: Unauthorized. Returned when the caller is not authorized to perform the requested action. This response does not have a response body.
         '403':
-          $ref: '#/components/responses/403'
+          description: Forbidden. Returned when the caller does not have adequate permissions to access the requested resource.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Forbidden:
+                 value:
+                  {
+                    "id": "89e8a24a-e1b3-4366-a968-20d21b1023f3",
+                    "url": "/transactions/payment-tokens/{paymentTokenId}",
+                    "errors": [],
+                    "generalMessage": "Forbidden",
+                    "errorCode": 100020,
+                    "timestamp": "2024-12-30T09:10:16.615Z"
+                  }
         '404':
-          $ref: '#/components/responses/404'
+          description: Not Found. Returned when the requested resource or any of the required related resources is not found.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Found:
+                  value:
+                    {
+                      "id": "98efcc51-51aa-4989-bd35-88041489c8d1",
+                      "url": "/transactions/payment-tokens/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Not Found",
+                      "errorCode": 130000,
+                      "timestamp": "2024-12-27T15:06:01.190Z"
+                    }
+
         '405':
-          $ref: '#/components/responses/405'
+          description: Method Not Allowed. Returned when the requested method is not allowed for the requested resource.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Method Not Allowed:
+                  value:
+                    {
+                      "id": "399f8978-e8f0-48f9-bedc-e1725534cc6b",
+                      "url": "/transactions/payment-tokens/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Method Not Allowed",
+                      "errorCode": 130000,
+                      "timestamp": "2024-12-30T09:21:25.724Z"
+                    }
         '406':
-          $ref: '#/components/responses/406'
-        '415':
-          $ref: '#/components/responses/415'
+          description: Not Acceptable. Returned when the requested media type is not supported.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Acceptable:
+                  value:
+                    {
+                      "id": "4dfa73a9-9fd0-4995-9e00-4984464c3f91",
+                      "url": "/transactions/payment-tokens/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Not Acceptable",
+                      "errorCode": 100015,
+                      "timestamp": "2024-12-30T09:45:11.962Z"
+                    }
         '500':
-          $ref: '#/components/responses/500'
+          description: Internal Server Error. Returned when the server encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    {
+                      "id": "f82d6175-c992-4342-8271-7a181d031415",
+                      "url": "/transactions/payment-tokens/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "An error occurred, please try again later.",
+                      "errorCode": 100100,
+                      "timestamp": "2024-12-30T13:50:51.218Z"
+                    }
 components:
   schemas:
     PaymentTokenTransaction:
@@ -84,13 +244,6 @@ components:
           - clientAccnum
           - clientSubacc
           - subscriptionId
-      example:
-        - clientAccnum: 900001
-          clientSubacc: 2
-          subscriptionId: '918166501000000981'
-        - clientAccnum: 900002
-          clientSubacc: 2
-          subscriptionId: '918166501000000982'
     ValidationError:
       type: object
       properties:
@@ -111,134 +264,31 @@ components:
       properties:
         id:
           pattern: ^[a-zA-Z0-9-]*$
-          description: Randomly generated GUID
+          description: The unique ID used to locate an error in the logs.
           type: string
-        url:
-          description: The RELATIVE url that has caused this error
-          type: string
-        generalMessage:
-          description: Something human readable
-          type: string
+          format: uuid
         errorCode:
           pattern: ^[0-9]*$
-          description: Product defined error code
+          description: Product defined error code.
+          type: integer
+          format: int32
+        generalMessage:
+          description: The general user message.
           type: string
+          nullable: true
+        url:
+          description: The requested relative URL that has caused this error response.
+          type: string
+          format: uri-reference
         timestamp:
-          description: Timestamp of the call
+          description: The timestamp of the request that resulted in this error response.
           type: string
           format: date-time
-      required:
-        - id
-        - url
-        - generalMessage
-        - errorCode
-        - timestamp
-      example:
-        id: string
-        url: specific/endpoint
-        generalMessage: General error message
-        errorCode: "100013"
-        timestamp: '2022-03-02T11:04:47.729Z'
-    Error400:
-      type: object
-      properties:
-        id:
-          pattern: ^[a-zA-Z0-9-]*$
-          description: Randomly generated GUID
-          type: string
-        url:
-          description: The RELATIVE url that has caused this error
-          type: string
         errors:
-          description: Optional, only returned on 400 Bad Request errors for validation errors
+          description: List of validation errors, which resulted in this error response.
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-        generalMessage:
-          description: Something human readable
-          type: string
-        errorCode:
-          pattern: ^[0-9]*$
-          description: Product defined error code
-          type: string
-        timestamp:
-          description: Timestamp of the call
-          type: string
-          format: date-time
-      required:
-        - id
-        - url
-        - generalMessage
-        - errorCode
-        - timestamp
-      example:
-        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
-        url: specific/endpoint
-        errors:
-          - field: string
-            message: string
-        generalMessage: "An error occurred, please try again later."
-        errorCode: "100013"
-        timestamp: '2022-03-02T11:04:47.729Z'
-    Error401:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: "unauthorized"
-        error_description: "Full authentication is required to access this resource"
-  responses:
-    '400':
-      description: The response failed to complete due to an invalid header/parameter in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '401':
-      description: The response failed to complete due to authorization problem.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error401'
-    '403':
-      description: The response failed to complete because access to the resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '404':
-      description: The response failed to complete due to an invalid resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '405':
-      description: The response failed to complete due to an invalid method of request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '406':
-      description: The response failed to complete due to an unacceptable media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '415':
-      description: The response failed to complete due to an unsupported media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '500':
-      description: The response failed to complete in some way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
   parameters:
     trait_versioned_Accept:
       name: '200'

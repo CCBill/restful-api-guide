@@ -259,7 +259,7 @@ paths:
               examples:
                 Bad Request:
                   description: |- 
-                    Returned when one of `requestBody`'s fields is not valid.
+                    Returned when one of `requestBody`'s fields is not valid.<br>
                     <em>Note</em>: For completeness the `errors` array in this example holds errors for all existing validated fields, but any subset of these can be returned.
 	
                   value:
@@ -782,51 +782,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-  responses:
-    '400':
-      description: The response failed to complete due to an invalid header/parameter in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    '401':
-      description: The response failed to complete due to authorization problem.
-    '403':
-      description: The response failed to complete because access to the resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    '404':
-      description: The response failed to complete due to an invalid resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    '405':
-      description: The response failed to complete due to an invalid method of request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    '406':
-      description: The response failed to complete due to an unacceptable media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    '415':
-      description: The response failed to complete due to an unsupported media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    '500':
-      description: The response failed to complete in some way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
     trait_versioned_Accept:
       name: '200'
