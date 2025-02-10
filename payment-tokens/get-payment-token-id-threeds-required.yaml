@@ -77,7 +77,7 @@ paths:
                 type: boolean
                 example: true
         '400':
-          description: Bad requirest. This response failed due to an invalid header, query, or request body parameter.
+          description: Bad request. This response failed due to an invalid header, query, or request body parameter.
           content:
             application/vnd.com.cwie.error.v1.+json:
               schema:
