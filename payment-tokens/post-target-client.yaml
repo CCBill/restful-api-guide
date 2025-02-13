@@ -179,7 +179,6 @@ paths:
                   description: |- 
                     Returned when one of `requestBody`'s fields is not valid.<br>
                     <em>Note</em>: For completeness the `errors` array in this example holds errors for all existing validated fields, but any subset of these can be returned.
-	
                   value:
                     {
                       "id": "1c726d8f-c7ef-4bcf-b206-878d23af1a8b",
