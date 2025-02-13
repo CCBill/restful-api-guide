@@ -114,10 +114,10 @@ The following instructions describe how to set up and use the `CCBill Advanced W
 
 Add the following preload link and script HTML elements to the HTML page that will host your payment form:
 ```
-<link rel="preload" href="https://js.ccbill.com/v1.12.2/ccbill-advanced-widget.js" as="script"/>
-<script type="text/javascript" src="https://js.ccbill.com/v1.12.2/ccbill-advanced-widget.js"></script>
+<link rel="preload" href="https://js.ccbill.com/v1.9.0/ccbill-advanced-widget.js" as="script"/>
+<script type="text/javascript" src="https://js.ccbill.com/v1.9.0/ccbill-advanced-widget.js"></script>
 ```
-**Note:** The version in this URI example is **v1.12.2**. Pay special attention to the version in the URI path as the version number may be subject to change.
+**Note:** The version in this URI example is **v1.9.0**. Pay special attention to the version in the URI path as the version number may be subject to change.
 
 ### Step 2. Define the Field IDs
 
