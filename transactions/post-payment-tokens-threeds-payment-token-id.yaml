@@ -13,11 +13,11 @@ tags:
 security:
   - bearerAuth: []
 paths:
-  /transactions/payment-tokens/threeds/{payment_token_id}:
+  /transactions/payment-tokens/threeds/{paymentTokenId}:
     post:
       tags:
         - /transactions
-      summary: Charge token with 3DS
+      summary: Creates a 3DS transactiong using Payment Token
       description: |-
         Use this API call to initiate a transaction with additional 3DS parameters.
         Supply the payment token ID as a URI parameter.
@@ -28,76 +28,304 @@ paths:
             schema:
               $ref: '#/components/schemas/ThreedsTransactionRequest'
             examples:
-              Required:
-                summary: Required fields
+              Single billing 3DS transaction:
+                description: Request body for charging a token and initiating one time 3DS transaction of 50 EUR passing a customer reference as a pass-through parameter.
                 value:
-                  clientAccnum: 900123
-                  clientSubacc: 10
-                  initialPrice: 9.99
-                  initialPeriod: 10
-                  currencyCode: 840
-                  threedsCavv: cGFzc3dvcmQxMjM0NTZwYXNzd28=
-                  threedsCavvAlgorithm: '3'
-                  threedsEci: '05'
-              All:
-                summary: All fields
-                value:
-                  clientAccnum: 900123
-                  clientSubacc: 10
-                  initialPrice: 9.99
-                  initialPeriod: 10
-                  recurringPrice: 15
-                  recurringPeriod: 30
-                  rebills: 99
-                  currencyCode: 840
-                  lifeTimeSubscription: false
-                  createNewPaymentToken: false
-                  passThroughInfo:
-                    - name: val1
-                      value: val2
-                  threedsCavv: cGFzc3dvcmQxMjM0NTZwYXNzd28=
-                  threedsCavvAlgorithm: '3'
-                  threedsEci: '05'
-                  threedsError: ''
-                  threedsTransactionId: id-7kzs4vel57n
-                  threedsId: id-7kzs4vel57n
-                  threedsStatus: 'Y'
-                  threedsSuccess: true
-                  threedsVersion: 1.0.2
-                  threedsXid: '123'
-                  threedsAmount: '999'
+                  {
+                    "clientAccnum": 900684,
+                    "clientSubacc": 0,
+                    "initialPrice": 50,
+                    "initialPeriod": 0,
+                    "currencyCode": 978,
+                    "passThroughInfo": [
+                      {
+                        "name": "customerRef",
+                        "value": "cus_123"
+                      }
+                    ],
+                    "threedsEci": "05",
+                    "threedsStatus": "Y",
+                    "threedsSuccess": true,
+                    "threedsVersion": "2.2.0",
+                    "threedsAmount": "50.0",
+                    "threedsClientTransactionId": "id-18kz8gxg7xv",
+                    "threedsCurrency": "978",
+                    "threedsSdkTransId": "aeba8094-ce5b-11ef-a890-0242ac110004",
+                    "threedsAcsTransId": "d6f15aae-2c9d-4333-a920-954be07c0c76",
+                    "threedsDsTransId": "3efc640b-8606-4d2a-a75e-9b9604fd7e9d",
+                    "threedsAuthenticationType": "01",
+                    "threedsAuthenticationValue": "AHUIg/TRI/Vo6qaaMN/eID4McaI="
+                  }
       parameters:
-        - name: payment_token_id
+        - name: paymentTokenId
           in: path
           required: true
           schema:
             type: string
+          example: ee0d05a3c41127025decd7c37855f42a
       responses:
         '200':
-          description: Successful Response
+          description: Processed Transaction object
           content:
             application/vnd.mcn.transaction-service.api.v.2+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfoV2'
+              examples:
+                Succesful Transaction:
+                  description: Successfully processed transaction
+                  value:
+                    {
+                      "declineCode": null,
+                      "declineText": null,
+                      "denialId": null,
+                      "approved": true,
+                      "paymentUniqueId": "z8Zprmki+WoAyOwj74Ei3w",
+                      "sessionId": null,
+                      "newPaymentTokenId": null,
+                      "subscriptionId": "925014201000000206"
+                    }
             application/vnd.mcn.transaction-service.api.v.1+json:
               schema:
                 $ref: '#/components/schemas/TransactionInfo'
+              examples:
+                Succesful Transaction:
+                  description: Successfully processed transaction
+                  value:
+                    {
+                      "declineCode": null,
+                      "declineText": null,
+                      "denialId": null,
+                      "approved": true,
+                      "paymentUniqueId": "z8Zprmki+WoAyOwj74Ei3w",
+                      "sessionId": null,
+                      "newPaymentTokenId": null,
+                      "subscriptionId": 925014201000000206
+                    }
         '400':
-          $ref: '#/components/responses/400'
+          description: Bad Request. The response failed to complete due to an invalid header, query or request body parameter. This response does not differ between versions.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request:
+                  description: |- 
+                    Returned when one of `requestBody`'s fields is not valid.<br>
+                    <em>Note</em>: For completeness the `errors` array in this example holds errors for all existing validated fields, but any subset of these can be returned.
+                  value:
+                    {
+                      "id": "5ea81718-6617-42d1-8852-77e5a18ecb57",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [
+                        {
+                          "field": "clientAccnum",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "clientAccnum",
+                          "message": "Problem with attribute size"
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "clientSubacc",
+                          "message": "Problem with attribute size"
+                        },
+                        {
+                          "field": "initialPrice",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "initialPeriod",
+                          "message": "Attribute required"
+                        },
+                        {
+                          "field": "threedsAmount",
+                          "message": "Threeds amount is not equal to initialPrice"
+                        },
+                        {
+                          "field": "threedsError",
+                          "message": "Threeds request parameters need to contain either 3DS verification parameters or error parameters to be valid"
+                        },
+                        {
+                          "field": "threedsCavv",
+                          "message": "Invalid 3DS Cavv"
+                        },
+                        {
+                          "field": "threedsCavvAlgorithm",
+                          "message": "Invalid 3DS Cavv Algorithm"
+                        },
+                        {
+                          "field": "threedsXid",
+                          "message": "Invalid 3DS Xid"
+                        },
+                        {
+                          "field": "threedsDsTransId",
+                          "message": "Invalid 3DS Ds Trans Id"
+                        },
+                        {
+                          "field": "threedsAcsTransId",
+                          "message": "Invalid 3DS Acs Trans Id"
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2024-12-30T14:58:56.914Z"
+                    }
+                Inactive program participation:
+                  description: Returned when program participation between the provided merchants is inactive.
+                  value:
+                    {
+                      "id": "5ea81718-6617-42d1-8852-77e5a18ecb57",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [
+                        {
+                          "field": null,
+                          "message": "Program is Inactive"
+                        }
+                      ],
+                      "generalMessage": "Validation failed!",
+                      "errorCode": 200000,
+                      "timestamp": "2025-01-10T12:23:12.998Z"
+                    }
+                Expired token error:
+                  value:
+                    {
+                      "id": "757bb1a4-2795-463e-a301-2d44188ecdcb",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Expired payment token",
+                      "errorCode": 100102,
+                      "timestamp": "2025-01-14T12:53:00.665Z"
+                    }
+                Invalid client account error:
+                  value:
+                    {
+                      "id": "80eb96b8-c009-4ca6-8176-58990727e890",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Invalid client account",
+                      "errorCode": 100100,
+                      "timestamp": "2025-01-14T15:40:39.564Z"
+                    }
+
         '401':
-          $ref: '#/components/responses/401'
+          description: Unauthorized. Returned when the caller is not authorized to perform the requested action. This response does not have a response body.
         '403':
-          $ref: '#/components/responses/403'
+          description: Forbidden. Returned when the caller does not have adequate permissions to access the requested resource.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Forbidden:
+                 value:
+                  {
+                    "id": "89e8a24a-e1b3-4366-a968-20d21b1023f3",
+                    "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                    "errors": [],
+                    "generalMessage": "Forbidden",
+                    "errorCode": 100020,
+                    "timestamp": "2024-12-30T09:10:16.615Z"
+                  }
         '404':
-          $ref: '#/components/responses/404'
+          description: Not Found. Returned when the requested resource or any of the required related resources is not found.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Found:
+                  value:
+                    {
+                      "id": "98efcc51-51aa-4989-bd35-88041489c8d1",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Not Found",
+                      "errorCode": 130000,
+                      "timestamp": "2024-12-27T15:06:01.190Z"
+                    }
+
         '405':
-          $ref: '#/components/responses/405'
+          description: Method Not Allowed. Returned when the requested method is not allowed for the requested resource.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Method Not Allowed:
+                  value:
+                    {
+                      "id": "399f8978-e8f0-48f9-bedc-e1725534cc6b",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Method Not Allowed",
+                      "errorCode": 130000,
+                      "timestamp": "2024-12-30T09:21:25.724Z"
+                    }
         '406':
-          $ref: '#/components/responses/406'
+          description: Not Acceptable. Returned when the requested media type is not supported.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not Acceptable:
+                  value:
+                    {
+                      "id": "4dfa73a9-9fd0-4995-9e00-4984464c3f91",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Not Acceptable",
+                      "errorCode": 100015,
+                      "timestamp": "2024-12-30T09:45:11.962Z"
+                    }
         '415':
-          $ref: '#/components/responses/415'
+          description: Unsupported Media Type. Returned when the requested media type is not supported.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unsupported Media Type:
+                  value:
+                    {
+                      "id": "ac10e72b-0124-481c-a7f8-44875352cf87",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "Unsupported Media Type",
+                      "errorCode": 100004,
+                      "timestamp": "2024-12-30T19:39:18.861Z"
+                    }
         '500':
-          $ref: '#/components/responses/500'
+          description: Internal Server Error. Returned when the server encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/vnd.com.cwie.error.v1+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    {
+                      "id": "f82d6175-c992-4342-8271-7a181d031415",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "An error occurred, please try again later.",
+                      "errorCode": 100100,
+                      "timestamp": "2024-12-30T13:50:51.218Z"
+                    }
+                Database or Data Link inactive error:
+                  value:
+                    {
+                      "id": "00a2a631-f32b-40b2-8058-42b244129d87",
+                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "errors": [],
+                      "generalMessage": "There was an internal error or a database error and the requested action could not be completed or Data Link is inactive for user",
+                      "errorCode": 100106,
+                      "timestamp": "2025-01-14T12:24:41.218Z"
+                    }
 components:
   schemas:
     PassThroughInfo:
@@ -117,12 +345,19 @@ components:
         name: "value1"
         value: "value2"
     TransactionInfo:
-      description: Response parameters confirm that a customer was successfully charged using a payment token.
+      description: Response parameters confirm that a customer was successfully charged using a Payment Token.
       type: object
       properties:
-        errorCode:
-          description: Error condition value of the transaction
+        declineCode:
+          description: Decline code returned in case of error
           type: integer
+          format: int64
+        declineText:
+          description: Decline message returned in case of error
+          type: string
+        denialId:
+          description: Denial ID returned in case of error
+          type: string
         approved:
           description: Approval status of the transaction
           type: boolean
@@ -135,16 +370,10 @@ components:
         subscriptionId:
           description: subscription ID to which the transaction belongs
           type: integer
+          format: int64
         newPaymentTokenId:
           description: New payment token for subsequent transactions
           type: string
-      required:
-        - errorCode
-        - approved
-        - paymentUniqueId
-        - sessionId
-        - subscriptionId
-        - newPaymentTokenId
       example:
         errorCode: 200
         approved: true
@@ -156,9 +385,16 @@ components:
       description: Response parameters confirm that a customer was successfully charged using a payment token.
       type: object
       properties:
-        errorCode:
-          description: Error condition value of the transaction
+        declineCode:
+          description: Decline code returned in case of error
           type: integer
+          format: int64
+        declineText:
+          description: Decline message returned in case of error
+          type: string
+        denialId:
+          description: Denial ID returned in case of error
+          type: string
         approved:
           description: Approval status of the transaction
           type: boolean
@@ -174,13 +410,6 @@ components:
         newPaymentTokenId:
           description: New payment token for subsequent transactions
           type: string
-      required:
-        - errorCode
-        - approved
-        - paymentUniqueId
-        - sessionId
-        - subscriptionId
-        - newPaymentTokenId
       example:
         errorCode: 200
         approved: true
@@ -195,27 +424,39 @@ components:
             clientAccnum:
                 description: Merchant account number.
                 type: integer
+                format: int32
+                minimum: 0
+                maximum: 999999
             clientSubacc:
                 description: Merchant subaccount number.
                 type: integer
+                format: int32
+                minimum: 0
+                maximum: 999999
             initialPrice:
                 description: Initial transaction price.
                 type: number
+                format: decimal
             initialPeriod:
                 description: The length (in days) of the initial billing period.
                 type: integer
+                format: int64
             currencyCode:
                 description: Three-digit currency code (ISO 4217 standard) for the currency used in the transaction.
-                type: string
+                type: integer
+                format: int64
             recurringPrice:
                 description: The amount the consumer will be charged for each recurring bill.
                 type: number
+                format: decimal
             recurringPeriod:
                 description: The length of time between rebills.
                 type: integer
+                format: int64
             rebills:
                 description: The total number of times the subscription will rebill.
                 type: integer
+                format: int64
             lifeTimeSubscription:
                 description: The presence of this variable with a value of **1** indicates that the transaction is a lifetime subscription.
                 type: boolean
@@ -230,63 +471,96 @@ components:
             threedsCardToken:
                 description: The encrypted cardToken you receive through the 3DS verification process. As we require only the first 16 characters, trim the string to that length before sending it to the CCBill API. Sending a string longer than 16 characters results in an error.
                 type: string
+                nullable: true
+                maxLength: 16
             threedsEci:
                 description: An Electronic Commerce Indicator (ECI).
                 type: string
+                nullable: true
+                maxLength: 2
             threedsStatus:
                 description: The status of the 3DS verification.
                 type: string
+                nullable: true
+                maxLength: 1
             threedsVersion:
                 description: The version of the 3DS protocol to be followed for this specific card and transaction. Available versions are 1.0.2 and 2.1.0
                 type: string
+                nullable: true
+                maxLength: 20
             threedsXid:
                 description: The transaction identifier (XID) is a unique tracking number set by the merchant for 3DS. It is a required parameter for threedsVersion 1.0.2.
                 type: string
+                nullable: true
+                maxLength: 50
             threedsCavv:
                 description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow and is a required parameter for threedsVersion 1.0.2
                 type: string
+                nullable: true
+                maxLength: 1024
             threedsCavvAlgorithm:
                 description: CAVV Algorithm for threeds request. The threedsCavvAlgorithm parameter is required for threedsVersion 1.0.2
                 type: string
+                nullable: true
+                maxLength: 28
             threedsDsTransId:
                 description: Directory Server Transaction ID. The threedsDsTransId parameter is required for threedsVersion 2.1.0
                 type: string
+                nullable: true
+                maxLength: 36
             threedsAcsTransId:
                 description: Access Control Server Transaction ID. The threedsAcsTransId parameter is required for threedsVersion 2.1.0
                 type: string
+                nullable: true
+                maxLength: 36
             threedsSdkTransId:
                 description: The 3DS vendor's transaction ID.
                 type: string
+                nullable: true
+                maxLength: 36
             threedsAuthenticationType:
                 description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (v2.1.0).
                 type: string
+                nullable: true
+                maxLength: 36
             threedsAuthenticationValue:
                 description: A digital signature that proves that the transaction has been 3DS verified. The signature is obtained through a 3DS verification flow (v2.1.0).
                 type: string
+                nullable: true
+                maxLength: 36
             threedsClientTransactionId:
                 description: The parameter is automatically generated by the Advanced Widget. Its purpose is to identify the origin of the 3DS authentication transaction.
                 type: string
+                nullable: true
+                maxLength: 36
             threedsSuccess:
                 description: Verification of 3DS authentication success or failure.
                 type: boolean
             threedsAmount:
                 description: The amount to be charged (same as `initialPrice`).
                 type: number
+                format: double
             threedsCurrency:
                 description: The 3-digit currency code for the currency to be used in this transaction.
                 type: string
+                nullable: true
             threedsError:
                 description: Error received from the 3DS vendor during the strong customer authentication process. The parameter is required if no threedsVersion is provided.
                 type: string
+                nullable: true
+                maxLength: 16
             threedsErrorDetail:
                 description: Error details related to the `threedsError`.
                 type: string
+                nullable: true
             threedsErrorCode:
                 description: Error code.
                 type: string
+                nullable: true
             threedsResponse:
                 description: The complete response in case of an error.
                 type: string
+                nullable: true
         required:
             - clientAccnum
             - clientSubacc
@@ -351,134 +625,31 @@ components:
       properties:
         id:
           pattern: ^[a-zA-Z0-9-]*$
-          description: Randomly generated GUID
+          description: The unique ID used to locate an error in the logs.
           type: string
-        url:
-          description: The RELATIVE url that has caused this error
-          type: string
-        generalMessage:
-          description: Something human readable
-          type: string
+          format: uuid
         errorCode:
           pattern: ^[0-9]*$
-          description: Product defined error code
+          description: Product defined error code.
+          type: integer
+          format: int32
+        generalMessage:
+          description: The general user message.
           type: string
+          nullable: true
+        url:
+          description: The requested relative URL that has caused this error response.
+          type: string
+          format: uri-reference
         timestamp:
-          description: Timestamp of the call
+          description: The timestamp of the request that resulted in this error response.
           type: string
           format: date-time
-      required:
-        - id
-        - url
-        - generalMessage
-        - errorCode
-        - timestamp
-      example:
-        id: string
-        url: specific/endpoint
-        generalMessage: General error message
-        errorCode: "100013"
-        timestamp: '2022-03-02T11:04:47.729Z'
-    Error400:
-      type: object
-      properties:
-        id:
-          pattern: ^[a-zA-Z0-9-]*$
-          description: Randomly generated GUID
-          type: string
-        url:
-          description: The RELATIVE url that has caused this error
-          type: string
         errors:
-          description: Optional, only returned on 400 Bad Request errors for validation errors
+          description: List of validation errors, which resulted in this error response.
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-        generalMessage:
-          description: Something human readable
-          type: string
-        errorCode:
-          pattern: ^[0-9]*$
-          description: Product defined error code
-          type: string
-        timestamp:
-          description: Timestamp of the call
-          type: string
-          format: date-time
-      required:
-        - id
-        - url
-        - generalMessage
-        - errorCode
-        - timestamp
-      example:
-        id: a98a9876-8bc87-765c-5432-4d4ef5ghij3
-        url: specific/endpoint
-        errors:
-          - field: string
-            message: string
-        generalMessage: "An error occurred, please try again later."
-        errorCode: "100013"
-        timestamp: '2022-03-02T11:04:47.729Z'
-    Error401:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: "unauthorized"
-        error_description: "Full authentication is required to access this resource"
-  responses:
-    '400':
-      description: The response failed to complete due to an invalid header/parameter in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '401':
-      description: The response failed to complete due to authorization problem.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error401'
-    '403':
-      description: The response failed to complete because access to the resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '404':
-      description: The response failed to complete due to an invalid resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '405':
-      description: The response failed to complete due to an invalid method of request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '406':
-      description: The response failed to complete due to an unacceptable media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '415':
-      description: The response failed to complete due to an unsupported media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '500':
-      description: The response failed to complete in some way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
   parameters:
     trait_versioned_Accept:
       name: '200'
@@ -486,93 +657,6 @@ components:
       description: API version
       schema:
         type: string
-  examples:
-    PaymentTokenMerchantOnlyParamsRequired:
-      summary: Required fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoRequired/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardPaymentInfo/value'
-        subscriptionId: 900000000000000000
-    PaymentTokenMerchantOnlyParamsAll:
-      summary: All fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoAll/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardPaymentInfo/value'
-        subscriptionId: 900000000000000000
-        timeToLive: 30
-        validNumberOfUse: 3
-    PaymentTokenMerchantOnlyVerifyParamsRequired:
-      summary: Required fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoRequired/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo/value'
-        subscriptionId: 900000000000000000
-    PaymentTokenMerchantOnlyVerifyParamsAll:
-      summary: All fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoAll/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo'
-        subscriptionId: 900000000000000000
-        timeToLive: 30
-        validNumberOfUse: 3
-    CustomerInfoAll:
-      value:
-        customerFname: Tyler
-        customerLname: Thomas
-        address1: Woodland Drive
-        address2: Apt 21
-        city: Tempe
-        state: AZ
-        zipcode: '85281'
-        country: US
-        phoneNumber: '5555555555'
-        email: tthomas@xyz.com
-        ipAddress: 10.70.60.14
-        browserHttpUserAgent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
-        browserHttpAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-        browserHttpAcceptLanguage: en-US,en;q=0.5
-        browserHttpAcceptEncoding: gzip, deflate, br
-    CustomerInfoRequired:
-      value:
-        customerFname: Tyler
-        customerLname: Thomas
-        zipcode: '85281'
-        country: US
-        email: tthomas@xyz.com
-        ipAddress: 10.70.60.14
-    CreditCardWithCvvPaymentInfo:
-      value:
-        cardNum: '4473707989493598'
-        nameOnCard: Tyler Thomas
-        expMonth: '04'
-        expYear: '2026'
-        cvv2: '123'
-    CreditCardPaymentInfo:
-      value:
-        cardNum: '4473707989493598'
-        nameOnCard: Tyler Thomas
-        expMonth: '04'
-        expYear: '2026'
   requestBodies: {}
   headers: {}
   links: {}
