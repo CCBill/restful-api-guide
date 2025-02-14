@@ -58,8 +58,6 @@ Click the image or open in a new tab to review the sequence diagram in full size
 
 <a href="https://github.com/user-attachments/assets/476eefe0-f1ee-4112-b893-764b20865c0d" target="_blank" rel="noopener"><img src="https://github.com/user-attachments/assets/476eefe0-f1ee-4112-b893-764b20865c0d" width="300"></a>
 
-![mcn-widget-integration-3ds-sequence-diagram2](https://github.com/user-attachments/assets/852d8560-551c-4768-9dc3-b8cee38a1d4c)
-
 While all of the above steps can be completed by making requests from your backend to our API endpoints, you can also use the `CCBill Advanced Widget` (JS library) to:
 * create the payment tokens
 * check whether the 3DS verification is required or not, and
