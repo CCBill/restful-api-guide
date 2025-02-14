@@ -56,7 +56,7 @@ Below are the 3 essential steps for charging the consumer using a payment token:
 
 Click the image or open in a new tab to review the sequence diagram in full size.
 
-<a href="https://user-images.githubusercontent.com/81383705/237035677-5ae3004a-8ed6-41d2-a5b8-c103462dbde8.png" target="_blank" rel="noopener"><img src="https://user-images.githubusercontent.com/81383705/237035677-5ae3004a-8ed6-41d2-a5b8-c103462dbde8.png" alt="ccbill-restful-api" width="300"></a>
+<a href="https://github.com/user-attachments/assets/0c05f92b-30d1-47c1-baa0-5d4a48c1bbf7" target="_blank" rel="noopener"><img src="https://github.com/user-attachments/assets/0c05f92b-30d1-47c1-baa0-5d4a48c1bbf7" alt="ccbill-restful-api" width="300"></a>
 
 While all of the above steps can be completed by making requests from your backend to our API endpoints, you can also use the `CCBill Advanced Widget` (JS library) to:
 * create the payment tokens
@@ -64,9 +64,6 @@ While all of the above steps can be completed by making requests from your backe
 * perform the strong customer authentication (SCA) from within the browser
 
 Click the image or open in a new tab to review the sequence flow for creating and charging of payment tokens with 3DS verification.
-
-![mcn-widget-integration-sequence-diagram](https://github.com/user-attachments/assets/0c05f92b-30d1-47c1-baa0-5d4a48c1bbf7)
-
 
 <a href="https://user-images.githubusercontent.com/81383705/237035691-46280338-e7e3-451a-94aa-d7c6b6338874.png" target="_blank" rel="noopener"><img src="https://user-images.githubusercontent.com/81383705/237035691-46280338-e7e3-451a-94aa-d7c6b6338874.png" alt="ccbill-restful-api" width="300"></a>
 
