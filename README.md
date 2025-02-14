@@ -65,7 +65,7 @@ While all of the above steps can be completed by making requests from your backe
 
 Click the image or open in a new tab to review the sequence flow for creating and charging of payment tokens with 3DS verification.
 
-<a href="https://user-images.githubusercontent.com/81383705/237035691-46280338-e7e3-451a-94aa-d7c6b6338874.png" target="_blank" rel="noopener"><img src="https://user-images.githubusercontent.com/81383705/237035691-46280338-e7e3-451a-94aa-d7c6b6338874.png" alt="ccbill-restful-api" width="300"></a>
+<a href="https://github.com/user-attachments/assets/543ee0fe-9654-43d5-a274-24581509abc1" target="_blank" rel="noopener"><img src="https://github.com/user-attachments/assets/543ee0fe-9654-43d5-a274-24581509abc1" alt="ccbill-restful-api" width="300"></a>
 
 Creation of the `CCBill OAuth` token and charging payment tokens are not supported by the `CCBill Advanced Widget` and must be performed by making API calls from your back-end services.
 
