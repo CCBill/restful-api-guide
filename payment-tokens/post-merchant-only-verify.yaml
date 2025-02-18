@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: RESTful API Endpoints
   version: 1.0.0
@@ -104,9 +104,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaymentTokenMerchantOnlyParams'
+              $ref: '#/components/schemas/PaymentTokenMerchantOnlyVerifyParams'
             examples:
               Single use Payment Token creation (with CVV):
+                description: Request body for creating a payment token that can be charged only once
                 value:
                   {
                     "clientAccnum": 900684,
@@ -141,6 +142,7 @@ paths:
                     "validNumberOfUse": 1
                   }
               24 hours valid Payment Token creation (with CVV):
+                description: Request body for creating a payment token that is valid for 24 hours
                 value:
                   {
                     "clientAccnum": 900684,
@@ -175,6 +177,7 @@ paths:
                     "timeToLive": 24
                   }
               Payment Token creation using previous subscription:
+                description: Request body for creating a payment token by providing an ID of one of the existing subscriptions
                 value:
                   {
                     "clientAccnum": 900684,
@@ -198,6 +201,7 @@ paths:
                 $ref: '#/components/schemas/PaymentTokenV2'
               examples:
                 Single use Payment Token response:
+                  description: Payment token that can be charged only once
                   value:              
                     paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
                     programParticipationId: null
@@ -210,6 +214,7 @@ paths:
                     subscriptionId: "924313501000000101"
                     paymentInfoId: null
                 24 hour Payment Token response:
+                  description: Payment token that is valid for 24 hours
                   value:              
                     paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
                     programParticipationId: null
@@ -226,6 +231,7 @@ paths:
                 $ref: '#/components/schemas/PaymentToken'
               examples:
                 Single use Payment Token response:
+                  description: Payment token that can be charged only once
                   value:              
                     paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
                     programParticipationId: null
@@ -238,6 +244,7 @@ paths:
                     subscriptionId: 924313501000000101
                     paymentInfoId: null
                 24 hour Payment Token response:
+                  description: Payment token that is valid for 24 hours
                   value:              
                     paymentTokenId: "019f5576d7f046c3a375e8a054f2c033"
                     programParticipationId: null
@@ -601,33 +608,29 @@ components:
         subscriptionId:
           description: Identification of the subscription associated with the transaction
           type: string
-    PaymentInfo:
-      description: Payment information on the customer's payment card. Elements of the `creditCardPaymentInfo` array.
-      type: object
-      properties:
-        creditCardPaymentInfo:
-          description: Credit Card Payment Information
-          allOf:
-            - $ref: '#/components/schemas/CreditCardPaymentInfo'
     CreditCardWithCvvPaymentInfo:
       description: Elements of the `paymentInfo` array with CVV2 authentication.
       type: object
       properties:
         cardNum:
-          description: Card number
+          description: Valid credit card number checked against the Luhn algorithm
           type: string
         expMonth:
-          description: Card expiration month in mm format
+          description: Card expiration month in `mm` format
           type: string
+          pattern: ^(0[1-9]|1[012])$
         expYear:
-          description: Card expiration year in yyyy format
+          description: Card expiration year in `yyyy` format
           type: string
+          pattern: \d{4}
         nameOnCard:
           description: Name as it appears on card
           type: string
+          pattern: ^[\p{L} .'-]+$
         cvv2:
           description: CVV2 code on the card
           type: string
+          pattern: ^(\d{3}|\d{4})$
       required:
         - cardNum
         - expMonth
@@ -917,62 +920,26 @@ components:
         - subscriptionId
         - cvv2Response
         - avsResponse
-      example:
-        paymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        programParticipationId: 1
-        originalPaymentTokenId: "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        clientAccnum: 900000
-        clientSubacc: 0
-        createdDatetime: '2022-01-01T01:00:00'
-        timeToLive: 30
-        validNumberOfUse: 20
-        subscriptionId: '900000000000000001'
-        paymentInfoId: "53104f5a54d3d43254def41c29aedba8"
-        cvv2Response: "M"
-        avsResponse: 'Y'
-    PaymentTokenMerchantOnlyParams:
-      description: Parameters for creating a payment token without CVV2 and AVS authentication.
-      type: object
-      properties:
-        clientAccnum:
-          description: Merchant account number
-          type: integer
-        clientSubacc:
-          description: Merchant subaccount number
-          type: integer
-        customerInfo:
-          description: Customer Information
-          allOf:
-            - $ref: '#/components/schemas/CustomerInfo'
-        paymentInfo:
-          description: Payment Information
-          allOf:
-            - $ref: '#/components/schemas/PaymentInfo'
-        subscriptionId:
-          description: Transaction subscription identification number
-          type: integer
-        timeToLive:
-          description: Time for the token to exist
-          type: integer
-        validNumberOfUse:
-          description: Total number of times the Payment Token can be used for purchases
-          type: integer
-      required:
-        - clientAccnum
-        - clientSubacc
-        - subscriptionId
     PaymentTokenMerchantOnlyVerifyParams:
-      description: Parameters for creating a payment token that includes CVV2 and AVS authentication.
+      description: |-
+        Parameters for creating a payment token without CVV2 and AVS authentication. 
+        `paymentInfo` and `customerInfo` fields are conditionally required, in case `subscriptionId` is `0`, or optional when it's not `0` and Charge by Previous is performed.
       type: object
       properties:
         clientAccnum:
           description: Merchant account number
           type: integer
+          format: int64
+          minimum: 0
+          maximum: 999999
         clientSubacc:
           description: Merchant subaccount number
           type: integer
+          format: int32
+          minimum: 0
+          maximum: 9999
         customerInfo:
-          description: Customer Information
+          description: Holds all the information related to the customer performing the transaction (name, email, address, browser info etc.).
           allOf:
             - $ref: '#/components/schemas/CustomerInfo'
         paymentInfo:
@@ -980,18 +947,24 @@ components:
           allOf:
             - $ref: '#/components/schemas/PaymentInfoWithCvv'
         subscriptionId:
-          description: Transaction subscription identification number
+          description: |-
+            Identification of the subscription associated with the transaction. 
+            If the value is `0`, the `customerInfo` and `paymentInfo` fields are required.
+            When the subscription ID of an existing transaction is provided, stored COF will be used to create the Payment Token.
           type: integer
+          format: int64
         timeToLive:
           description: Time for the token to exist
           type: integer
+          format: int64
         validNumberOfUse:
           description: Total number of times the Payment Token can be used for purchases
           type: integer
+          format: int64
       required:
         - clientAccnum
         - clientSubacc
-        - subscriptionId
+        - subscriptionId	
     ValidationError:
       type: object
       properties:
@@ -1037,55 +1010,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-  responses:
-    '400':
-      description: The response failed to complete due to an invalid header/parameter in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '401':
-      description: The response failed to complete due to authorization problem.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error401'
-    '403':
-      description: The response failed to complete because access to the resource is forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '404':
-      description: The response failed to complete due to an invalid resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '405':
-      description: The response failed to complete due to an invalid method of request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '406':
-      description: The response failed to complete due to an unacceptable media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '415':
-      description: The response failed to complete due to an unsupported media type in the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
-    '500':
-      description: The response failed to complete in some way.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error400'
   parameters:
     trait_versioned_Accept:
       name: '200'
@@ -1093,31 +1017,6 @@ components:
       description: API version
       schema:
         type: string
-  examples:
-    PaymentTokenMerchantOnlyVerifyParamsRequired:
-      summary: Required fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoRequired/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo/value'
-        subscriptionId: 900000000000000000
-    PaymentTokenMerchantOnlyVerifyParamsAll:
-      summary: All fields
-      value:
-        clientAccnum: 900000
-        clientSubacc: 2
-        customerInfo:
-          $ref: '#/components/examples/CustomerInfoAll/value'
-        paymentInfo:
-          creditCardPaymentInfo:
-            $ref: '#/components/examples/CreditCardWithCvvPaymentInfo'
-        subscriptionId: 900000000000000000
-        timeToLive: 30
-        validNumberOfUse: 3
   requestBodies: {}
   headers: {}
   links: {}
