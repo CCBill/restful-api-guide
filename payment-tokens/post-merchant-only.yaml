@@ -529,11 +529,11 @@ components:
           description: Card number
           type: string
         expMonth:
-          description: Card expiration month in mm format
+          description: Card expiration month in `mm` format
           type: string
           pattern: ^(0[1-9]|1[012])$
         expYear:
-          description: Card expiration year in yyyy format
+          description: Card expiration year in `yyyy` format
           type: string
           pattern: \d{4}
         nameOnCard:
@@ -689,10 +689,7 @@ components:
           type: string
           nullable: true
         subscriptionId:
-          description: |-
-            Identification of the subscription associated with the transaction. 
-            If the value is `0`, the `customerInfo` and `paymentInfo` fields are required.
-            When the subscription ID of an existing transaction is provided, stored COF will be used to create the Payment Token.
+          description: Identification of the subscription associated with the transaction
           type: integer
           format: int64
     PaymentTokenV2:
@@ -700,7 +697,7 @@ components:
       type: object
       properties:
         paymentTokenId:
-          description: Complex representation of Payment Token Id
+          description: Complex representation of the Payment Token Id
           type: string
         programParticipationId:
           description: Program connected to the Payment Token
@@ -801,12 +798,10 @@ components:
       type: object
       properties:
         id:
-          pattern: ^[a-zA-Z0-9-]*$
           description: The unique ID used to locate an error in the logs.
           type: string
           format: uuid
         errorCode:
-          pattern: ^[0-9]*$
           description: Product defined error code.
           type: integer
           format: int32

@@ -308,7 +308,7 @@ paths:
                   value:
                     {
                       "id": "00a2a631-f32b-40b2-8058-42b244129d87",
-                      "url": "/transactions/payment-tokens/threeds/{paymentTokenId}",
+                      "url": "/transactions/payment-tokens/{paymentTokenId}",
                       "errors": [],
                       "generalMessage": "There was an internal error or a database error and the requested action could not be completed or Data Link is inactive for user",
                       "errorCode": 100106,
@@ -485,12 +485,10 @@ components:
       type: object
       properties:
         id:
-          pattern: ^[a-zA-Z0-9-]*$
           description: The unique ID used to locate an error in the logs.
           type: string
           format: uuid
         errorCode:
-          pattern: ^[0-9]*$
           description: Product defined error code.
           type: integer
           format: int32
