@@ -263,12 +263,10 @@ components:
       type: object
       properties:
         id:
-          pattern: ^[a-zA-Z0-9-]*$
           description: The unique ID used to locate an error in the logs.
           type: string
           format: uuid
         errorCode:
-          pattern: ^[0-9]*$
           description: Product defined error code.
           type: integer
           format: int32

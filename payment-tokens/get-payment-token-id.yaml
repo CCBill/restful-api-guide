@@ -452,7 +452,6 @@ components:
       type: object
       properties:
         id:
-          pattern: ^[a-zA-Z0-9-]*$
           description: Randomly generated GUID
           type: string
         url:
@@ -462,7 +461,6 @@ components:
           description: Something human readable
           type: string
         errorCode:
-          pattern: ^[0-9]*$
           description: Product defined error code
           type: string
         timestamp:
