@@ -104,6 +104,12 @@ curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
 ``` 
 ## 2. Create Payment Token ID (CCBill Advanced Widget)
 
+Customer payment details (such as the credit card number, expiration date, cardholder name, etc.) must be collected through a payment form.
+
+Merchants can design custom payment forms and apps to capture this information and then forward the data in an API request to the correct endpoint.
+
+**To comply with banking regulations, your payment forms must display card logos for the accepted card schemes and payment methods.**
+
 The `CCBill Advanced Widget` makes the creation of payment tokens easier by encapsulating the API calls that need to be made into a JavaScript function that can be used from within your web page. 
 
 The library is hosted on CCBill's content distribution network (CDN) which makes import into the merchants' websites quick and easy from any location in the world.
