@@ -108,7 +108,7 @@ Customer payment details (such as the credit card number, expiration date, cardh
 
 Merchants can design custom payment forms and apps to capture this information and then forward the data in an API request to the correct endpoint.
 
-**To comply with banking regulations, your payment forms must display card logos for the accepted card schemes and payment methods.**
+**Note:** To comply with banking regulations, your payment forms must display card logos for the accepted card schemes and payment methods.
 
 The `CCBill Advanced Widget` makes the creation of payment tokens easier by encapsulating the API calls that need to be made into a JavaScript function that can be used from within your web page. 
 
