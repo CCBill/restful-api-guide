@@ -302,7 +302,7 @@ The merchant payment form also needs to contain text input fields, hidden if nec
 
 | PARAMETER                   | TYPE    | DESCRIPTION                                                    |
 |-----------------------------|---------|----------------------------------------------------------------|
-| **nameOnCard** (required)    | string  | Must be a valid OAuth token for the provided merchant account. |
+| **nameOnCard** (required)    | string  | Name as it appears on the card, between 2-45 characters. |
 | **email** (required) | string | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.                                       |
 | **currencyCode** (required) | integer | The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).                        |
 
@@ -363,7 +363,7 @@ const result = widget.isScaRequired(authToken, clientAccnum, clientSubacc);
 | clientAccnum                    | A range of 900000-999999 and must be a number.  |
 | clientSubacc                    | A range of 0-9999 and must be a number.        |
 | currencyCode                    | Has to match the regular expression `^\\d{3}$` |
-| nameOnCard                      | Must be a valid OAuth token for the provided merchant account. |
+| nameOnCard                      | Name as it appears on the card, between 2-45 characters. |
 | email                           | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.|
 | credit card number (form input) | Must be a valid credit card number.            |
 
@@ -391,7 +391,7 @@ The merchant payment form also needs to contain text input fields, hidden if nec
 
 | PARAMETER                   | TYPE    | DESCRIPTION                                                    |
 |-----------------------------|---------|----------------------------------------------------------------|
-| **nameOnCard** (required)    | string  | Must be a valid OAuth token for the provided merchant account. |
+| **nameOnCard** (required)    | string  | Name as it appears on the card, between 2-45 characters. |
 | **email** (required) | string | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.                                       |
 | **currencyCode** (required) | integer | The value must be represented by a three-digit currency code as defined in [ISO 4217 standard](https://www.iso.org/obp/ui#iso:std:iso:4217:ed-8:v1:en).                        |
 
@@ -451,7 +451,7 @@ const result = widget.isScaRequiredForPaymentToken(authToken, paymentTokenId);
 |----------------|--------------------------------------------------------------------------------------------|
 | paymentTokenId | Unique string identifying the payment token, must match regular expression `[a-zA-Z0-9]+$` |
 | currencyCode   | Has to match regular expression `^\\d{3}$`                                                 |
-| nameOnCard     | Must be a valid OAuth token for the provided merchant account. |
+| nameOnCard     | Name as it appears on the card, between 2-45 characters. |
 | email          | The customer's email address up to 254 characters. Must comply with RFC 5322 specification.                                       |
 
 
