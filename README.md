@@ -100,7 +100,7 @@ Pay special attention to the Widget version (**v1.13.1**) in the URI path, as th
 
 The widget extracts values from form fields. You can provide them in three ways:
 
-<details><summary>👉 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary><br>
+<details><summary>📝 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary><br>
 
 Using <code>data-ccbill</code> data attributes is non-intrusive and provides more flexibility. You can map form inputs directly without modifying existing <code>id</code> attributes.
 ```
@@ -118,7 +118,7 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
 </form>
 ```
 </details>
-<details><summary>👉 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary><br>
+<details><summary>📝 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary><br>
 
 If you cannot modify your HTML to include <code>data-ccbill</code> attributes, use the default <code>_ccbillId_</code> attributes instead. They are less flexible because the field names must match CCBill's predefined format.
 ```
@@ -136,7 +136,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
 </form>
 ```
 </details>
-<details><summary>👉 Use custom ID attributes (requires additional mapping).</summary><br>
+<details><summary>📝 Use custom ID attributes (requires additional mapping).</summary><br>
 
 You can also map custom IDs to corresponding input fields using the <code>customIds</code> parameter in the Widget <code>constructor</code>.
 ```
@@ -207,7 +207,9 @@ The CCBill RESTful API uses [OAuth-based](https://ccbill.com/kb/what-is-oauth) a
 
 You must include this token in the Authorization header of API requests when creating payment tokens. Use the following examples and adjust the necessary parameters to obtain a **frontend bearer token:**
 
-<details><summary>👉 cURL</summary>
+💻**Code Examples**
+
+<details><summary>⚙️ cURL</summary>
 
 ```
 curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
@@ -217,7 +219,7 @@ curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
 ```
 
 </details>
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 String getOAuthToken() {
@@ -243,7 +245,7 @@ String getOAuthToken() {
 }
 ```
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -315,7 +317,7 @@ The **`createPaymentToken()`** function automatically validates all field values
 To finalize a payment, send a request to charge the Payment Token through the backend. Generate a new **backend bearer token** using your Base64 encoded backend credentials. Then, pass the **backend bearer token** and **payment token ID** to the API endpoint and charge the customer's credit card.
 
 💻**Code Examples**
-<details><summary>👉 cURL</summary>
+<details><summary>⚙️ cURL</summary>
   
 ```
 curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/[payment_token_id]' \
@@ -333,7 +335,7 @@ curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/[payment_token_
 ```
 </details>
   
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 public ResponseEntity<String> processPurchase() {
@@ -366,7 +368,7 @@ public ResponseEntity<String> processPurchase() {
 ```
 
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -471,7 +473,7 @@ async function purchase() {
 let result = await purchase();
 ```
 </details>
-<details><summary>⚙️ Java Backend</summary>
+<details><summary>☕ Java Backend</summary>
 
 ```
 import java.io.IOException;
@@ -620,7 +622,7 @@ Pay special attention to the Widget version (**v1.13.1**) in the URI path, as th
 
 The Advanced Widget automatically extracts values from form fields. The required fields can be provided in three ways:
 
-<details><summary>👉 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary>
+<details><summary>📝 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary>
 
 Using <code>data-ccbill</code> data attributes is non-intrusive and provides more flexibility. You can map form inputs directly without modifying existing <code>id</code> attributes.
 ```
@@ -642,7 +644,7 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
 
 </details>
 
-<details><summary>👉 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary>
+<details><summary>📝 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary>
 
 If you cannot modify your HTML to include <code>data-ccbill</code> attributes, use the default <code>_ccbillId_</code> attributes instead. The field names must match CCBill's predefined format.
 ```
@@ -663,7 +665,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
 ```
 </details>
 
-<details><summary>👉 Use custom ID attributes (requires additional mapping).</summary>
+<details><summary>📝 Use custom ID attributes (requires additional mapping).</summary>
 
 If you prefer custom IDs, map them to corresponding input fields using the <code>customIds</code> parameter in the Widget <code>constructor</code>.
 ```
@@ -741,7 +743,9 @@ The CCBill RESTful API uses [OAuth-based](https://ccbill.com/kb/what-is-oauth) a
 
 Include this token in the Authorization header of API requests when creating payment tokens. Use the following examples and adjust the necessary parameters to obtain a **frontend bearer token:**
 
-<details><summary>👉 cURL</summary>
+💻**Code Examples**
+
+<details><summary>⚙️ cURL</summary>
 
 ```
 curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
@@ -750,7 +754,7 @@ curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
   -d 'grant_type=client_credentials'  
 ```
 </details>
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
   
 ```
 String getOAuthToken() {
@@ -776,7 +780,7 @@ String getOAuthToken() {
 }
 ```
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
   
 ```
 <?php
@@ -931,7 +935,7 @@ Use the Payment Token ID and backend bearer token to charge a customer's credit 
 Ensure the Payment Token passed the required 3DS authentication flow and the required 3DS values are collected.
 
 💻**Code Examples**
-<details><summary>👉 cURL</summary>
+<details><summary>⚙️ cURL</summary>
   
 ```
 curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/threeds/[payment_token_id]' \
@@ -962,7 +966,7 @@ curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/threeds/[paymen
 
 </details>
   
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 public ResponseEntity<String> processPurchase3ds() {
@@ -1007,7 +1011,7 @@ public ResponseEntity<String> processPurchase3ds() {
 
 ```
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -1366,13 +1370,13 @@ To use the CCBill Advanced Widget, add the following **preload link** and **scri
 
 <script type="text/javascript" src="https://js.ccbill.com/v1.13.1/ccbill-advanced-widget.js"></script>
 ```
-Pay special attention to the Widget version (**v1.13.1**) in the URI path, as the version number may be subject to change.
+Pay special attention to the Widget version (**v1.13.1**) in the URI path, as the version number may change.
 
 #### 2. Collect Customer and Payment Data
 
 The Advanced Widget automatically extracts values from form fields. The required fields can be provided in three ways:
 
-<details><summary>👉 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary><br>
+<details><summary>📝 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary><br>
 
 Using <code>data-ccbill</code> data attributes is non-intrusive and provides more flexibility. You can map form inputs directly without modifying existing <code>id</code> attributes.
 ```
@@ -1394,7 +1398,7 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
 
 </details>
 
-<details><summary>👉 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary><br>
+<details><summary>📝 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary><br>
 
 If you cannot modify your HTML to include <code>data-ccbill</code> attributes, use the default <code>_ccbillId_</code> attributes instead. The field names must match CCBill's predefined format.
 ```
@@ -1415,7 +1419,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
 ```
 </details>
 
-<details><summary>👉 Use custom ID attributes (requires additional mapping).</summary><br>
+<details><summary>📝 Use custom ID attributes (requires additional mapping).</summary><br>
 
 Map custom IDs to corresponding input fields using the <code>customIds</code> parameter in the Widget <code>constructor</code>.
 ```
@@ -1492,7 +1496,9 @@ The CCBill RESTful API uses [OAuth-based](https://ccbill.com/kb/what-is-oauth) a
 
 You must include this token in the Authorization header of API requests when creating payment tokens. Use the following examples and adjust the necessary parameters to obtain a **frontend bearer token:**
 
-<details><summary>👉 cURL</summary>
+💻**Code Examples**
+
+<details><summary>⚙️ cURL</summary>
 
 ```
 curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
@@ -1501,7 +1507,7 @@ curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
   -d 'grant_type=client_credentials' 
 ```
 </details>
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 String getOAuthToken() {
@@ -1527,7 +1533,7 @@ String getOAuthToken() {
 }
 ```
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -1639,7 +1645,7 @@ After you receive a **payment token ID**, generate a new **backend bearer token*
 
 💻**Code Examples**
 
-<details><summary>👉 cURL</summary>
+<details><summary>⚙️ cURL</summary>
   
 ```
 curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/threeds/[payment_token_id]' \
@@ -1670,7 +1676,7 @@ curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/threeds/[paymen
 
 </details>
   
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 public ResponseEntity<String> processPurchase3ds() {
@@ -1716,7 +1722,7 @@ public ResponseEntity<String> processPurchase3ds() {
 ```
 
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -1882,7 +1888,7 @@ async function authenticateAndPurchase() {
 let result = await authenticateAndPurchase();
 ```
 </details>
-<details><summary>⚙️ Java Backend</summary>
+<details><summary>☕ Java Backend</summary>
 
 ```
 import java.io.IOException;
@@ -2095,7 +2101,7 @@ Pay special attention to the Widget version (**v1.13.1**) in the URI path, as th
 
 The Advanced Widget automatically extracts values from form fields. The required fields can be provided in three ways:
 
-<details><summary>👉 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary><br>
+<details><summary>📝 (Recommended) Use <code>data-ccbill</code> HTML data attributes.</summary><br>
 
 Using <code>data-ccbill</code> data attributes is non-intrusive and provides more flexibility. You can map form inputs directly without modifying existing <code>id</code> attributes.
 ```
@@ -2116,7 +2122,7 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
 
 </details>
 
-<details><summary>👉 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary><br>
+<details><summary>📝 Use default <code>_ccbillId_FieldName</code> ID attributes.</summary><br>
 
 If you cannot modify your HTML to include <code>data-ccbill</code> attributes, use the default <code>_ccbillId_</code> attributes instead. The field names must match CCBill's predefined format.
 ```
@@ -2136,7 +2142,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
 ```
 </details>
 
-<details><summary>👉 Use custom ID attributes (requires additional mapping).</summary><br>
+<details><summary>📝 Use custom ID attributes (requires additional mapping).</summary><br>
 
 Map custom IDs to corresponding input fields using the <code>customIds</code> parameter in the Widget <code>constructor</code>.
 ```
@@ -2211,7 +2217,9 @@ The CCBill RESTful API uses [OAuth-based](https://ccbill.com/kb/what-is-oauth) a
 
 Include this token in the Authorization header of API requests when creating payment tokens. Use the following examples and adjust the necessary parameters to obtain a **frontend bearer token:**
 
-<details><summary>👉 cURL</summary>
+💻**Code Examples**
+
+<details><summary>⚙️ cURL</summary>
 
 ```
 curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
@@ -2221,7 +2229,7 @@ curl -X POST 'https://api.ccbill.com/ccbill-auth/oauth/token' \
   
 ```
 </details>
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 
@@ -2248,7 +2256,7 @@ String getOAuthToken() {
 }
 ```
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -2353,7 +2361,7 @@ The function returns a response with the outcome of the 3DS authentication and t
 Use the Payment Token ID and backend bearer token to charge a customer's credit card through a 3DS-secured payment flow. Generate a new **backend bearer token** using your Base64 encoded backend credentials.
 
 💻**Code Examples**
-<details><summary>👉 cURL</summary>
+<details><summary>⚙️ cURL</summary>
   
 ```
 curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/[payment_token_id]' \
@@ -2372,7 +2380,7 @@ curl -X POST 'https://api.ccbill.com/transactions/payment-tokens/[payment_token_
 
 </details>
   
-<details><summary>👉 Java</summary>
+<details><summary>⚙️ Java</summary>
 
 ```
 public ResponseEntity<String> processPurchase() {
@@ -2405,7 +2413,7 @@ public ResponseEntity<String> processPurchase() {
 ```
 
 </details>
-<details><summary>👉 PHP</summary>
+<details><summary>⚙️ PHP</summary>
 
 ```
 <?php
@@ -2533,7 +2541,7 @@ async function authenticateAndPurchaseLater() {
 let result = await authenticateAndPurchaseLater();
 ```
 </details>
-<details><summary>⚙️ Java Backend</summary>
+<details><summary>☕ Java Backend</summary>
 
 ```
 import java.io.IOException;
@@ -2676,4 +2684,5 @@ Get in touch with us if you have questions or need help with the CCBill RESTful 
   <a href="https://www.youtube.com/c/CCBillBiz/featured">YouTube</a> •
   <a href="https://ccbill.com/contact">Support</a>
 </p>
+
 
