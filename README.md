@@ -114,7 +114,8 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
     <input data-ccbill="expYear" /> 
     <input data-ccbill="expMonth" /> 
     <input data-ccbill="nameOnCard" /> 
-    <input data-ccbill="cvv2" /> 
+    <input data-ccbill="cvv2" />
+    <input data-ccbill="ipAddress" />
 </form>
 ```
 </details>
@@ -133,6 +134,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
     <input id="_ccbillId_expMonth" />
     <input id="_ccbillId_nameOnCard" />
     <input id="_ccbillId_cvv2" />
+    <input id="_ccbillId_ipAddress" />
 </form>
 ```
 </details>
@@ -150,7 +152,8 @@ You can also map custom IDs to corresponding input fields using the <code>custom
     <input id="custom_expYear_id" /> 
     <input id="custom_expMonth_id" /> 
     <input id="custom_nameOnCard_id" /> 
-    <input id="custom_cvv2_id" /> 
+    <input id="custom_cvv2_id" />
+    <input id="custom_ipAddress_id" /> 
 </form>
 <script>
 // map custom ids to relevant fields
@@ -164,7 +167,8 @@ const customIds = {
     expYear: "custom_expYear_id", 
     expMonth: "custom_expMonth_id", 
     nameOnCard: "custom_nameOnCard_id",
-    cvv2: "custom_cvv2_id"
+    cvv2: "custom_cvv2_id",
+    ipAddress: "custom_ipAddress_id"
 };
 
 // pass custom ids to Widget constructor
@@ -190,7 +194,7 @@ const widget = new ccbill.CCBillAdvancedWidget("application_id", customIds);
 | **country**                                     | Yes                             | Customer's billing country. Should be a two-letter country code as defined in ISO 3166-1.                             |
 | **email**                                       | Yes                             | Customer's email. Should be a well-formed email address, max 254 characters long.                      |
 | **phoneNumber**                                 | No                              | Customer's phone number. If provided, it should be a well-formed phone number.                                         |
-| **ipAddress**                                   | No                              | Customer's IP address.                                                                                              |
+| **ipAddress**                                   | Yes                             | Customer's IP address. (IPv4 only)                                                                                              |
 | **browserHttpUserAgent**                        | No                              | Browser User-Agent header value.                                                                                    |
 | **browserHttpAccept**                           | No                              | Browser Accept header value.                                                                                           |  
 | **browserHttpAcceptEncoding**                   | No                              | Browser Accept Encoding header value.                                                                                           |                   
@@ -638,7 +642,8 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
     <input data-ccbill="expYear" /> 
     <input data-ccbill="expMonth" /> 
     <input data-ccbill="nameOnCard" /> 
-    <input data-ccbill="cvv2" /> 
+    <input data-ccbill="cvv2" />
+    <input data-ccbill="ipAddress" />
 </form>
 ```
 
@@ -661,6 +666,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
     <input id="_ccbillId_expMonth" />
     <input id="_ccbillId_nameOnCard" />
     <input id="_ccbillId_cvv2" />
+    <input id="_ccbillId_ipAddress" />
 </form>
 ```
 </details>
@@ -681,7 +687,8 @@ If you prefer custom IDs, map them to corresponding input fields using the <code
     <input id="custom_expYear_id" /> 
     <input id="custom_expMonth_id" /> 
     <input id="custom_nameOnCard_id" /> 
-    <input id="custom_cvv2_id" /> 
+    <input id="custom_cvv2_id" />
+    <input id="custom_ipAddress_id" /> 
 </form>
 <script>
 // map custom ids to relevant fields
@@ -697,7 +704,8 @@ const customIds = {
     expYear: "custom_expYear_id", 
     expMonth: "custom_expMonth_id", 
     nameOnCard: "custom_nameOnCard_id",
-    cvv2: "custom_cvv2_id"
+    cvv2: "custom_cvv2_id",
+    ipAddress: "custom_ipAddress_id"
 };
 
 // pass custom ids to Widget constructor
@@ -726,7 +734,7 @@ const widget = new ccbill.CCBillAdvancedWidget("application_id", customIds);
 | **country**                                     | Yes                             | Customer's billing country. Should be a two-letter country code as defined in ISO 3166-1.                             |
 | **email**                                       | Yes                             | Customer's email. Should be a well-formed email address, max 254 characters long.                      |
 | **phoneNumber**                                 | No                              | Customer's phone number. If provided, it should be a well-formed phone number.                                         |
-| **ipAddress**                                   | No                              | Customer's IP address.                                                                                              |
+| **ipAddress**                                   | Yes                             | Customer's IP address. (IPv4 only)                                                                                              |
 | **browserHttpUserAgent**                        | No                              | Browser User-Agent header value.                                                                                    |
 | **browserHttpAccept**                           | No                              | Browser Accept header value.                                                                                           |  
 | **browserHttpAcceptEncoding**                   | No                              | Browser Accept Encoding header value.                                                                                           |                   
@@ -1392,7 +1400,8 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
     <input data-ccbill="expYear" /> 
     <input data-ccbill="expMonth" /> 
     <input data-ccbill="nameOnCard" /> 
-    <input data-ccbill="cvv2" /> 
+    <input data-ccbill="cvv2" />
+    <input data-ccbill="ipAddress" />
 </form>
 ```
 
@@ -1415,6 +1424,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
     <input id="_ccbillId_expMonth" />
     <input id="_ccbillId_nameOnCard" />
     <input id="_ccbillId_cvv2" />
+    <input id="_ccbillId_ipAddress" />
 </form>
 ```
 </details>
@@ -1435,7 +1445,8 @@ Map custom IDs to corresponding input fields using the <code>customIds</code> pa
     <input id="custom_expYear_id" /> 
     <input id="custom_expMonth_id" /> 
     <input id="custom_nameOnCard_id" /> 
-    <input id="custom_cvv2_id" /> 
+    <input id="custom_cvv2_id" />
+    <input id="custom_ipAddress_id" />
 </form>
 <script>
 // map custom ids to relevant fields
@@ -1451,7 +1462,8 @@ const customIds = {
     expYear: "custom_expYear_id", 
     expMonth: "custom_expMonth_id", 
     nameOnCard: "custom_nameOnCard_id",
-    cvv2: "custom_cvv2_id"
+    cvv2: "custom_cvv2_id",
+    ipAddress: "custom_ipAddress_id"
 };
 
 // pass custom ids to Widget constructor
@@ -1479,7 +1491,7 @@ const widget = new ccbill.CCBillAdvancedWidget("application_id", customIds);
 | **country**                                     | Yes                             | Customer's billing country. Should be a two-letter country code as defined in ISO 3166-1.                             |
 | **email**                                       | Yes                             | Customer's email. Should be a well-formed email address, max 254 characters long.                      |
 | **phoneNumber**                                 | No                              | Customer's phone number. If provided, it should be a well-formed phone number.                                         |
-| **ipAddress**                                   | No                              | Customer's IP address.                                                                                              |
+| **ipAddress**                                   | Yes                             | Customer's IP address. (IPv4 only)                                                                                              |
 | **browserHttpUserAgent**                        | No                              | Browser User-Agent header value.                                                                                    |
 | **browserHttpAccept**                           | No                              | Browser Accept header value.                                                                                           |  
 | **browserHttpAcceptEncoding**                   | No                              | Browser Accept Encoding header value.                                                                                           |                   
@@ -2116,7 +2128,8 @@ Using <code>data-ccbill</code> data attributes is non-intrusive and provides mor
     <input data-ccbill="expYear" /> 
     <input data-ccbill="expMonth" /> 
     <input data-ccbill="nameOnCard" /> 
-    <input data-ccbill="cvv2" /> 
+    <input data-ccbill="cvv2" />
+    <input data-ccbill="ipAddress" />
 </form>
 ```
 
@@ -2138,6 +2151,7 @@ If you cannot modify your HTML to include <code>data-ccbill</code> attributes, u
     <input id="_ccbillId_expMonth" />
     <input id="_ccbillId_nameOnCard" />
     <input id="_ccbillId_cvv2" />
+    <input id="_ccbillId_ipAddress" />
 </form>
 ```
 </details>
@@ -2157,7 +2171,8 @@ Map custom IDs to corresponding input fields using the <code>customIds</code> pa
     <input id="custom_expYear_id" /> 
     <input id="custom_expMonth_id" /> 
     <input id="custom_nameOnCard_id" /> 
-    <input id="custom_cvv2_id" /> 
+    <input id="custom_cvv2_id" />
+    <input id="custom_ipAddress_id" />
 </form>
 <script>
 // map custom ids to relevant fields
@@ -2172,7 +2187,8 @@ const customIds = {
     expYear: "custom_expYear_id", 
     expMonth: "custom_expMonth_id", 
     nameOnCard: "custom_nameOnCard_id",
-    cvv2: "custom_cvv2_id"
+    cvv2: "custom_cvv2_id",
+    ipAddress: "custom_ipAddress_id"
 };
 
 // pass custom ids to Widget constructor
@@ -2200,7 +2216,7 @@ const widget = new ccbill.CCBillAdvancedWidget("application_id", customIds);
 | **country**                                     | Yes                             | Customer's billing country. Should be a two-letter country code as defined in ISO 3166-1.                             |
 | **email**                                       | Yes                             | Customer's email. Should be a well-formed email address, max 254 characters long.                      |
 | **phoneNumber**                                 | No                              | Customer's phone number. If provided, it should be a well-formed phone number.                                         |
-| **ipAddress**                                   | No                              | Customer's IP address.                                                                                              |
+| **ipAddress**                                   | Yes                             | Customer's IP address. (IPv4 only)                                                                                              |
 | **browserHttpUserAgent**                        | No                              | Browser User-Agent header value.                                                                                    |
 | **browserHttpAccept**                           | No                              | Browser Accept header value.                                                                                           |  
 | **browserHttpAcceptEncoding**                   | No                              | Browser Accept Encoding header value.                                                                                           |                   
@@ -2684,5 +2700,6 @@ Get in touch with us if you have questions or need help with the CCBill RESTful 
   <a href="https://www.youtube.com/c/CCBillBiz/featured">YouTube</a> •
   <a href="https://ccbill.com/contact">Support</a>
 </p>
+
 
 
